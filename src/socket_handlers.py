@@ -783,6 +783,8 @@ def handle_update_backup_config(data):
             
             db.session.commit()
             
+            load_config()
+            
             if scheduler.get_job('auto_backup'):
                 scheduler.remove_job('auto_backup')
             
