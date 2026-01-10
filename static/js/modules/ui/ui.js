@@ -41,19 +41,24 @@ export { formatUptime };
 export function updateStatus(connected) {
     state.isConnected = connected;
     const enableControls = !connected && state.isAdmin;
-    
+
     if(elements.serverSelector) elements.serverSelector.disabled = !enableControls;
 
-    if (connected) {
-        elements.status.className = 'status status-connected';
-        elements.status.innerHTML = '<div class="status-dot"></div>Conectado';
-        elements.connectBtn.style.display = 'none';
-        elements.disconnectBtn.style.display = state.isAdmin ? 'inline-block' : 'none';
-    } else {
-        elements.status.className = 'status status-disconnected';
-        elements.status.innerHTML = '<div class="status-dot"></div>Desconectado';
-        elements.connectBtn.style.display = state.isAdmin ? 'inline-block' : 'none';
-        elements.disconnectBtn.style.display = 'none';
+    if (elements.status) {
+        if (connected) {
+            elements.status.className = 'status status-connected';
+            elements.status.innerHTML = '<div class="status-dot"></div>Conectado';
+        } else {
+            elements.status.className = 'status status-disconnected';
+            elements.status.innerHTML = '<div class="status-dot"></div>Desconectado';
+        }
+    }
+
+    if (elements.connectBtn) {
+        elements.connectBtn.style.display = connected ? 'none' : (state.isAdmin ? 'inline-block' : 'none');
+    }
+    if (elements.disconnectBtn) {
+        elements.disconnectBtn.style.display = connected && state.isAdmin ? 'inline-block' : 'none';
     }
 
     if (elements.subscribeBtn) elements.subscribeBtn.disabled = !connected || !state.isAdmin;
