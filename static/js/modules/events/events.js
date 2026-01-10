@@ -169,6 +169,7 @@ export async function initEventListeners() {
             case 'cancel-alert-modal': modals.closeAlertModal(); break;
             case 'add-task-modal': modals.openTaskModal(); break;
             case 'add-group-modal': modals.openGroupModal(); break;
+            case 'edit-group': modals.openGroupModal(groupId); break;
             case 'save-group': modals.saveGroup(); break;
             case 'close-group-modal': modals.closeGroupModal(); break;
             case 'cancel-group-modal': modals.closeGroupModal(); break;
