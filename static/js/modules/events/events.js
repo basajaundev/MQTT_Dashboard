@@ -5,11 +5,29 @@ import { showToast } from '../ui/toasts.js';
 import { state } from '../core/state.js';
 
 export async function initEventListeners() {
+    console.log('[DEBUG] initEventListeners called');
+    console.log('[DEBUG] elements.loginModal:', elements.loginModal);
+    console.log('[DEBUG] modals.openLoginModal:', typeof modals.openLoginModal);
+
+    // Event listener específico para el botón de login
+    const loginBtn = document.querySelector('[data-action="open-login-modal"]');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', (e) => {
+            console.log('[DEBUG] Login button clicked');
+            modals.openLoginModal();
+        });
+        console.log('[DEBUG] Login button event listener attached');
+    } else {
+        console.log('[DEBUG] Login button not found');
+    }
+
     document.body.addEventListener('click', async (e) => {
         const target = e.target.closest('[data-action]');
         if (!target) return;
 
         const action = target.dataset.action;
+        console.log('[DEBUG] Click action:', action);
+
         let deviceId = target.dataset.deviceId;
         let location = target.dataset.location;
 
