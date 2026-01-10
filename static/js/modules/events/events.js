@@ -280,7 +280,9 @@ export async function initEventListeners() {
             case 'save-trigger': modals.saveTrigger(); break;
             case 'close-trigger-modal': modals.closeTriggerModal(); break;
             case 'cancel-trigger-modal': modals.closeTriggerModal(); break;
-            case 'close-trigger-modal': elements.triggerModal.style.display = 'none'; break;
+            case 'close-trigger-modal':
+                if (elements.triggerModal) elements.triggerModal.style.display = 'none';
+                break;
         }
     });
 
@@ -317,8 +319,11 @@ export async function initEventListeners() {
             if (e.target.tagName === 'BUTTON') {
                 const tab = e.target.dataset.tab;
                 state.currentTab = tab;
-                document.querySelectorAll('.config-section').forEach(s => s.style.display = 'none');
-                document.getElementById(tab + 'Section').style.display = 'block';
+                document.querySelectorAll('.config-section').forEach(s => {
+                    if (s) s.style.display = 'none';
+                });
+                const section = document.getElementById(tab + 'Section');
+                if (section) section.style.display = 'block';
             }
         });
     }
