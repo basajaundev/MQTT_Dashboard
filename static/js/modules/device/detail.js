@@ -97,6 +97,116 @@ function setupSocketListeners() {
     });
 }
 
+function setupEventListeners() {
+    const refreshBtn = document.getElementById('deviceChartRefresh');
+    const dateStartInput = document.getElementById('deviceChartDateStart');
+    const dateEndInput = document.getElementById('deviceChartDateEnd');
+    const presetSelect = document.getElementById('chartDatePreset');
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+    const eventFilter = document.getElementById('eventFilter');
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', refreshDeviceHistory);
+    }
+
+    if (dateStartInput) {
+        dateStartInput.addEventListener('change', refreshDeviceHistory);
+    }
+
+    if (dateEndInput) {
+        dateEndInput.addEventListener('change', refreshDeviceHistory);
+    }
+
+    if (presetSelect) {
+        presetSelect.addEventListener('change', refreshDeviceHistory);
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (state.currentDevicePage > 1) {
+                state.currentDevicePage--;
+                loadDeviceEvents();
+            }
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            state.currentDevicePage++;
+            loadDeviceEvents();
+        });
+    }
+
+    if (eventFilter) {
+        eventFilter.addEventListener('change', () => {
+            state.currentDeviceEventFilter = eventFilter.value;
+            state.currentDevicePage = 1;
+            loadDeviceEvents();
+        });
+    }
+
+    refreshDeviceHistory();
+}
+
+function loadDeviceEvents() {
+    state.socket.emit('get_device_events', {
+        device_id: deviceDetailData.deviceId,
+        location: deviceDetailData.location,
+        limit: 50,
+        event_type: state.currentDeviceEventFilter || null
+    });
+}
+
+function refreshDeviceHistory() {
+    const dateStartInput = document.getElementById('deviceChartDateStart');
+    const dateEndInput = document.getElementById('deviceChartDateEnd');
+    const presetSelect = document.getElementById('chartDatePreset');
+    const preset = presetSelect ? presetSelect.value : '';
+    let startDate = null;
+    let endDate = null;
+
+    if (preset) {
+        const now = new Date();
+
+        if (preset === 'today') {
+            startDate = now.toLocaleDateString('en-CA');
+            endDate = startDate;
+        } else if (preset === 'yesterday') {
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            startDate = yesterday.toLocaleDateString('en-CA');
+            endDate = startDate;
+        } else if (preset === 'week') {
+            endDate = now.toLocaleDateString('en-CA');
+            const weekAgo = new Date(now);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            startDate = weekAgo.toLocaleDateString('en-CA');
+        } else if (preset === 'month') {
+            endDate = now.toLocaleDateString('en-CA');
+            const monthAgo = new Date(now);
+            monthAgo.setDate(monthAgo.getDate() - 30);
+            startDate = monthAgo.toLocaleDateString('en-CA');
+        } else if (preset === 'all') {
+            startDate = null;
+            endDate = null;
+        }
+    } else {
+        startDate = dateStartInput ? dateStartInput.value : null;
+        endDate = dateEndInput ? dateEndInput.value : null;
+    }
+
+    if (dateStartInput) dateStartInput.value = startDate || '';
+    if (dateEndInput) dateEndInput.value = endDate || '';
+
+    state.socket.emit('get_device_history', {
+        device_id: deviceDetailData.deviceId,
+        location: deviceDetailData.location,
+        start_date: startDate,
+        end_date: endDate
+    });
+}
+
 export function getDeviceDetailData() {
     return deviceDetailData;
 }
