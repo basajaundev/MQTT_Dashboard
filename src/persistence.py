@@ -49,6 +49,22 @@ def load_config():
         settings = Setting.query.all()
         settings_data = {s.key: s.value for s in settings}
         
+        defaults = {
+            'refresh_interval': '30',
+            'max_missed_pings': '2',
+            'auto_backup_enabled': 'false',
+            'auto_backup_interval': '24',
+            'auto_backup_keep': '7',
+            'toast_duration': '5',
+            'toast_position': 'top-right',
+            'toast_sound': 'true',
+            'toast_animation': 'fade',
+            'toast_types': 'all'
+        }
+        for key, default_value in defaults.items():
+            if key not in settings_data:
+                settings_data[key] = default_value
+        
         config['servers'] = servers_data
         config['settings'] = settings_data
         

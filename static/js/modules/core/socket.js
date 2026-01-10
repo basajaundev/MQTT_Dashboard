@@ -83,6 +83,15 @@ export function initSocketListeners() {
             elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
             elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
         }
+        if (elements.toastSettings?.duration) {
+            const settings = newState.config?.settings || {};
+            elements.toastSettings.duration.value = settings.toast_duration || 5;
+            elements.toastSettings.durationValue.textContent = (settings.toast_duration || 5) + 's';
+            elements.toastSettings.position.value = settings.toast_position || 'top-right';
+            elements.toastSettings.sound.checked = settings.toast_sound !== 'false';
+            elements.toastSettings.animation.value = settings.toast_animation || 'fade';
+            elements.toastSettings.types.value = settings.toast_types || 'all';
+        }
     });
 
     // --- Listeners para eventos de alta frecuencia o específicos ---

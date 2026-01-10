@@ -1,9 +1,65 @@
+import { state } from '../core/state.js';
+import { elements } from '../core/dom.js';
+
+let toastConfig = {
+    duration: 5000,
+    position: 'top-right',
+    sound: true,
+    animation: 'fade',
+    types: 'all'
+};
+
+export function updateToastConfig(config) {
+    if (config) {
+        toastConfig.duration = (config.toast_duration || 5) * 1000;
+        toastConfig.position = config.toast_position || 'top-right';
+        toastConfig.sound = config.toast_sound !== 'false';
+        toastConfig.animation = config.toast_animation || 'fade';
+        toastConfig.types = config.toast_types || 'all';
+        
+        updateToastContainerPosition();
+    }
+}
+
+function updateToastContainerPosition() {
+    const container = document.getElementById('toast-container');
+    if (container) {
+        container.className = 'toast-container toast-position-' + toastConfig.position;
+    }
+}
+
+function playToastSound() {
+    if (toastConfig.sound) {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            gainNode.gain.value = 0.1;
+            
+            oscillator.start();
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        } catch (e) {
+            console.log('[TOAST] Could not play sound:', e);
+        }
+    }
+}
+
 export function showToast(message, type = 'info', duration = 0) {
+    if (toastConfig.types === 'none') return;
+    if (toastConfig.types === 'info+warning' && !['info', 'warning'].includes(type)) return;
+    
     const container = document.getElementById('toast-container');
     if (!container) return;
 
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
+    toast.className = `toast toast-${type} toast-anim-${toastConfig.animation}`;
 
     let icon = '';
     switch(type) {
@@ -21,7 +77,7 @@ export function showToast(message, type = 'info', duration = 0) {
     container.appendChild(toast);
 
     const removeToast = () => {
-        toast.style.animation = 'fadeOut 0.3s ease-out forwards';
+        toast.classList.add('toast-hiding');
         toast.addEventListener('animationend', () => {
             if (toast.parentElement) {
                 toast.remove();
@@ -29,10 +85,62 @@ export function showToast(message, type = 'info', duration = 0) {
         });
     };
 
-    if (duration > 0) {
-        setTimeout(removeToast, duration);
+    const toastDuration = duration > 0 ? duration : toastConfig.duration;
+    if (toastDuration > 0) {
+        setTimeout(removeToast, toastDuration);
     }
 
     const closeBtn = toast.querySelector('.toast-close');
     closeBtn.addEventListener('click', removeToast);
+
+    if (type !== 'success' && type !== 'info') {
+        playToastSound();
+    }
+}
+
+export function showToastWithAction(message, type, actionId, actionText, actionCallback) {
+    if (toastConfig.types === 'none') return;
+    if (toastConfig.types === 'info+warning' && !['info', 'warning'].includes(type)) return;
+    
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type} toast-anim-${toastConfig.animation} toast-with-action`;
+
+    toast.innerHTML = `
+        <span class="toast-message">${message}</span>
+        <button class="toast-action-btn" data-action="${actionId}">${actionText}</button>
+        <button class="toast-close">&times;</button>
+    `;
+
+    container.appendChild(toast);
+
+    const removeToast = () => {
+        toast.classList.add('toast-hiding');
+        toast.addEventListener('animationend', () => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        });
+    };
+
+    setTimeout(removeToast, toastConfig.duration);
+
+    const actionBtn = toast.querySelector(`[data-action="${actionId}"]`);
+    if (actionBtn) {
+        actionBtn.addEventListener('click', () => {
+            if (actionCallback) actionCallback();
+            removeToast();
+        });
+    }
+
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', removeToast);
+}
+
+export function initToastFromState() {
+    if (state.config?.settings) {
+        updateToastConfig(state.config.settings);
+    }
 }

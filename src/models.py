@@ -28,6 +28,13 @@ class Group(db.Model):
     server = relationship("Server", back_populates="groups")
     __table_args__ = (db.UniqueConstraint('server_name', 'name', name='_group_server_name_uc'),)
 
+# Toast settings constants
+TOAST_DURATION = 'toast_duration'
+TOAST_POSITION = 'toast_position'
+TOAST_SOUND = 'toast_sound'
+TOAST_ANIMATION = 'toast_animation'
+TOAST_TYPES = 'toast_types'
+
 class Device(db.Model):
     __tablename__ = 'devices'
     id = db.Column(db.Integer, primary_key=True)

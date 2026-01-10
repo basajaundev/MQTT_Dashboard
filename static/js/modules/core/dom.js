@@ -62,6 +62,15 @@ export function initElements() {
         maxMissedPingsInput: document.getElementById('maxMissedPings'),
         saveSettingsBtn: document.getElementById('saveSettingsBtn'),
         
+        toastSettings: {
+            duration: document.getElementById('toastDuration'),
+            durationValue: document.getElementById('toastDurationValue'),
+            position: document.getElementById('toastPosition'),
+            sound: document.getElementById('toastSound'),
+            animation: document.getElementById('toastAnimation'),
+            types: document.getElementById('toastTypes')
+        },
+        
         newPasswordInput: document.getElementById('newPassword'),
         confirmPasswordInput: document.getElementById('confirmPassword'),
 

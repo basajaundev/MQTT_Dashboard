@@ -510,6 +510,54 @@ export async function initEventListeners() {
         });
     }
 
+    if (elements.toastSettings?.duration) {
+        elements.toastSettings.duration.addEventListener('input', () => {
+            if (elements.toastSettings.durationValue) {
+                elements.toastSettings.durationValue.textContent = elements.toastSettings.duration.value + 's';
+            }
+            console.log('[TOAST] Guardando configuración...');
+            state.socket.emit('save_settings', {
+                'toast_duration': parseInt(elements.toastSettings.duration.value, 10)
+            });
+        });
+    }
+
+    if (elements.toastSettings?.position) {
+        elements.toastSettings.position.addEventListener('change', () => {
+            console.log('[TOAST] Posición cambiada, guardando...');
+            state.socket.emit('save_settings', {
+                'toast_position': elements.toastSettings.position.value
+            });
+        });
+    }
+
+    if (elements.toastSettings?.sound) {
+        elements.toastSettings.sound.addEventListener('change', () => {
+            console.log('[TOAST] Sonido cambiado, guardando...');
+            state.socket.emit('save_settings', {
+                'toast_sound': elements.toastSettings.sound.checked
+            });
+        });
+    }
+
+    if (elements.toastSettings?.animation) {
+        elements.toastSettings.animation.addEventListener('change', () => {
+            console.log('[TOAST] Animación cambiada, guardando...');
+            state.socket.emit('save_settings', {
+                'toast_animation': elements.toastSettings.animation.value
+            });
+        });
+    }
+
+    if (elements.toastSettings?.types) {
+        elements.toastSettings.types.addEventListener('change', () => {
+            console.log('[TOAST] Tipos visibles cambiados, guardando...');
+            state.socket.emit('save_settings', {
+                'toast_types': elements.toastSettings.types.value
+            });
+        });
+    }
+
     window.onclick = (event) => {
         if (event.target === elements.taskModal && elements.taskModal) elements.taskModal.style.display = 'none';
         if (event.target === elements.historyModal) elements.historyModal.style.display = 'none';
