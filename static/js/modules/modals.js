@@ -1,6 +1,6 @@
-import { elements } from './dom.js';
-import { state } from './state.js';
-import { showNotification } from './ui.js';
+import { elements } from './core/dom.js';
+import { state } from './core/state.js';
+import { showNotification } from './ui/ui.js';
 
 export function openServerModal(serverId) {
     elements.serverModal.style.display = 'block';

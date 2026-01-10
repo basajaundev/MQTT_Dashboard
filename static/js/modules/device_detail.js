@@ -1,6 +1,6 @@
-import { elements } from './dom.js';
-import { showToast } from './toasts.js';
-import { state } from './state.js';
+import { elements } from './core/dom.js';
+import { showToast } from './ui/toasts.js';
+import { state } from './core/state.js';
 
 // Modal state management
 

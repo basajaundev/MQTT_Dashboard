@@ -1,5 +1,5 @@
-import { elements } from './dom.js';
-import { state } from './state.js';
+import { elements } from './core/dom.js';
+import { state } from './core/state.js';
 
 export function initNotifications() {
     state.notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';

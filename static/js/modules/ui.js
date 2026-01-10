@@ -1,5 +1,5 @@
-import { state } from './state.js';
-import { elements } from './dom.js';
+import { state } from './core/state.js';
+import { elements } from './core/dom.js';
 
 let currentMessageCount = 0;
 

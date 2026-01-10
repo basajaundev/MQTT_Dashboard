@@ -1,4 +1,4 @@
-import { state, scheduleDevicesUpdate } from './state.js';
+import { state, scheduleDevicesUpdate } from './core/state.js';
 import { elements } from './core/dom.js';
 import * as ui from './ui/ui.js';
 import { displayHistoryChart } from './ui/charts.js';
