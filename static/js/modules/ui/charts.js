@@ -93,6 +93,18 @@ export function displayHistoryChart(deviceId, history) {
             minTime = weekAgo;
         }
     }
+
+    if (history && history.length > 0) {
+        const dataMinTime = new Date(history[0].timestamp + 'Z');
+        const dataMaxTime = new Date(history[history.length - 1].timestamp + 'Z');
+        if (preset === 'all') {
+            minTime = dataMinTime;
+            maxTime = dataMaxTime;
+        } else if (minTime && maxTime && (dataMinTime > minTime || dataMaxTime < maxTime)) {
+            minTime = dataMinTime;
+            maxTime = dataMaxTime;
+        }
+    }
     const datasets = [];
     if (history.some(d => d.temp_c !== null)) {
         datasets.push({ label: 'Temperatura (°C)', data: history.map(d => ({ x: new Date(d.timestamp + 'Z'), y: d.temp_c })), borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)', yAxisID: 'y_temp' });

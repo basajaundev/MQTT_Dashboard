@@ -873,16 +873,6 @@ body.dark-mode .group-badge {
     flex-wrap: wrap;
 }
 
-.preset-select {
-    padding: 8px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    min-width: 140px;
-    font-size: 13px;
-}
-
 .date-range-inputs {
     display: flex;
     align-items: center;
