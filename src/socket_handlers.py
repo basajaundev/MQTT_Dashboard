@@ -785,6 +785,8 @@ def handle_update_backup_config(data):
             
             load_config()
             
+            broadcast_full_update()
+            
             if scheduler.get_job('auto_backup'):
                 scheduler.remove_job('auto_backup')
             
