@@ -739,6 +739,9 @@ def handle_trigger_backup():
             logger.info("✅ Backup manual completado")
         else:
             emit('backup_complete', {'success': False})
+    except Exception as e:
+        logger.error(f"❌ Error en backup manual: {e}")
+        emit('backup_complete', {'success': False})
 
 
 @socketio.on('update_backup_config')
