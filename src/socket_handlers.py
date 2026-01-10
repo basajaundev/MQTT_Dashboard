@@ -739,10 +739,67 @@ def handle_trigger_backup():
             logger.info("✅ Backup manual completado")
         else:
             emit('backup_complete', {'success': False})
-            add_message_to_history('ERROR', '❌ Error en backup manual')
+
+
+@socketio.on('update_backup_config')
+def handle_update_backup_config(data):
+    """Actualizar configuración de backup y reconfigurar scheduler."""
+    if not session.get('is_admin'): return
+    
+    def scheduled_backup_job():
+        """Función de backup automático llamada por el scheduler."""
+        try:
+            from backup_db import BackupManager
+            manager = BackupManager()
+            result = manager.create_backup()
+            if result:
+                logger.info("Backup automatico completado")
+            else:
+                logger.warning("Backup automatico falló")
+        except Exception as e:
+            logger.error(f"Error en backup automatico: {e}")
+    
+    try:
+        from src.globals import scheduler, app
+        from src.models import Setting
+        
+        enabled = data.get('auto_backup_enabled', False)
+        interval = data.get('auto_backup_interval', 24)
+        
+        with app.app_context():
+            enabled_setting = Setting.query.filter_by(key='auto_backup_enabled').first()
+            interval_setting = Setting.query.filter_by(key='auto_backup_interval').first()
+            keep_setting = Setting.query.filter_by(key='auto_backup_keep').first()
+            
+            if enabled_setting:
+                enabled_setting.value = 'true' if enabled else 'false'
+            if interval_setting:
+                interval_setting.value = str(interval)
+            if keep_setting:
+                keep_setting.value = str(data.get('auto_backup_keep', 7))
+            
+            db.session.commit()
+            
+            if scheduler.get_job('auto_backup'):
+                scheduler.remove_job('auto_backup')
+            
+            if enabled:
+                scheduler.add_job(
+                    scheduled_backup_job,
+                    'interval',
+                    hours=interval,
+                    id='auto_backup',
+                    replace_existing=True,
+                    name='Backup automático de base de datos'
+                )
+                logger.info(f"Job backup configurado cada {interval} horas")
+            else:
+                logger.info("Job backup deshabilitado")
+        
+        emit('backup_config_updated', {'success': True})
     except Exception as e:
-        logger.error(f"❌ Error en backup manual: {e}")
-        emit('backup_complete', {'success': False})
+        logger.error(f"Error actualizando config de backup: {e}")
+        emit('backup_config_updated', {'success': False, 'error': str(e)})
 
 
 @socketio.on('restore_backup')
