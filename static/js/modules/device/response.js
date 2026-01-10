@@ -186,7 +186,15 @@ export function handleDeviceConfigUpdate(data) {
     }
 
     if (data.config.sensor && typeof data.config.sensor === 'object' && !data.config.sensor.type) {
-        renderCurrentSensors({ sensor: data.config.sensor });
+        const sensor = data.config.sensor;
+        const hasValidSensorData = 
+            (sensor.temp_c !== null && sensor.temp_c !== undefined) ||
+            (sensor.temp_h !== null && sensor.temp_h !== undefined) ||
+            (sensor.temp_st !== null && sensor.temp_st !== undefined);
+        
+        if (hasValidSensorData) {
+            renderCurrentSensors({ sensor: sensor });
+        }
     }
 
     showToast('Configuracion actualizada', 'success');
