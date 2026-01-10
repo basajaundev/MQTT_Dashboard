@@ -151,10 +151,12 @@ function setupEventListeners() {
 }
 
 function loadDeviceEvents() {
+    const page = state.currentDevicePage || 1;
     state.socket.emit('get_device_events', {
         device_id: deviceDetailData.deviceId,
         location: deviceDetailData.location,
         limit: 50,
+        page: page,
         event_type: state.currentDeviceEventFilter || null
     });
 }

@@ -512,13 +512,15 @@ def handle_get_device_events(data):
     device_id = data.get('device_id')
     location = data.get('location')
     limit = data.get('limit', 100)
+    page = data.get('page', 1)
     event_type = data.get('event_type')
+    offset = (page - 1) * limit
     
     if not device_id or not location:
         emit('error', {'message': 'device_id y location son requeridos'})
         return
     
-    events = get_device_events(device_id, location, limit, event_type)
+    events = get_device_events(device_id, location, limit, event_type, offset)
     emit('device_events_response', {
         'device_id': device_id,
         'location': location,

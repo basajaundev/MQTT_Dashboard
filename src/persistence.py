@@ -738,13 +738,13 @@ def add_device_event(device_id, location, event_type, details=None):
         logger.error(f"❌ Error registrando evento de dispositivo: {e}")
         db.session.rollback()
 
-def get_device_events(device_id, location, limit=100, event_type=None):
+def get_device_events(device_id, location, limit=100, event_type=None, offset=0):
     """Obtiene el historial de eventos de un dispositivo."""
     try:
         query = DeviceEvent.query.filter_by(device_id=device_id, location=location)
         if event_type:
             query = query.filter_by(event_type=event_type)
-        events = query.order_by(DeviceEvent.timestamp.desc()).limit(limit).all()
+        events = query.order_by(DeviceEvent.timestamp.desc()).offset(offset).limit(limit).all()
         return [{
             'id': e.id,
             'device_id': e.device_id,
