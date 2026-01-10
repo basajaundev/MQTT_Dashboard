@@ -1,10 +1,10 @@
-import { initElements, elements } from './modules/dom.js';
+import { initElements, elements } from './modules/core/dom.js';
 import { initSocketListeners, setupNotificationListener } from './modules/socket_client.js';
-import { initEventListeners } from './modules/events.js';
-import { applyTheme } from './modules/ui.js';
-import { showToast } from './modules/toasts.js';
-import { initNotifications } from './modules/notifications.js';
-import { state } from './modules/state.js';
+import { initEventListeners } from './modules/events/events.js';
+import { applyTheme } from './modules/ui/ui.js';
+import { showToast } from './modules/ui/toasts.js';
+import { initNotifications } from './modules/events/notifications.js';
+import { state } from './modules/core/state.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initElements();
