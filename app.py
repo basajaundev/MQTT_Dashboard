@@ -147,15 +147,40 @@ def main():
         except Exception as e:
             logger.error(f"Error en backup automatico: {e}")
     
-    scheduler.add_job(
-        scheduled_backup_job,
-        'interval',
-        hours=24,
-        id='auto_backup',
-        replace_existing=True,
-        name='Backup automático de base de datos'
-    )
-    logger.info("Job de backup automatico programado (cada 24 horas)")
+    def configure_backup_job():
+        """Configura el job de backup según la configuración en BD."""
+        try:
+            from src.models import Setting
+            from src.globals import db
+            
+            with app.app_context():
+                enabled_setting = Setting.query.filter_by(key='auto_backup_enabled').first()
+                interval_setting = Setting.query.filter_by(key='auto_backup_interval').first()
+                
+                is_enabled = enabled_setting and enabled_setting.value.lower() == 'true'
+                hours = int(interval_setting.value) if interval_setting and interval_setting.value.isdigit() else 24
+                
+                # Remover job existente si hay
+                if scheduler.get_job('auto_backup'):
+                    scheduler.remove_job('auto_backup')
+                
+                if is_enabled:
+                    scheduler.add_job(
+                        scheduled_backup_job,
+                        'interval',
+                        hours=hours,
+                        id='auto_backup',
+                        replace_existing=True,
+                        name='Backup automático de base de datos'
+                    )
+                    logger.info(f"Job backup automático configurado cada {hours} horas")
+                else:
+                    logger.info("Job backup automático deshabilitado")
+        except Exception as e:
+            logger.error(f"Error configurando job de backup: {e}")
+    
+    # Configurar backup según BD
+    configure_backup_job()
 
     # Imprimir información de inicio
     broker_info = global_state['active_server_config'].get('broker', 'N/A')
