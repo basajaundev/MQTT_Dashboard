@@ -115,6 +115,11 @@ export async function initEventListeners() {
                 }
                 break;
             }
+            case 'manual-backup': {
+                showToast('Creando backup...', 'info');
+                state.socket.emit('trigger_backup');
+                break;
+            }
             case 'close-history-modal':
                 elements.historyModal.style.display = 'none';
                 break;
