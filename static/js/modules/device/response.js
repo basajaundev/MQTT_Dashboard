@@ -2,7 +2,46 @@ import { state } from '../core/state.js';
 import { showToast } from '../ui/toasts.js';
 import { getDeviceDetailData } from './detail.js';
 import { renderDeviceChart, renderDeviceStats, renderCurrentSensors } from './chart.js';
-import { renderDeviceEvents } from '../device_detail.js';
+
+export function renderDeviceEvents(events) {
+    const container = document.getElementById('deviceEvents');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevBtn = document.getElementById('prevPage');
+
+    if (pageInfo) pageInfo.textContent = state.currentDevicePage;
+    if (prevBtn) prevBtn.disabled = state.currentDevicePage === 1;
+
+    if (!container) return;
+
+    if (events.length === 0) {
+        container.innerHTML = '<div class="empty-state">Sin eventos</div>';
+        return;
+    }
+
+    const icons = {
+        'connected': { icon: '🟢', label: 'Conectado' },
+        'disconnected': { icon: '🔴', label: 'Desconectado' },
+        'alert': { icon: '⚠️', label: 'Alerta' },
+        'status': { icon: '📊', label: 'Status' },
+        'reboot': { icon: '🔄', label: 'Reinicio' }
+    };
+
+    container.innerHTML = events.map(e => {
+        const iconInfo = icons[e.event_type] || { icon: '📌', label: e.event_type };
+        return `
+            <div class="timeline-item" data-event-type="${e.event_type}">
+                <div class="timeline-icon">${iconInfo.icon}</div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <span class="timeline-type">${iconInfo.label}</span>
+                        <span class="timeline-time">${e.timestamp}</span>
+                    </div>
+                    ${e.details ? `<div class="timeline-details">${e.details}</div>` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
 export function handleDeviceDetailResponse(data) {
     const deviceDetailData = getDeviceDetailData();
