@@ -198,7 +198,7 @@ export function renderDeviceStats(sensors) {
 
     if (sts.length > 0) {
         html += `<tr class="stats-st">
-            <td>❄️ S. Termica</td>
+            <td>🔥 S. Termica</td>
             <td>${stStats.min.toFixed(1)} °C</td>
             <td>${stStats.avg.toFixed(1)} °C</td>
             <td>${stStats.max.toFixed(1)} °C</td>
