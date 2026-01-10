@@ -122,7 +122,7 @@ export async function initEventListeners() {
                 if (deviceId && location) {
                     state.currentHistoryDevice = { deviceId, location };
                     if (elements.historyDatepicker) elements.historyDatepicker.value = '';
-                    state.socket.emit('request_device_history', { device_id: deviceId, location: location });
+                    state.socket.emit('get_device_history', { device_id: deviceId, location: location });
                 }
                 break;
             case 'show-timeline':
