@@ -256,8 +256,8 @@ def handle_reboot_device(data):
             client.publish(topic, command)
             add_message_to_history('SISTEMA', f'🔥 Comando REBOOT enviado a <code>{topic}</code>', direction='out')
 
-@socketio.on('request_device_history')
-def handle_request_device_history(data):
+@socketio.on('get_device_history')
+def handle_get_device_history(data):
     device_id = data.get('device_id')
     location = data.get('location')
     start_date = data.get('start_date')

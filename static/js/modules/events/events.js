@@ -290,11 +290,14 @@ export async function initEventListeners() {
         elements.historyDatepicker.addEventListener('change', () => {
             if (state.currentHistoryDevice) {
                 const date = elements.historyDatepicker.value;
-                state.socket.emit('request_device_history', {
-                    device_id: state.currentHistoryDevice.deviceId,
-                    location: state.currentHistoryDevice.location,
-                    date: date
-                });
+                if (date) {
+                    state.socket.emit('get_device_history', {
+                        device_id: state.currentHistoryDevice.deviceId,
+                        location: state.currentHistoryDevice.location,
+                        start_date: date,
+                        end_date: date
+                    });
+                }
             }
         });
     }

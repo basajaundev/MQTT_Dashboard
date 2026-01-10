@@ -130,7 +130,14 @@ export function handleDeviceDetailResponse(data) {
 export function handleDeviceHistoryResponse(data) {
     const deviceDetailData = getDeviceDetailData();
     if (data.device_id === deviceDetailData.deviceId) {
-        renderDeviceChart(data.history);
+        if (data.history && Array.isArray(data.history) && data.history.length > 0) {
+            renderDeviceChart(data.history);
+        } else {
+            const chartContainer = document.querySelector('.chart-container');
+            if (chartContainer) {
+                chartContainer.innerHTML = '<div class="empty-state">Sin datos para el período seleccionado</div>';
+            }
+        }
     }
 }
 

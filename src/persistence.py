@@ -366,20 +366,38 @@ def get_sensor_data_for_device(device_id, location, start_date=None, end_date=No
         query = SensorData.query.filter_by(device_id=device_id, location=location)
 
         if start_date and end_date and str(start_date).strip() and str(end_date).strip():
-            start_of_day = datetime.strptime(start_date, '%Y-%m-%d').replace(hour=0, minute=0, second=0)
-            end_of_day = datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
-            logger.info(f"[SENSOR_DATA] Filtrando entre {start_of_day} y {end_of_day}")
-            query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
+            try:
+                start_of_day = datetime.strptime(start_date, '%Y-%m-%d').replace(hour=0, minute=0, second=0)
+                end_of_day = datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
+            except ValueError:
+                logger.warning(f"[SENSOR_DATA] Formato de fecha inválido: start={start_date}, end={end_date}")
+                since = datetime.now() - timedelta(hours=24)
+                query = query.filter(SensorData.timestamp >= since)
+            else:
+                logger.info(f"[SENSOR_DATA] Filtrando entre {start_of_day} y {end_of_day}")
+                query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
         elif start_date and str(start_date).strip():
-            start_of_day = datetime.strptime(start_date, '%Y-%m-%d').replace(hour=0, minute=0, second=0)
-            end_of_day = start_of_day + timedelta(days=1, seconds=-1)
-            logger.info(f"[SENSOR_DATA] Filtrando desde {start_of_day} hasta {end_of_day}")
-            query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
+            try:
+                start_of_day = datetime.strptime(start_date, '%Y-%m-%d').replace(hour=0, minute=0, second=0)
+                end_of_day = start_of_day + timedelta(days=1, seconds=-1)
+            except ValueError:
+                logger.warning(f"[SENSOR_DATA] Formato de fecha inválido: start={start_date}")
+                since = datetime.now() - timedelta(hours=24)
+                query = query.filter(SensorData.timestamp >= since)
+            else:
+                logger.info(f"[SENSOR_DATA] Filtrando desde {start_of_day} hasta {end_of_day}")
+                query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
         elif end_date and str(end_date).strip():
-            end_of_day = datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
-            start_of_day = end_of_day - timedelta(days=1, seconds=-1)
-            logger.info(f"[SENSOR_DATA] Filtrando desde {start_of_day} hasta {end_of_day}")
-            query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
+            try:
+                end_of_day = datetime.strptime(end_date, '%Y-%m-%d').replace(hour=23, minute=59, second=59)
+                start_of_day = end_of_day - timedelta(days=1, seconds=-1)
+            except ValueError:
+                logger.warning(f"[SENSOR_DATA] Formato de fecha inválido: end={end_date}")
+                since = datetime.now() - timedelta(hours=24)
+                query = query.filter(SensorData.timestamp >= since)
+            else:
+                logger.info(f"[SENSOR_DATA] Filtrando desde {start_of_day} hasta {end_of_day}")
+                query = query.filter(SensorData.timestamp.between(start_of_day, end_of_day))
         else:
             since = datetime.now() - timedelta(hours=24)
             logger.info(f"[SENSOR_DATA] Sin filtro de fecha, mostrando ultimas 24h desde {since}")
