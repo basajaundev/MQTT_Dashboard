@@ -24,18 +24,32 @@ export function initDeviceDetail(deviceId, location) {
         setupSocketListeners();
     }
 
-    if (state.socket.connected) {
+    const loadAll = () => {
         requestDeviceDetail();
         requestDeviceLogs();
         setTimeout(() => requestDeviceConfig(), 1000);
         loadDeviceEvents();
+    };
+
+    if (state.socket.connected) {
+        loadAll();
     } else {
-        state.socket.once('connect', () => {
-            requestDeviceDetail();
-            requestDeviceLogs();
-            setTimeout(() => requestDeviceConfig(), 1000);
-            loadDeviceEvents();
-        });
+        let loaded = false;
+        const connectHandler = () => {
+            if (loaded) return;
+            loaded = true;
+            state.socket.off('connect', connectHandler);
+            loadAll();
+        };
+        state.socket.on('connect', connectHandler);
+
+        setTimeout(() => {
+            if (!loaded && state.socket.connected) {
+                loaded = true;
+                state.socket.off('connect', connectHandler);
+                loadAll();
+            }
+        }, 100);
     }
 }
 
