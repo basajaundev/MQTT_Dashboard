@@ -77,6 +77,12 @@ export function initSocketListeners() {
             const settings = newState.config?.settings || {};
             elements.maxMissedPingsInput.value = settings.max_missed_pings || 2;
         }
+        if (elements.backupSection?.autoBackupEnabled) {
+            const settings = newState.config?.settings || {};
+            elements.backupSection.autoBackupEnabled.checked = settings.auto_backup_enabled === 'true';
+            elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
+            elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
+        }
     });
 
     // --- Listeners para eventos de alta frecuencia o específicos ---
@@ -127,6 +133,14 @@ export function initSocketListeners() {
         }
     });
     
+    state.socket.on('backup_config_updated', (data) => {
+        if (data.success) {
+            showToast('Configuración de backup actualizada', 'success');
+        } else {
+            showToast('Error al actualizar configuración: ' + (data.error || ''), 'error');
+        }
+    });
+    
     state.socket.on('backup_deleted', (data) => {
         if (data.success) {
             showToast('Backup eliminado', 'info');
@@ -170,6 +184,7 @@ function renderBackupsList(backups) {
     
     const container = elements.backupSection.backupsList;
     const countEl = elements.backupSection.backupsCount;
+    const selectEl = elements.backupSection?.restoreBackupSelect;
     
     if (countEl) {
         countEl.textContent = backups.length;
@@ -177,6 +192,9 @@ function renderBackupsList(backups) {
     
     if (backups.length === 0) {
         container.innerHTML = '<div class="empty-state">No hay backups disponibles</div>';
+        if (selectEl) {
+            selectEl.innerHTML = '<option value="">-- No hay backups --</option>';
+        }
         return;
     }
     
@@ -192,6 +210,11 @@ function renderBackupsList(backups) {
             </div>
         </div>
     `).join('');
+    
+    if (selectEl) {
+        selectEl.innerHTML = '<option value="">-- Seleccionar backup --</option>' +
+            backups.map(backup => `<option value="${backup.filename}">${backup.display} (${backup.size_mb} MB)</option>`).join('');
+    }
 }
 
 function showRestartConfirmNotification() {
