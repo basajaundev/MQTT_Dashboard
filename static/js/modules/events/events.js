@@ -322,7 +322,7 @@ export async function initEventListeners() {
                 document.querySelectorAll('.config-section').forEach(s => {
                     if (s) s.style.display = 'none';
                 });
-                const section = document.getElementById(tab + 'Section');
+                const section = document.getElementById(tab);
                 if (section) section.style.display = 'block';
             }
         });
