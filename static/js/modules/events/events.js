@@ -104,11 +104,11 @@ export async function initEventListeners() {
 
                     state.socket.emit('save_settings', settings);
 
-                    if (elements.backupSection?.autoBackupEnabled) {
+                    if (elements.backupSection) {
                         const backupConfig = {
-                            'auto_backup_enabled': elements.backupSection.autoBackupEnabled.checked,
-                            'auto_backup_interval': parseInt(elements.backupSection.autoBackupInterval.value, 10),
-                            'auto_backup_keep': parseInt(elements.backupSection.autoBackupKeep.value, 10)
+                            'auto_backup_enabled': elements.backupSection?.autoBackupEnabled?.checked || false,
+                            'auto_backup_interval': parseInt(elements.backupSection?.autoBackupInterval?.value || 24, 10),
+                            'auto_backup_keep': parseInt(elements.backupSection?.autoBackupKeep?.value || 7, 10)
                         };
                         state.socket.emit('update_backup_config', backupConfig);
                     }
