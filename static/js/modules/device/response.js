@@ -2,7 +2,7 @@ import { state } from '../core/state.js';
 import { showToast } from '../ui/toasts.js';
 import { getDeviceDetailData } from './detail.js';
 import { renderDeviceChart, renderDeviceStats, renderCurrentSensors } from './chart.js';
-import { renderDeviceEvents } from './events.js';
+import { renderDeviceEvents } from '../device_detail.js';
 
 export function handleDeviceDetailResponse(data) {
     const deviceDetailData = getDeviceDetailData();
