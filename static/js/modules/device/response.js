@@ -97,13 +97,8 @@ export function handleDeviceDetailResponse(data) {
     }
 
     if (sensorsArray && sensorsArray.length > 0) {
-        renderDeviceChart(sensorsArray);
         renderDeviceStats(sensorsArray);
     } else {
-        const chartContainer = document.querySelector('.chart-container');
-        if (chartContainer) {
-            chartContainer.innerHTML = '<div class="empty-state">Sin datos</div>';
-        }
         const statsSection = document.getElementById('deviceStatsSection');
         if (statsSection) statsSection.style.display = 'none';
     }
