@@ -104,15 +104,6 @@ export async function initEventListeners() {
 
                     state.socket.emit('save_settings', settings);
 
-                    if (elements.backupSection) {
-                        const backupConfig = {
-                            'auto_backup_enabled': elements.backupSection?.autoBackupEnabled?.checked || false,
-                            'auto_backup_interval': parseInt(elements.backupSection?.autoBackupInterval?.value || 24, 10),
-                            'auto_backup_keep': parseInt(elements.backupSection?.autoBackupKeep?.value || 7, 10)
-                        };
-                        state.socket.emit('update_backup_config', backupConfig);
-                    }
-
                     showToast('Ajustes guardados. Los cambios se aplicarán en la próxima conexión/ciclo.', 'success');
                 } else {
                     showToast('Valores inválidos. El intervalo debe ser >= 5 y la tolerancia >= 1.', 'error');
@@ -349,6 +340,39 @@ export async function initEventListeners() {
                 break;
         }
     });
+
+    if (elements.backupSection?.autoBackupEnabled) {
+        elements.backupSection.autoBackupEnabled.addEventListener('change', () => {
+            console.log('[BACKUP] Auto-guardando configuración de backup...');
+            state.socket.emit('update_backup_config', {
+                'auto_backup_enabled': elements.backupSection.autoBackupEnabled.checked,
+                'auto_backup_interval': parseInt(elements.backupSection?.autoBackupInterval?.value || 24, 10),
+                'auto_backup_keep': parseInt(elements.backupSection?.autoBackupKeep?.value || 7, 10)
+            });
+        });
+    }
+
+    if (elements.backupSection?.autoBackupInterval) {
+        elements.backupSection.autoBackupInterval.addEventListener('blur', () => {
+            console.log('[BACKUP] Intervalo cambiado, guardando...');
+            state.socket.emit('update_backup_config', {
+                'auto_backup_enabled': elements.backupSection?.autoBackupEnabled?.checked || false,
+                'auto_backup_interval': parseInt(elements.backupSection.autoBackupInterval.value, 10),
+                'auto_backup_keep': parseInt(elements.backupSection?.autoBackupKeep?.value || 7, 10)
+            });
+        });
+    }
+
+    if (elements.backupSection?.autoBackupKeep) {
+        elements.backupSection.autoBackupKeep.addEventListener('blur', () => {
+            console.log('[BACKUP] Keep cambiado, guardando...');
+            state.socket.emit('update_backup_config', {
+                'auto_backup_enabled': elements.backupSection?.autoBackupEnabled?.checked || false,
+                'auto_backup_interval': parseInt(elements.backupSection?.autoBackupInterval?.value || 24, 10),
+                'auto_backup_keep': parseInt(elements.backupSection.autoBackupKeep.value, 10)
+            });
+        });
+    }
 
     function refreshHistoryChart() {
         if (!state.currentHistoryDevice) return;
