@@ -316,14 +316,21 @@ export async function initEventListeners() {
     if (elements.publishBtn) elements.publishBtn.addEventListener('click', () => { const topic = elements.publishTopic.value.trim(); const payload = elements.publishPayload.value; if (topic) state.socket.emit('mqtt_publish', { topic, payload }); });
     if (elements.configTabs) {
         elements.configTabs.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
-                const tab = e.target.dataset.tab;
+            const target = e.target.closest('button, .tab-link');
+            if (target && target.dataset.tab) {
+                const tab = target.dataset.tab;
                 state.currentTab = tab;
-                document.querySelectorAll('.config-section').forEach(s => {
+                document.querySelectorAll('.tab-content').forEach(s => {
                     if (s) s.style.display = 'none';
                 });
+                document.querySelectorAll('.tab-link').forEach(t => {
+                    t.classList.remove('active');
+                });
                 const section = document.getElementById(tab);
-                if (section) section.style.display = 'block';
+                if (section) {
+                    section.style.display = 'block';
+                    target.classList.add('active');
+                }
             }
         });
     }
