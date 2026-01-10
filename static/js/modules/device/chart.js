@@ -95,28 +95,40 @@ export function renderCurrentSensors(data) {
 
     let hasSensors = false;
 
-    if (data.sensor) {
-        const latest = data.sensor;
+    let sensorData = null;
 
-        if (latest.temp_c !== null && latest.temp_c !== undefined) {
+    if (data.sensor && typeof data.sensor === 'object') {
+        sensorData = data.sensor;
+    } else if (data.sensors && Array.isArray(data.sensors) && data.sensors.length > 0) {
+        sensorData = data.sensors[0];
+    } else if (data.temp_c !== undefined || data.temp_h !== undefined || data.temp_st !== undefined) {
+        sensorData = {
+            temp_c: data.temp_c,
+            temp_h: data.temp_h,
+            temp_st: data.temp_st
+        };
+    }
+
+    if (sensorData) {
+        if (sensorData.temp_c !== null && sensorData.temp_c !== undefined) {
             tempCard.style.display = 'flex';
-            tempValue.textContent = latest.temp_c.toFixed(1) + ' °C';
+            tempValue.textContent = sensorData.temp_c.toFixed(1) + ' °C';
             hasSensors = true;
         } else {
             tempCard.style.display = 'none';
         }
 
-        if (latest.temp_h !== null && latest.temp_h !== undefined) {
+        if (sensorData.temp_h !== null && sensorData.temp_h !== undefined) {
             humCard.style.display = 'flex';
-            humValue.textContent = latest.temp_h.toFixed(1) + ' %';
+            humValue.textContent = sensorData.temp_h.toFixed(1) + ' %';
             hasSensors = true;
         } else {
             humCard.style.display = 'none';
         }
 
-        if (latest.temp_st !== null && latest.temp_st !== undefined) {
+        if (sensorData.temp_st !== null && sensorData.temp_st !== undefined) {
             stCard.style.display = 'flex';
-            stValue.textContent = latest.temp_st.toFixed(1) + ' °C';
+            stValue.textContent = sensorData.temp_st.toFixed(1) + ' °C';
             hasSensors = true;
         } else {
             stCard.style.display = 'none';
