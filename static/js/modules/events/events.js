@@ -121,8 +121,22 @@ export async function initEventListeners() {
             case 'show-history':
                 if (deviceId && location) {
                     state.currentHistoryDevice = { deviceId, location };
-                    if (elements.historyDatepicker) elements.historyDatepicker.value = '';
-                    state.socket.emit('get_device_history', { device_id: deviceId, location: location });
+                    if (elements.historyDatePreset) elements.historyDatePreset.value = 'week';
+                    if (elements.historyDateStart) elements.historyDateStart.value = '';
+                    if (elements.historyDateEnd) elements.historyDateEnd.value = '';
+                    refreshHistoryChart();
+                }
+                break;
+            case 'refresh-history':
+                refreshHistoryChart();
+                break;
+            case 'toggle-stats':
+                const statsSection = elements.historyStatsSection;
+                if (statsSection) {
+                    const table = statsSection.querySelector('.stats-table');
+                    const toggle = statsSection.querySelector('.stats-toggle');
+                    if (table) table.style.display = table.style.display === 'none' ? 'table' : 'none';
+                    if (toggle) toggle.textContent = table.style.display === 'none' ? '▶' : '▼';
                 }
                 break;
             case 'show-timeline':
@@ -286,6 +300,51 @@ export async function initEventListeners() {
         }
     });
 
+    function refreshHistoryChart() {
+        if (!state.currentHistoryDevice) return;
+        const preset = elements.historyDatePreset?.value || '';
+        const dateStartInput = elements.historyDateStart;
+        const dateEndInput = elements.historyDateEnd;
+        let startDate = null;
+        let endDate = null;
+        const now = new Date();
+        if (preset) {
+            if (preset === 'today') {
+                startDate = now.toLocaleDateString('en-CA');
+                endDate = startDate;
+            } else if (preset === 'yesterday') {
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                startDate = yesterday.toLocaleDateString('en-CA');
+                endDate = startDate;
+            } else if (preset === 'week') {
+                endDate = now.toLocaleDateString('en-CA');
+                const weekAgo = new Date(now);
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                startDate = weekAgo.toLocaleDateString('en-CA');
+            } else if (preset === 'month') {
+                endDate = now.toLocaleDateString('en-CA');
+                const monthAgo = new Date(now);
+                monthAgo.setDate(monthAgo.getDate() - 30);
+                startDate = monthAgo.toLocaleDateString('en-CA');
+            } else if (preset === 'all') {
+                startDate = null;
+                endDate = null;
+            }
+        } else {
+            startDate = dateStartInput?.value || null;
+            endDate = dateEndInput?.value || null;
+        }
+        if (dateStartInput) dateStartInput.value = startDate || '';
+        if (dateEndInput) dateEndInput.value = endDate || '';
+        state.socket.emit('get_device_history', {
+            device_id: state.currentHistoryDevice.deviceId,
+            location: state.currentHistoryDevice.location,
+            start_date: startDate,
+            end_date: endDate
+        });
+    }
+
     if (elements.historyDatepicker) {
         elements.historyDatepicker.addEventListener('change', () => {
             if (state.currentHistoryDevice) {
@@ -299,6 +358,34 @@ export async function initEventListeners() {
                     });
                 }
             }
+        });
+    }
+
+    if (elements.historyDatePreset) {
+        elements.historyDatePreset.addEventListener('change', () => {
+            if (elements.historyDateStart) elements.historyDateStart.value = '';
+            if (elements.historyDateEnd) elements.historyDateEnd.value = '';
+            refreshHistoryChart();
+        });
+    }
+
+    if (elements.historyDateStart) {
+        elements.historyDateStart.addEventListener('change', () => {
+            if (elements.historyDatePreset) elements.historyDatePreset.value = '';
+            refreshHistoryChart();
+        });
+    }
+
+    if (elements.historyDateEnd) {
+        elements.historyDateEnd.addEventListener('change', () => {
+            if (elements.historyDatePreset) elements.historyDatePreset.value = '';
+            refreshHistoryChart();
+        });
+    }
+
+    if (elements.historyChartRefresh) {
+        elements.historyChartRefresh.addEventListener('click', () => {
+            refreshHistoryChart();
         });
     }
 

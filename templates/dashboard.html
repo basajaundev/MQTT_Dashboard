@@ -50,12 +50,41 @@
     <div class="modal-content modal-lg">
         <span class="close" data-action="close-history-modal">&times;</span>
         <h2 id="historyModalTitle">📈 Historial del Dispositivo</h2>
-        <div class="history-controls">
-            <label for="historyDatepicker">Seleccionar fecha:</label>
-            <input type="date" id="historyDatepicker">
+        <div class="chart-controls-row">
+            <select id="historyDatePreset" class="preset-select">
+                <option value="">Seleccionar...</option>
+                <option value="today">Hoy</option>
+                <option value="yesterday">Ayer</option>
+                <option value="week" selected>Semana</option>
+                <option value="month">Mes</option>
+                <option value="all">Todo</option>
+            </select>
+            <div class="date-range-inputs">
+                <input type="date" id="historyDateStart" class="date-input">
+                <span class="date-separator">a</span>
+                <input type="date" id="historyDateEnd" class="date-input">
+            </div>
+            <button class="btn-icon" id="historyChartRefresh" data-action="refresh-history" title="Actualizar">🔄</button>
         </div>
         <div class="chart-container">
             <canvas id="historyChart"></canvas>
+        </div>
+        <div class="chart-stats collapsible" id="historyStatsSection">
+            <div class="stats-header" data-action="toggle-stats">
+                <span>📊 Estadísticas</span>
+                <span class="stats-toggle">▼</span>
+            </div>
+            <table class="stats-table" id="historyStatsTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Min</th>
+                        <th>Prom</th>
+                        <th>Max</th>
+                    </tr>
+                </thead>
+                <tbody id="historyStatsTableBody"></tbody>
+            </table>
         </div>
     </div>
 </div>

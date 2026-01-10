@@ -810,6 +810,31 @@ body.dark-mode .group-badge {
     overflow-x: auto;
 }
 
+.chart-stats.collapsible {
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 16px;
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-light-gray);
+    cursor: pointer;
+    user-select: none;
+}
+
+.stats-header:hover {
+    background: var(--border-color);
+}
+
+.stats-toggle {
+    font-size: 12px;
+    color: var(--text-medium);
+}
+
 .stats-table {
     width: 100%;
     font-size: 13px;
@@ -833,6 +858,63 @@ body.dark-mode .group-badge {
 
 .stats-table tr:nth-child(even) {
     background: var(--bg-light-gray);
+}
+
+.stats-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Chart Controls */
+.chart-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.preset-select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    min-width: 140px;
+    font-size: 13px;
+}
+
+.date-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.date-separator {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.btn-refresh {
+    padding: 8px 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-refresh:hover {
+    background: var(--primary-hover);
 }
 
 /* Events Section */

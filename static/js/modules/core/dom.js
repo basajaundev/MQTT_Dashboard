@@ -27,6 +27,12 @@ export function initElements() {
         historyModalTitle: document.getElementById('historyModalTitle'),
         historyChartCanvas: document.getElementById('historyChart'),
         historyDatepicker: document.getElementById('historyDatepicker'),
+        historyDatePreset: document.getElementById('historyDatePreset'),
+        historyDateStart: document.getElementById('historyDateStart'),
+        historyDateEnd: document.getElementById('historyDateEnd'),
+        historyChartRefresh: document.getElementById('historyChartRefresh'),
+        historyStatsSection: document.getElementById('historyStatsSection'),
+        historyStatsTableBody: document.getElementById('historyStatsTableBody'),
         
         timelineModal: document.getElementById('timelineModal'),
         timelineDeviceInfo: document.getElementById('timelineDeviceInfo'),
