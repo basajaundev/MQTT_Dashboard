@@ -102,13 +102,17 @@ export async function initEventListeners() {
                         'max_missed_pings': newMaxMissedPings
                     };
 
+                    state.socket.emit('save_settings', settings);
+
                     if (elements.backupSection?.autoBackupEnabled) {
-                        settings['auto_backup_enabled'] = elements.backupSection.autoBackupEnabled.checked;
-                        settings['auto_backup_interval'] = parseInt(elements.backupSection.autoBackupInterval.value, 10);
-                        settings['auto_backup_keep'] = parseInt(elements.backupSection.autoBackupKeep.value, 10);
+                        const backupConfig = {
+                            'auto_backup_enabled': elements.backupSection.autoBackupEnabled.checked,
+                            'auto_backup_interval': parseInt(elements.backupSection.autoBackupInterval.value, 10),
+                            'auto_backup_keep': parseInt(elements.backupSection.autoBackupKeep.value, 10)
+                        };
+                        state.socket.emit('update_backup_config', backupConfig);
                     }
 
-                    state.socket.emit('save_settings', settings);
                     showToast('Ajustes guardados. Los cambios se aplicarán en la próxima conexión/ciclo.', 'success');
                 } else {
                     showToast('Valores inválidos. El intervalo debe ser >= 5 y la tolerancia >= 1.', 'error');
@@ -118,6 +122,46 @@ export async function initEventListeners() {
             case 'manual-backup': {
                 showToast('Creando backup...', 'info');
                 state.socket.emit('trigger_backup');
+                break;
+            }
+            case 'restore-backup-modal': {
+                if (elements.backupSection?.restoreBackupModal) {
+                    elements.backupSection.restoreBackupModal.style.display = 'block';
+                    state.socket.emit('request_backups');
+                }
+                break;
+            }
+            case 'close-restore-modal':
+            case 'cancel-restore-modal': {
+                if (elements.backupSection?.restoreBackupModal) {
+                    elements.backupSection.restoreBackupModal.style.display = 'none';
+                }
+                break;
+            }
+            case 'confirm-restore-backup': {
+                const select = elements.backupSection?.restoreBackupSelect;
+                const filename = select?.value;
+                if (filename) {
+                    state.socket.emit('restore_backup', { filename });
+                    if (elements.backupSection?.restoreBackupModal) {
+                        elements.backupSection.restoreBackupModal.style.display = 'none';
+                    }
+                }
+                break;
+            }
+            case 'restore-backup-item': {
+                const filename = target?.dataset?.filename;
+                if (filename) {
+                    state.socket.emit('restore_backup', { filename });
+                }
+                break;
+            }
+            case 'delete-backup-item': {
+                const filename = target?.dataset?.filename;
+                if (filename) {
+                    showToast('Eliminando backup...', 'info');
+                    state.socket.emit('delete_backup', { filename });
+                }
                 break;
             }
             case 'close-history-modal':
@@ -392,6 +436,15 @@ export async function initEventListeners() {
     if (elements.historyChartRefresh) {
         elements.historyChartRefresh.addEventListener('click', () => {
             refreshHistoryChart();
+        });
+    }
+
+    if (elements.backupSection?.restoreBackupSelect) {
+        elements.backupSection.restoreBackupSelect.addEventListener('change', (e) => {
+            const btn = document.querySelector('[data-action="confirm-restore-backup"]');
+            if (btn) {
+                btn.disabled = !e.target.value;
+            }
         });
     }
 
