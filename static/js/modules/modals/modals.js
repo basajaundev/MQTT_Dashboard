@@ -244,9 +244,11 @@ export function closeTaskModal() {
 }
 
 export function openLoginModal() {
+    if (!elements.loginModal) return;
     elements.loginModal.style.display = 'block';
-    elements.loginError.style.display = 'none';
-    document.getElementById('loginPassword').value = '';
+    if (elements.loginError) elements.loginError.style.display = 'none';
+    const passwordInput = document.getElementById('loginPassword');
+    if (passwordInput) passwordInput.value = '';
 }
 
 export function openGroupModal(groupId) {

@@ -304,4 +304,55 @@ export async function initEventListeners() {
             }
         });
     }
+
+    if (elements.messagesFooterHeader) {
+        elements.messagesFooterHeader.addEventListener('click', (e) => {
+            if (e.target.closest('[data-action="clear-messages"]')) return;
+
+            if (elements.messagesFooter) {
+                const isExpanded = elements.messagesFooter.classList.toggle('expanded');
+                elements.messagesFooter.classList.toggle('collapsed', !isExpanded);
+                localStorage.setItem('messagesFooterExpanded', String(isExpanded));
+                ui.setMessagesFooterExpanded(isExpanded);
+            }
+        });
+    }
+
+    document.body.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-action="clear-messages"]');
+        if (target) {
+            state.socket.emit('clear_message_history');
+        }
+    });
+
+    if (elements.messagesFooter) {
+        if (state.messagesFooterExpanded) {
+            elements.messagesFooter.classList.add('expanded');
+            elements.messagesFooter.classList.remove('collapsed');
+        } else {
+            elements.messagesFooter.classList.add('collapsed');
+            elements.messagesFooter.classList.remove('expanded');
+        }
+    }
+
+    if (elements.timelineFilter) {
+        elements.timelineFilter.addEventListener('change', (e) => {
+            ui.setTimelineFilter(e.target.value);
+        });
+    }
+
+    window.onclick = (event) => {
+        if (event.target === elements.taskModal && elements.taskModal) elements.taskModal.style.display = 'none';
+        if (event.target === elements.historyModal) elements.historyModal.style.display = 'none';
+        if (event.target === elements.timelineModal) elements.timelineModal.style.display = 'none';
+        if (event.target === elements.loginModal && elements.loginModal) elements.loginModal.style.display = 'none';
+        if (event.target === elements.serverModal) elements.serverModal.style.display = 'none';
+        if (event.target === elements.alertModal) elements.alertModal.style.display = 'none';
+        if (event.target === elements.groupModal) elements.groupModal.style.display = 'none';
+        if (event.target === elements.triggerModal) elements.triggerModal.style.display = 'none';
+        if (event.target === elements.deviceModals?.rebootModal) elements.deviceModals.rebootModal.style.display = 'none';
+        if (event.target === elements.deviceModals?.aliasModal) elements.deviceModals.aliasModal.style.display = 'none';
+        if (event.target === elements.deviceModals?.removeModal) elements.deviceModals.removeModal.style.display = 'none';
+        if (event.target === elements.restoreBackupModal) elements.restoreBackupModal.style.display = 'none';
+    };
 }
