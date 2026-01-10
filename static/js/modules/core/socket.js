@@ -5,6 +5,7 @@ import { displayHistoryChart } from '../ui/charts.js';
 import { openLoginModal } from '../modals/modals.js';
 import { showToast } from '../ui/toasts.js';
 import { handleNotificationEvent } from '../events/notifications.js';
+import { renderDevices, renderServers } from '../device/dashboard.js';
 
 export function initSocketListeners() {
     // --- Listener Unificado para el Estado Principal ---
@@ -40,9 +41,9 @@ export function initSocketListeners() {
         // Renderizar componentes principales
         ui.renderTopics();
         ui.renderTasks();
-        ui.renderDevices();
+        renderDevices();
         ui.renderAlerts();
-        ui.renderServers();
+        renderServers();
         ui.renderAccessLists();
         ui.renderGroups();
         ui.populateGroupSelect();
@@ -92,7 +93,7 @@ export function initSocketListeners() {
     state.socket.on('devices_update', (data) => {
         scheduleDevicesUpdate(() => {
             state.devices = data.devices || {};
-            ui.renderDevices();
+            renderDevices();
         });
     });
     state.socket.on('alerts_update', (data) => { state.alerts = data.alerts || []; ui.renderAlerts(); });
