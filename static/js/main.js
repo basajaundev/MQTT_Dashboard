@@ -1,5 +1,5 @@
 import { initElements, elements } from './modules/core/dom.js';
-import { initSocketListeners, setupNotificationListener } from './modules/socket_client.js';
+import { initSocketListeners, setupNotificationListener } from './modules/core/socket.js';
 import { initEventListeners } from './modules/events/events.js';
 import { applyTheme } from './modules/ui/ui.js';
 import { showToast } from './modules/ui/toasts.js';
