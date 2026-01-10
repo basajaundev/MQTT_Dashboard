@@ -83,10 +83,8 @@ export function initSocketListeners() {
     state.socket.on('history_update', (data) => ui.renderMessages(data.history || []));
     state.socket.on('new_alert', (data) => showToast(`ALERTA: ${data.message}`, data.type || 'warning'));
     state.socket.on('device_history_response', (data) => {
-        if (data.history) {
-            if (!document.getElementById('deviceChart')) {
-                displayHistoryChart(data.device_id, data.history);
-            }
+        if (data.history && elements.historyChartCanvas) {
+            displayHistoryChart(data.device_id, data.history);
         }
     });
 
