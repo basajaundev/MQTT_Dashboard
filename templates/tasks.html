@@ -1,0 +1,189 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Gestión de Tareas - MQTT IoT
+{% endblock %}
+
+{% block content %}
+<div class="tasks-container">
+    <div class="tasks-header">
+        <div class="header-with-actions">
+            <h2 class="page-title">Gestión de Tareas</h2>
+            <div class="actions-group">
+                <button id="newTaskBtn" class="btn-icon" data-action="add-task-modal" disabled title="Nueva Tarea">⏰</button>
+                <button id="newTriggerBtn" class="btn-icon" data-action="add-trigger-modal" disabled title="Nuevo Disparador">⚡</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tasks-list" id="tasksList">
+        <div class="empty-state">⏰<br>No hay tareas programadas. Conectate a un servidor para gestionarlas.</div>
+    </div>
+
+    <div class="triggers-list" id="triggersList">
+        <div class="empty-state">⚡<br>No hay disparadores configurados.</div>
+    </div>
+</div>
+
+<!-- Modal para crear/editar tareas -->
+<div id="taskModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close" data-action="close-task-modal">&times;</span>
+        <h3 id="modalTitle">📝 Nueva Tarea</h3>
+
+        <div class="modal-form">
+            <input type="hidden" id="editTaskId" value="">
+
+            <div class="form-group">
+                <label for="taskName">Nombre de la tarea</label>
+                <input type="text" id="taskName" placeholder="Ej: Encender luz cocina" maxlength="100">
+                <div id="taskNameError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="taskTopic">Topic MQTT</label>
+                <input type="text" id="taskTopic" placeholder="home/lights/kitchen">
+                <div id="taskTopicError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="taskPayload">Payload (mensaje)</label>
+                <textarea id="taskPayload" placeholder='{"state": "on"}' rows="3" maxlength="1000"></textarea>
+                <small>Placeholders: {{timestamp}}, {{timestamp_ms}}, {{datetime}}, {{date}}, {{time}}</small>
+                <div id="taskPayloadError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="scheduleType">Tipo de programación</label>
+                <select id="scheduleType">
+                    <option value="interval">Intervalo (cada X minutos)</option>
+                    <option value="daily">Diario (hora específica)</option>
+                    <option value="cron">Cron (avanzado)</option>
+                </select>
+            </div>
+
+            <div id="scheduleOptions">
+                <div id="intervalOptions" class="schedule-option">
+                    <div class="input-group">
+                        <label>Cada cuántos minutos</label>
+                        <input type="number" id="intervalMinutes" value="5" min="1">
+                    </div>
+                </div>
+
+                <div id="dailyOptions" class="schedule-option" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="input-group">
+                            <label>Hora</label>
+                            <input type="number" id="dailyHour" value="12" min="0" max="23">
+                        </div>
+                        <div class="input-group">
+                            <label>Minuto</label>
+                            <input type="number" id="dailyMinute" value="0" min="0" max="59">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cronOptions" class="schedule-option" style="display: none;">
+                    <div class="input-group">
+                        <label>Expresión Cron</label>
+                        <input type="text" id="cronExpression" value="0 12 * * *" placeholder="minuto hora dia mes dia_semana">
+                        <small>Ej: "0 12 * * *" = Todos los días a las 12:00</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                <h4 style="margin: 0 0 10px 0;">Análisis de Respuesta (opcional)</h4>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="responseEnabled">
+                    <span>Esperar respuesta del dispositivo</span>
+                </label>
+            </div>
+
+            <div id="responseOptions" style="display: none; margin-top: 10px;">
+                <div class="input-group">
+                    <label for="responseTopic">Topic de respuesta</label>
+                    <input type="text" id="responseTopic" placeholder="home/lights/kitchen/response">
+                </div>
+                <div class="input-group">
+                    <label for="responseTimeout">Timeout (segundos)</label>
+                    <input type="number" id="responseTimeout" value="10" min="1" max="60">
+                </div>
+                <div class="input-group">
+                    <label for="responseCondition">Condición (ej: temp_c > 30, $.status == 'ok')</label>
+                    <input type="text" id="responseCondition" placeholder="temp_c > 30">
+                </div>
+                <div class="input-group">
+                    <label for="responseAction">Acción al cumplir condición</label>
+                    <select id="responseAction">
+                        <option value="log">Solo registrar</option>
+                        <option value="notify">Notificar al usuario</option>
+                        <option value="error">Notificar como error</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-task-modal">Cancelar</button>
+            <button id="saveTaskBtn" class="btn-primary" data-action="save-task">Crear Tarea</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para crear/editar disparadores -->
+<div id="triggerModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close" data-action="close-trigger-modal">&times;</span>
+        <h3 id="triggerModalTitle">⚡ Nuevo Disparador</h3>
+
+        <div class="modal-form">
+            <input type="hidden" id="editTriggerId" value="">
+
+            <div class="form-group">
+                <label for="triggerName">Nombre del disparador</label>
+                <input type="text" id="triggerName" placeholder="Ej: Alerta temperatura alta" maxlength="100">
+                <div id="triggerNameError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="triggerTopicPattern">Topic a escuchar (usa + y # como wildcards)</label>
+                <input type="text" id="triggerTopicPattern" placeholder="iot/+/+/status">
+                <small>+ = un nivel cualquiera, # = varios niveles</small>
+                <div id="triggerTopicPatternError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="triggerCondition">Condición (opcional)</label>
+                <input type="text" id="triggerCondition" placeholder="temp_c > 35 o $.status == 'ok'">
+                <small>Compara campos del payload: temp_c > 30, humidity < 60</small>
+            </div>
+
+            <div class="form-group">
+                <label for="triggerActionType">Tipo de acción</label>
+                <select id="triggerActionType">
+                    <option value="notify">Notificación</option>
+                    <option value="publish">Publicar MQTT</option>
+                </select>
+            </div>
+
+            <div id="triggerPublishOptions" style="display: none;">
+                <div class="form-group">
+                    <label for="triggerActionTopic">Topic destino</label>
+                    <input type="text" id="triggerActionTopic" placeholder="home/alerts/temperature">
+                    <div id="triggerActionTopicError" class="form-error" style="display: none;"></div>
+                </div>
+                <div class="form-group">
+                    <label for="triggerActionPayload">Payload</label>
+                    <textarea id="triggerActionPayload" placeholder='{"alert": "Temperatura alta"}' rows="3" maxlength="1000"></textarea>
+                    <small>Placeholders: {{timestamp}}, {{datetime}}, etc.</small>
+                    <div id="triggerActionPayloadError" class="form-error" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-trigger-modal">Cancelar</button>
+            <button id="saveTriggerBtn" class="btn-primary" data-action="save-trigger">Crear Disparador</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

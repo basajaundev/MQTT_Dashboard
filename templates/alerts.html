@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Alertas - MQTT IoT
+{% endblock %}
+
+{% block content %}
+<div class="alerts-container">
+    <div class="alerts-header">
+        <h2>Gestión de Alertas</h2>
+        <button id="addAlertBtn" class="btn-icon" data-action="add-alert-modal" disabled title="Nueva Alerta">🔔</button>
+    </div>
+
+    <div class="alerts-list" id="alertsList">
+        <!-- Las alertas se insertarán aquí dinámicamente -->
+    </div>
+</div>
+
+<!-- Modal para añadir/editar alerta -->
+<div id="alertModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-alert-modal">&times;</span>
+        <h3 id="alertModalTitle">🔔 Nueva Alerta</h3>
+        <div class="modal-form">
+            <input type="hidden" id="alertId" value="">
+
+            <div class="form-group">
+                <label for="alertName">Nombre de la Alerta</label>
+                <input type="text" id="alertName" placeholder="Ej: Temp Alta Salón" maxlength="100">
+                <div id="alertNameError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="alertDevice">Dispositivo</label>
+                <select id="alertDevice">
+                    <option value="*">Cualquier Dispositivo (*)</option>
+                    <!-- Se llenará dinámicamente -->
+                </select>
+            </div>
+
+            <div class="condition-builder">
+                <span>SI</span>
+                <select id="alertMetric">
+                    <option value="temp_c">Temperatura (°C)</option>
+                    <option value="temp_h">Humedad (%)</option>
+                    <option value="temp_st">Sensación Térmica (°C)</option>
+                    <option value="uptime">Uptime (s)</option>
+                    <option value="status">Estado (online/offline)</option>
+                </select>
+                <select id="alertOperator">
+                    <option value=">">Mayor que (>)</option>
+                    <option value="<">Menor que (<)</option>
+                    <option value="==">Igual a (==)</option>
+                </select>
+                <input type="text" id="alertValue" placeholder="Valor">
+                <div id="alertValueError" class="form-error" style="display: none;"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="alertType">Tipo de Alerta</label>
+                <select id="alertType">
+                    <option value="info">ℹ️ Información</option>
+                    <option value="success">✅ Éxito</option>
+                    <option value="warning" selected>⚠️ Advertencia</option>
+                    <option value="error">🚨 Error</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="alertMessage">Mensaje de Notificación</label>
+                <textarea id="alertMessage" placeholder="Ej: ¡Alerta! {device_name} está a {value}°C" rows="3" maxlength="500"></textarea>
+                <small>Variables disponibles: {device_name}, {value}</small>
+                <div id="alertMessageError" class="form-error" style="display: none;"></div>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-alert-modal">Cancelar</button>
+            <button class="btn-primary" data-action="save-alert">Guardar Alerta</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

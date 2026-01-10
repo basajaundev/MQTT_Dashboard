@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dispositivo: {{ device_id }}@{{ location }} - MQTT IoT
+{% endblock %}
+
+{% block content %}
+<div class="device-detail-container">
+    <div class="device-detail-grid">
+        <!-- Sección: Header con título y estado -->
+        <section class="device-header-section">
+            <div class="device-header-main">
+                <h1 id="deviceTitle">Cargando...</h1>
+                <div class="device-status-row">
+                    <span class="status-badge" id="infoStatus">-</span>
+                    <span class="status-latency" id="infoLatencyBadge" style="display: none;"></span>
+                    <span class="header-meta" id="infoLastSeen">Nunca visto</span>
+                </div>
+            </div>
+            <div class="device-meta-row">
+                <span class="meta-item"><strong>ID:</strong> <span id="infoId">-</span></span>
+                <span class="meta-item"><strong>IP:</strong> <span id="infoIp">-</span></span>
+                <span class="meta-item"><strong>FW:</strong> <span id="infoFirmware">-</span></span>
+                <span class="meta-item"><strong>MAC:</strong> <span id="infoMac">-</span></span>
+            </div>
+        </section>
+
+        <!-- Sección: Sensores Actuales (más visibles) -->
+        <section class="device-sensors-section" id="currentSensorsSection" style="display: none;">
+            <h2>🌡️ Valores Actuales</h2>
+            <div class="current-sensors-grid">
+                <div class="sensor-card" id="tempCurrentCard" style="display: none;">
+                    <div class="sensor-icon">🌡️</div>
+                    <div class="sensor-info">
+                        <span class="sensor-value" id="tempCurrentValue">--</span>
+                        <span class="sensor-label">Temperatura</span>
+                    </div>
+                </div>
+                <div class="sensor-card" id="humCurrentCard" style="display: none;">
+                    <div class="sensor-icon">💧</div>
+                    <div class="sensor-info">
+                        <span class="sensor-value" id="humCurrentValue">--</span>
+                        <span class="sensor-label">Humedad</span>
+                    </div>
+                </div>
+                <div class="sensor-card" id="stCurrentCard" style="display: none;">
+                    <div class="sensor-icon">🔥</div>
+                    <div class="sensor-info">
+                        <span class="sensor-value" id="stCurrentValue">--</span>
+                        <span class="sensor-label">S. Térmica</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Acciones -->
+        <section class="device-actions-section">
+            <h2>⚡ Acciones</h2>
+            <div class="actions-row">
+                <button class="btn-action" id="btnDeviceStatus" data-action="request-device-status">
+                    <span class="btn-icon">📊</span>
+                    <span class="btn-text">Status</span>
+                </button>
+                <button class="btn-action" id="btnDeviceConfig" data-action="request-device-config">
+                    <span class="btn-icon">⚙️</span>
+                    <span class="btn-text">Config</span>
+                </button>
+                <button class="btn-action btn-warning" id="btnDeviceReboot" data-action="reboot-device">
+                    <span class="btn-icon">🔄</span>
+                    <span class="btn-text">Reiniciar</span>
+                </button>
+                <button class="btn-action" id="btnDeviceAlias" data-action="edit-device-alias">
+                    <span class="btn-icon">✏️</span>
+                    <span class="btn-text">Editar</span>
+                </button>
+                <button class="btn-action btn-danger" id="btnDeviceRemove" data-action="remove-device-whitelist">
+                    <span class="btn-icon">🗑️</span>
+                    <span class="btn-text">Eliminar</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Sección: Gráfico de Sensores -->
+        <section class="device-chart-section">
+            <div class="chart-header">
+                <h2>📈 Historial de Sensores</h2>
+                <div class="chart-controls-row">
+                    <select id="chartDatePreset" class="preset-select">
+                        <option value="">Seleccionar...</option>
+                        <option value="today">Hoy</option>
+                        <option value="yesterday">Ayer</option>
+                        <option value="week">Semana</option>
+                        <option value="month">Mes</option>
+                        <option value="all">Todo</option>
+                    </select>
+                    <div class="date-range-inputs">
+                        <input type="date" id="deviceChartDateStart" class="date-input">
+                        <span class="date-separator">a</span>
+                        <input type="date" id="deviceChartDateEnd" class="date-input">
+                    </div>
+                    <button class="btn-refresh" id="deviceChartRefresh" title="Actualizar">🔄</button>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="deviceChart"></canvas>
+            </div>
+            <div class="chart-stats" id="deviceStatsSection" style="display: none;">
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Min</th>
+                            <th>Prom</th>
+                            <th>Max</th>
+                        </tr>
+                    </thead>
+                    <tbody id="statsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Sección: Eventos -->
+        <section class="device-events-section">
+            <div class="events-header">
+                <h2>📋 Historial de Eventos</h2>
+                <select id="eventFilter" class="filter-select">
+                    <option value="">Todos</option>
+                    <option value="connected">Conectado</option>
+                    <option value="disconnected">Desconectado</option>
+                    <option value="alert">Alerta</option>
+                    <option value="status">Status</option>
+                </select>
+            </div>
+            <div class="events-timeline" id="deviceEvents">
+                <div class="empty-state">Cargando eventos...</div>
+            </div>
+            <div class="pagination">
+                <button class="btn-page" id="prevPage" disabled>&lt;</button>
+                <span id="pageInfo">1</span>
+                <button class="btn-page" id="nextPage">&gt;</button>
+            </div>
+        </section>
+
+        <!-- Sección: Logs (expandible) -->
+        <section class="device-logs-section" id="deviceLogsSection" style="display: none;">
+            <div class="logs-header" onclick="toggleLogs()">
+                <h2>📜 Logs del Dispositivo</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="logs-container" id="deviceLogs">
+                <div class="empty-state">Cargando...</div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Modales -->
+<div id="deviceRebootModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-device-reboot-modal">&times;</span>
+        <h3>⚡ Reiniciar Dispositivo</h3>
+        <p>¿Está seguro de que desea reiniciar este dispositivo?</p>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-device-reboot">Cancelar</button>
+            <button class="btn-warning" data-action="confirm-device-reboot">Reiniciar</button>
+        </div>
+    </div>
+</div>
+
+<div id="deviceAliasModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-device-alias-modal">&times;</span>
+        <h3>✏️ Cambiar Alias</h3>
+        <div class="modal-form">
+            <input type="text" id="deviceAliasInput" placeholder="Nuevo alias" maxlength="50">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-device-alias">Cancelar</button>
+            <button class="btn-primary" data-action="confirm-device-alias">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<div id="deviceRemoveModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-device-remove-modal">&times;</span>
+        <h3>🗑️ Eliminar Dispositivo</h3>
+        <p>¿Eliminar de la whitelist?</p>
+        <p class="modal-warning">El dispositivo no podrá conectarse.</p>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-device-remove">Cancelar</button>
+            <button class="btn-danger" data-action="confirm-device-remove">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initDeviceDetail } from '{{ url_for("static", filename="js/modules/device_detail.js") }}';
+
+    const deviceDetailData = {
+        deviceId: '{{ device_id }}',
+        location: '{{ location }}'
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initDeviceDetail(deviceDetailData.deviceId, deviceDetailData.location);
+    });
+
+    function toggleLogs() {
+        const logs = document.getElementById('deviceLogs');
+        const icon = document.querySelector('.logs-header .toggle-icon');
+        if (logs) {
+            const isHidden = logs.style.display === 'none';
+            logs.style.display = isHidden ? 'block' : 'none';
+            if (icon) icon.textContent = isHidden ? '▼' : '▲';
+        }
+    }
+</script>
+{% endblock %}

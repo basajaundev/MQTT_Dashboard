@@ -1,0 +1,19 @@
+{
+  "mqtt": {
+    "broker": "192.168.0.5",
+    "port": 1883,
+    "device_id": "duo256",
+    "location": "pcroom",
+    "username": "",
+    "password": ""
+  },
+  "gpio": {
+    "led_pin": 495
+  },
+  "logging": {
+    "log_dir": "logs"
+  },
+  "settings": {
+    "reconnect_delay": 2
+  }
+}

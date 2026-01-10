@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard - Dispositivos IoT
+{% endblock %}
+
+{% block content %}
+<div class="batch-actions-bar" id="batchActionsBar" style="display: none;">
+    <span class="batch-selected-count"><span id="selectedCount">0</span> dispositivo(s) seleccionado(s)</span>
+    <div class="batch-actions">
+        <button class="btn-secondary" data-action="batch-status" title="Solicitar Estado">📊 Estado</button>
+        <button class="btn-danger" data-action="batch-reboot" title="Reiniciar">🔄 Reiniciar</button>
+        <button class="btn-primary" data-action="batch-custom" title="Comando Personalizado">💬 Comando</button>
+        <button class="btn-icon" data-action="batch-deselect-all" title="Deseleccionar Todo">✕</button>
+    </div>
+</div>
+
+<div class="device-grid-container">
+    <div class="device-grid-header">
+        <h2>Dispositivos Conectados</h2>
+        <div class="device-search-container">
+            <input type="text" id="deviceSearch" placeholder="Buscar dispositivos..." class="device-search-input">
+            <span id="deviceCount" class="device-count"></span>
+        </div>
+    </div>
+    <div id="deviceGrid" class="device-grid">
+        <!-- Las tarjetas de dispositivos se insertarán aquí dinámicamente -->
+        <div class="empty-state">
+            <p>🔌 Conéctate a un servidor para ver los dispositivos.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para comando personalizado -->
+<div id="batchCommandModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-batch-command-modal">&times;</span>
+        <h2>💬 Comando Personalizado</h2>
+        <div class="batch-command-preview" id="batchCommandPreview"></div>
+        <div class="input-group">
+            <label>Payload (JSON)</label>
+            <textarea id="batchCommandPayload" placeholder='{"cmd": "custom", "value": "..."}'></textarea>
+        </div>
+        <button class="btn-primary" data-action="execute-batch-command">Enviar a todos</button>
+    </div>
+</div>
+
+<!-- Modal para el gráfico de historial -->
+<div id="historyModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close" data-action="close-history-modal">&times;</span>
+        <h2 id="historyModalTitle">📈 Historial del Dispositivo</h2>
+        <div class="history-controls">
+            <label for="historyDatepicker">Seleccionar fecha:</label>
+            <input type="date" id="historyDatepicker">
+        </div>
+        <div class="chart-container">
+            <canvas id="historyChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para el timeline de eventos -->
+<div id="timelineModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close" data-action="close-timeline-modal">&times;</span>
+        <h2>📋 Historial de Eventos</h2>
+        <div id="timelineDeviceInfo" class="timeline-device-info"></div>
+        <div class="timeline-controls">
+            <label for="timelineFilter">Filtrar:</label>
+            <select id="timelineFilter">
+                <option value="">Todos</option>
+                <option value="connected">🟢 Conexiones</option>
+                <option value="disconnected">🔴 Desconexiones</option>
+                <option value="offline">⚠️ Offline</option>
+            </select>
+        </div>
+        <div class="timeline-container" id="timelineContainer">
+            <div class="empty-state">📭 No hay eventos registrados</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

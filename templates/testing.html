@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Testing - MQTT IoT
+{% endblock %}
+
+{% block content %}
+<div class="main-grid">
+    <div class="panel">
+        <h2>📡 Suscripciones</h2>
+        <div class="subscribe-form">
+            <input type="text" id="topicInput" placeholder="ej: home/sensors/#">
+            <button id="subscribeBtn" class="btn-subscribe" disabled>Suscribir</button>
+        </div>
+        <div class="topics-list" id="topicsList">
+            <div class="empty-state">📋<br>No hay suscripciones activas</div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>📤 Publicar Mensaje</h2>
+        <div class="publish-form">
+            <div class="input-group">
+                <label>Topic</label>
+                <input type="text" id="publishTopic" placeholder="ej: home/lights/living">
+            </div>
+            <div class="input-group">
+                <label>Mensaje (JSON o texto)</label>
+                <textarea id="publishPayload" placeholder='{"state": "on", "brightness": 100}'></textarea>
+            </div>
+            <button id="publishBtn" class="btn-publish" disabled>Publicar</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

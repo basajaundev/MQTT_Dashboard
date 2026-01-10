@@ -1,0 +1,87 @@
+/* --- Paleta de Colores --- */
+:root {
+    /* Modo Claro (Por defecto) */
+    --primary-color: #667eea;
+    --primary-hover: #5568d3;
+    --secondary-color: #9b59b6;
+    --secondary-hover: #8e44ad;
+    --success-color: #27ae60;
+    --success-hover: #229954;
+    --info-color: #3498db;
+    --info-hover: #2980b9;
+    --warning-color: #f39c12;
+    --warning-hover: #e67e22;
+    --danger-color: #e74c3c;
+    --danger-hover: #c0392b;
+
+    --neutral-color: #95a5a6;
+    --neutral-hover: #7f8c8d;
+
+    --gradient-start: #f4f7f6;
+    --gradient-end: #d4dee7;
+
+    --bg-white: #ffffff;
+    --bg-light-gray: #f8f9fa;
+    --bg-panel: #ffffff;
+
+    --text-dark: #2c3e50;
+    --text-medium: #555;
+    --text-light: #888;
+    --text-muted: #999;
+
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0,0,0,0.1);
+
+    --status-connected-bg: #e9f7ef;
+    --status-connected-text: #1d8348;
+    --status-disconnected-bg: #fdedec;
+    --status-disconnected-text: #c0392b;
+
+    --badge-enabled-bg: #d4edda;
+    --badge-enabled-text: #155724;
+    --badge-disabled-bg: #f8d7da;
+    --badge-disabled-text: #721c24;
+}
+
+body.dark-mode {
+    /* --- Paleta Tokyo Night --- */
+    --primary-color: #7aa2f7;
+    --primary-hover: #9cabf7;
+    --secondary-color: #bb9af7;
+    --secondary-hover: #d5bdf7;
+    --success-color: #9ece6a;
+    --success-hover: #b8e69a;
+    --info-color: #7dcfff;
+    --info-hover: #a0e9ff;
+    --warning-color: #e0af68;
+    --warning-hover: #f0d8a8;
+    --danger-color: #f7768e;
+    --danger-hover: #ff96a9;
+    --neutral-color: #565f89;
+    --neutral-hover: #6b77ad;
+
+    --gradient-start: #1a1b26;
+    --gradient-end: #161620;
+
+    --bg-white: #24283b;
+    --bg-light-gray: #1f2335;
+    --bg-panel: #24283b;
+
+    --text-dark: #c0caf5;
+    --text-medium: #a9b1d6;
+    --text-light: #737aa2;
+    --text-muted: #565f89;
+
+    --border-color: #414868;
+    --shadow-color: rgba(0,0,0,0.3);
+
+    --status-connected-bg: rgba(158, 206, 106, 0.1);
+    --status-connected-text: #9ece6a;
+    --status-disconnected-bg: rgba(247, 118, 142, 0.1);
+    --status-disconnected-text: #f7768e;
+
+    --badge-enabled-bg: rgba(158, 206, 106, 0.15);
+    --badge-enabled-text: #9ece6a;
+    --badge-disabled-bg: rgba(86, 95, 137, 0.2);
+    --badge-disabled-text: #737aa2;
+}

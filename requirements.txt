@@ -1,0 +1,9 @@
+Flask
+Flask-SocketIO
+gevent
+paho-mqtt
+apscheduler
+Flask-SQLAlchemy
+Flask-Compress
+python-dotenv
+

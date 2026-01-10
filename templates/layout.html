@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard MQTT IoT{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-top">
+                <h1>🌐 Dashboard MQTT IoT</h1>
+                <div class="header-controls">
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch" for="theme-checkbox">
+                            <input type="checkbox" id="theme-checkbox" />
+                            <div class="slider"></div>
+                        </label>
+                    </div>
+                    <div class="auth-controls">
+                        {% if session.get('is_admin') %}
+                            <a href="{{ url_for('logout') }}" class="btn-secondary">Cerrar Sesión</a>
+                        {% else %}
+                            <button class="btn-secondary" data-action="open-login-modal">Iniciar Sesión</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">Dashboard</a></li>
+                    {% if session.get('is_admin') %}
+                        <li><a href="{{ url_for('tasks') }}" class="{{ 'active' if request.endpoint == 'tasks' else '' }}">Tareas</a></li>
+                        <li><a href="{{ url_for('alerts') }}" class="{{ 'active' if request.endpoint == 'alerts' else '' }}">Alertas</a></li>
+                        <li><a href="{{ url_for('config') }}" class="{{ 'active' if request.endpoint == 'config' else '' }}">Configuración</a></li>
+                        <li><a href="{{ url_for('testing') }}" class="{{ 'active' if request.endpoint == 'testing' else '' }}">Testing</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <div class="connection-controls-wrapper" {% if not session.get('is_admin') %}style="display: none;"{% endif %}>
+                <div class="server-selector-container">
+                    <label for="serverSelector">Servidor MQTT</label>
+                    <select id="serverSelector"></select>
+                </div>
+                <div class="connection-controls">
+                    <button id="connectBtn" class="btn-connect">Conectar</button>
+                    <button id="disconnectBtn" class="btn-disconnect" style="display: none;">Desconectar</button>
+                    <div id="status" class="status status-disconnected"><div class="status-dot"></div>Desconectado</div>
+                    <span id="reconnecting-icon" class="reconnecting-icon" style="display: none;">↻</span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer de Mensajes -->
+    <footer class="messages-footer expanded" id="messagesFooter">
+        <div class="messages-footer-header" data-action="toggle-messages-footer">
+            <div class="messages-footer-actions">
+                <button class="btn-icon" data-action="clear-messages" title="Limpiar Mensajes">🗑️</button>
+            </div>
+            <div class="messages-footer-title">
+                <span>💬 Mensajes</span>
+                <span id="unreadBadge" class="unread-badge" style="display: none;">0</span>
+            </div>
+            <span class="toggle-icon">▲</span>
+        </div>
+        <div class="messages-footer-content">
+            <div class="messages-list" id="messagesList">
+                <div class="empty-state">📭<br>No hay mensajes aún</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Contenedor oculto para mensajes flash -->
+    <div id="flashMessages" style="display: none;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div data-category="{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" data-action="close-login-modal">&times;</span>
+            <h2>🔑 Acceso de Administrador</h2>
+            <div id="loginError" class="flash-message flash-error" style="display: none;"></div>
+            <form id="loginForm" class="modal-form" action="{{ url_for('login') }}" method="POST">
+                <div class="input-group">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenedor para notificaciones Toast -->
+    <div id="toast-container"></div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" type="module"></script>
+
+    {% block scripts %}{% endblock %}
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js').then(
+                (registration) => {
+                    console.log('Service Worker registrado:', registration.scope);
+                },
+                (error) => {
+                    console.log('Error al registrar Service Worker:', error);
+                }
+            );
+        }
+    </script>
+</body>
+</html>

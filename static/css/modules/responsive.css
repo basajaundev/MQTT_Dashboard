@@ -1,0 +1,19 @@
+@media (max-width: 768px) {
+    .main-grid,
+    .servers-list-grid,
+    .alerts-list,
+    .tasks-list,
+    .access-lists-container,
+    .settings-layout { /* Añadido settings-layout */
+        grid-template-columns: 1fr;
+    }
+
+    .connection-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .header-top {
+        flex-direction: column;
+        gap: 15px;
+    }
+}

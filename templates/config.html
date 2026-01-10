@@ -1,0 +1,234 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Configuración - MQTT IoT
+{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <div class="config-tabs">
+        <button class="tab-link active" data-tab="servers">🗄️ Servidores</button>
+        <button class="tab-link" data-tab="settings">⚙️ Ajustes del Sistema</button>
+    </div>
+
+    <!-- Pestaña de Servidores -->
+    <div id="servers" class="tab-content active">
+        <div class="server-management-header">
+            <h2>Gestión de Servidores MQTT</h2>
+            <button id="addServerBtn" class="btn-icon" data-action="add-server-modal" title="Añadir Servidor">🆕</button>
+        </div>
+        <div class="servers-list-grid" id="serversListGrid">
+            <!-- Las tarjetas de servidor se insertarán aquí dinámicamente -->
+        </div>
+    </div>
+
+    <!-- Pestaña de Ajustes Unificada -->
+    <div id="settings" class="tab-content">
+
+        <div class="settings-layout">
+            <!-- Sección Ajustes del Dashboard Fusionada -->
+            <section class="settings-section">
+                <h3>🛠️ Ajustes del Dashboard</h3>
+                <p class="section-desc">Configura el comportamiento y preferencias del dashboard.</p>
+
+                <div class="triple-fused-content">
+                    <!-- General (tercio izquierdo) -->
+                    <div class="fused-third general-third">
+                        <h4>🛠️ General</h4>
+                        <div class="input-group">
+                            <label for="refreshInterval">Intervalo de Auto-Refresco (s)</label>
+                            <input type="number" id="refreshInterval" value="30" min="5">
+                        </div>
+                        <div class="input-group">
+                            <label for="maxMissedPings">Tolerancia de Pings (Vidas)</label>
+                            <input type="number" id="maxMissedPings" value="2" min="1" max="10">
+                        </div>
+                        <button class="btn-primary" data-action="save-settings" style="width: 100%;">Guardar Ajustes</button>
+                    </div>
+
+                    <!-- Seguridad (tercio central) -->
+                    <div class="fused-third security-third">
+                        <h4>🔒 Seguridad</h4>
+                        <div class="input-group">
+                            <label for="newPassword">Nueva Contraseña</label>
+                            <input type="password" id="newPassword">
+                        </div>
+                        <div class="input-group">
+                            <label for="confirmPassword">Confirmar Contraseña</label>
+                            <input type="password" id="confirmPassword">
+                        </div>
+                        <button class="btn-primary" data-action="change-password" style="width: 100%;">Cambiar Contraseña</button>
+                    </div>
+
+                    <!-- Notificaciones (tercio derecho) -->
+                    <div class="fused-third notifications-third">
+                        <h4>🔔 Notificaciones</h4>
+                        <div class="input-group">
+                            <label for="notificationsEnabled">Habilitar Notificaciones</label>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="notificationsEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <label for="notificationsSound">Sonido de Notificaciones</label>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="notificationsSound">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Whitelist + Grupos Fusionados -->
+            <section class="settings-section">
+                <h3>📱 Gestión de Dispositivos</h3>
+                <p class="section-desc">Gestiona los dispositivos permitidos y organízalos en grupos.</p>
+
+                <div class="fused-card-content">
+                    <!-- Whitelist (mitad izquierda) -->
+                    <div class="fused-half whitelist-half">
+                        <h4>🛡️ Whitelist</h4>
+                        <div class="whitelist-form-inline">
+                            <select id="whitelist-device-id">
+                                <option value="">Dispositivo...</option>
+                            </select>
+                            <select id="whitelist-group-id">
+                                <option value="">Grupo...</option>
+                            </select>
+                        </div>
+                        <button class="btn-success" data-action="add-to-whitelist" style="width: 100%;">Añadir</button>
+                        <div id="whitelistContainer" class="list-items whitelist-list"></div>
+                    </div>
+
+                    <!-- Grupos (mitad derecha) -->
+                    <div class="fused-half groups-half">
+                        <h4>👥 Grupos</h4>
+                        <div id="groupsList" class="list-items groups-list"></div>
+                        <button class="btn-primary" data-action="add-group-modal" style="width: 100%;">
+                            + Crear Grupo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Backup -->
+            <section class="settings-section">
+                <h3>💾 Backup de Base de Datos</h3>
+                <p class="section-desc">Copias de seguridad automáticas y restauración.</p>
+                
+                <div class="backup-controls-grid">
+                    <div class="backup-main-controls">
+                        <div class="input-group">
+                            <label for="autoBackupEnabled">Backup Automático</label>
+                            <label class="theme-switch">
+                                <input type="checkbox" id="autoBackupEnabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <label for="autoBackupInterval">Intervalo (horas)</label>
+                            <input type="number" id="autoBackupInterval" value="24" min="1" max="168">
+                        </div>
+                        <div class="input-group">
+                            <label for="autoBackupKeep">Backups a mantener</label>
+                            <input type="number" id="autoBackupKeep" value="7" min="1" max="30">
+                        </div>
+                    </div>
+                    <div class="backup-actions">
+                        <button class="btn-primary" data-action="manual-backup">
+                            💾 Backup Ahora
+                        </button>
+                        <button class="btn-secondary" data-action="restore-backup-modal">
+                            ♻️ Restaurar Backup
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="backups-list-container">
+                    <h4>📁 Backups Disponibles (<span id="backupsCount">0</span>)</h4>
+                    <div id="backupsList" class="backups-list">
+                        <div class="empty-state">Cargando backups...</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Restaurar Backup -->
+<div id="restoreBackupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-restore-modal">&times;</span>
+        <h2>♻️ Restaurar Backup</h2>
+        <p class="warning-text">⚠️ Esta acción reemplazará la base de datos actual. Se perderán los datos no respaldados.</p>
+        <div class="input-group">
+            <label for="restoreBackupSelect">Seleccionar Backup</label>
+            <select id="restoreBackupSelect">
+                <option value="">-- Seleccionar --</option>
+            </select>
+        </div>
+        <button class="btn-danger" data-action="confirm-restore-backup" disabled>
+            ♻️ Restaurar Backup
+        </button>
+    </div>
+</div>
+
+<!-- Modal para añadir/editar servidor -->
+<div id="serverModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-server-modal">&times;</span>
+        <h2 id="serverModalTitle">Añadir Nuevo Servidor</h2>
+        <div class="modal-form">
+            <input type="hidden" id="serverId" value="">
+            <div class="input-group">
+                <label for="serverName">Nombre del Servidor</label>
+                <input type="text" id="serverName" placeholder="Ej: Mi Broker Local" required>
+            </div>
+            <div class="input-group">
+                <label for="serverBroker">Broker (IP o Dominio)</label>
+                <input type="text" id="serverBroker" placeholder="Ej: localhost o broker.hivemq.com" required>
+            </div>
+            <div class="input-group">
+                <label for="serverPort">Puerto</label>
+                <input type="number" id="serverPort" value="1883" min="1" max="65535" required>
+            </div>
+            <div class="input-group">
+                <label for="serverUsername">Usuario (opcional)</label>
+                <input type="text" id="serverUsername" placeholder="Usuario MQTT">
+            </div>
+            <div class="input-group">
+                <label for="serverPassword">Contraseña (opcional)</label>
+                <input type="password" id="serverPassword" placeholder="Contraseña MQTT">
+            </div>
+            <button class="btn-primary" data-action="save-server">Guardar Servidor</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para añadir/editar grupo -->
+<div id="groupModal" class="modal">
+    <div class="modal-content">
+        <span class="close" data-action="close-group-modal">&times;</span>
+        <h3 id="groupModalTitle">👥 Crear Grupo</h3>
+        <div class="modal-form">
+            <input type="hidden" id="groupId" value="">
+            <div class="form-group">
+                <label for="groupName">Nombre del Grupo</label>
+                <input type="text" id="groupName" placeholder="Ej: Sala de Estar, Cocina, Dormitorio" maxlength="50">
+                <div id="groupNameError" class="form-error" style="display: none;"></div>
+            </div>
+            <div class="form-group">
+                <label for="groupDescription">Descripción (opcional)</label>
+                <textarea id="groupDescription" placeholder="Descripción breve del grupo..." rows="2" maxlength="200"></textarea>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" data-action="cancel-group-modal">Cancelar</button>
+            <button class="btn-primary" data-action="save-group">Guardar Grupo</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

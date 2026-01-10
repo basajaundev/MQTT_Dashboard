@@ -1,0 +1,19 @@
+{
+    "mqtt": {
+        "broker": "192.168.1.100",
+        "port": 1883,
+        "device_id": "esp32-001",
+        "location": "sala-principal",
+        "username": "mqtt_user",
+        "password": "secure_password_123"
+    },
+    "logging": {
+        "log_dir": "logs"
+    },
+    "gpio": {
+        "led_pin": 2
+    },
+    "settings": {
+        "reconnect_delay": 5
+    }
+}
