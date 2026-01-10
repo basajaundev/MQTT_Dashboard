@@ -103,8 +103,10 @@ export function handleDeviceDetailResponse(data) {
         if (statsSection) statsSection.style.display = 'none';
     }
 
-    state.currentDeviceEvents = data.events || [];
-    renderDeviceEvents(data.events || []);
+    if (data.events !== undefined) {
+        state.currentDeviceEvents = data.events || [];
+        renderDeviceEvents(data.events || []);
+    }
 
     const dateStartInput = document.getElementById('deviceChartDateStart');
     const dateEndInput = document.getElementById('deviceChartDateEnd');
