@@ -77,54 +77,42 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Sección Configuración de Toast -->
-            <section class="settings-section">
-                <h3>🍞 Configuración de Notificaciones Toast</h3>
-                <p class="section-desc">Personaliza el comportamiento de los mensajes toast.</p>
-
-                <div class="toast-settings-grid">
-                    <div class="toast-setting-item">
-                        <label for="toastDuration">Duración</label>
-                        <div class="range-with-value">
-                            <input type="range" id="toastDuration" min="2" max="10" value="5">
-                            <span id="toastDurationValue">5s</span>
+                        
+                        <!-- Configuración de Toast integrada -->
+                        <div class="toast-config-inline">
+                            <h5>🍞 Toast</h5>
+                            <div class="toast-config-row">
+                                <label for="toastDuration">Duración</label>
+                                <div class="range-with-value compact">
+                                    <input type="range" id="toastDuration" min="2" max="10" value="5">
+                                    <span id="toastDurationValue">5s</span>
+                                </div>
+                            </div>
+                            <div class="toast-config-row">
+                                <label for="toastPosition">Posición</label>
+                                <select id="toastPosition" class="compact-select">
+                                    <option value="top-right">Sup. Der.</option>
+                                    <option value="top-left">Sup. Izq.</option>
+                                    <option value="bottom-right">Inf. Der.</option>
+                                    <option value="bottom-left">Inf. Izq.</option>
+                                </select>
+                            </div>
+                            <div class="toast-config-row">
+                                <label for="toastSound">Sonido</label>
+                                <label class="theme-switch compact-switch">
+                                    <input type="checkbox" id="toastSound">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toast-config-row">
+                                <label for="toastAnimation">Animación</label>
+                                <select id="toastAnimation" class="compact-select">
+                                    <option value="fade">Fade</option>
+                                    <option value="slide">Slide</option>
+                                    <option value="zoom">Zoom</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="toast-setting-item">
-                        <label for="toastPosition">Posición</label>
-                        <select id="toastPosition">
-                            <option value="top-right">Superior Derecha</option>
-                            <option value="top-left">Superior Izquierda</option>
-                            <option value="bottom-right">Inferior Derecha</option>
-                            <option value="bottom-left">Inferior Izquierda</option>
-                        </select>
-                    </div>
-                    <div class="toast-setting-item">
-                        <label for="toastSound">Reproducir Sonido</label>
-                        <label class="theme-switch">
-                            <input type="checkbox" id="toastSound">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="toast-setting-item">
-                        <label for="toastAnimation">Animación</label>
-                        <select id="toastAnimation">
-                            <option value="fade">Fade</option>
-                            <option value="slide">Slide</option>
-                            <option value="zoom">Zoom</option>
-                        </select>
-                    </div>
-                    <div class="toast-setting-item">
-                        <label for="toastTypes">Tipos Visibles</label>
-                        <select id="toastTypes">
-                            <option value="all">Todos</option>
-                            <option value="info+warning">Solo Info y Warning</option>
-                            <option value="none">Ninguno</option>
-                        </select>
                     </div>
                 </div>
             </section>

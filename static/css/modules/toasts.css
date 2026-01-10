@@ -280,3 +280,93 @@
     font-size: 13px;
     color: var(--text-medium);
 }
+
+/* Estilos compactos para toast integrado en columna Notificaciones */
+.toast-config-inline {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.toast-config-inline h5 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-medium);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.toast-config-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.toast-config-row label {
+    font-size: 12px;
+    color: var(--text-medium);
+    min-width: 70px;
+}
+
+.toast-config-row .range-with-value {
+    flex: 1;
+    gap: 8px;
+}
+
+.toast-config-row .range-with-value input[type="range"] {
+    height: 4px;
+    -webkit-appearance: none;
+    background: var(--border-color);
+    border-radius: 2px;
+    outline: none;
+}
+
+.toast-config-row .range-with-value input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.toast-config-row .range-with-value span {
+    font-size: 11px;
+    min-width: 30px;
+    text-align: right;
+}
+
+.toast-config-row select.compact-select {
+    padding: 5px 8px;
+    font-size: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    cursor: pointer;
+    flex: 1;
+}
+
+.toast-config-row .theme-switch.compact-switch {
+    width: 40px;
+    height: 20px;
+}
+
+.toast-config-row .theme-switch.compact-switch .slider {
+    height: 16px;
+    border-radius: 16px;
+}
+
+.toast-config-row .theme-switch.compact-switch .slider:before {
+    height: 12px;
+    width: 12px;
+    bottom: 2px;
+    left: 2px;
+}
+
+.toast-config-row .theme-switch.compact-switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
