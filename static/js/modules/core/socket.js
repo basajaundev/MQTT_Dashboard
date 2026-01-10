@@ -79,7 +79,7 @@ export function initSocketListeners() {
         }
         if (elements.backupSection?.autoBackupEnabled) {
             const settings = newState.config?.settings || {};
-            elements.backupSection.autoBackupEnabled.checked = settings.auto_backup_enabled === 'true';
+            elements.backupSection.autoBackupEnabled.checked = String(settings.auto_backup_enabled) === 'true';
             elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
             elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
         }
