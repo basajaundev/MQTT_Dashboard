@@ -1,10 +1,10 @@
 import { state, scheduleDevicesUpdate } from './state.js';
-import { elements } from './dom.js';
-import * as ui from './ui.js';
-import { displayHistoryChart } from './charts.js';
-import { openLoginModal } from './modals.js';
-import { showToast } from './toasts.js';
-import { handleNotificationEvent } from './notifications.js';
+import { elements } from './core/dom.js';
+import * as ui from './ui/ui.js';
+import { displayHistoryChart } from './ui/charts.js';
+import { openLoginModal } from './modals/modals.js';
+import { showToast } from './ui/toasts.js';
+import { handleNotificationEvent } from './events/notifications.js';
 
 export function initSocketListeners() {
     // --- Listener Unificado para el Estado Principal ---
