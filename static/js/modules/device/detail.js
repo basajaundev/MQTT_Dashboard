@@ -1,6 +1,6 @@
 import { state } from '../core/state.js';
 import { showToast } from '../ui/toasts.js';
-import { handleDeviceDetailResponse, handleDeviceHistoryResponse, handleDeviceLogsResponse, handleDeviceConfigUpdate } from './response.js';
+import { handleDeviceDetailResponse, handleDeviceHistoryResponse, handleDeviceLogsResponse, handleDeviceConfigUpdate, renderDeviceEvents } from './response.js';
 
 // Device detail page state
 let deviceDetailData = {
