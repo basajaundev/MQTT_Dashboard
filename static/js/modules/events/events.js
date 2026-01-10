@@ -1,5 +1,5 @@
 import { elements } from '../core/dom.js';
-import * as modals from '../modals.js';
+import * as modals from '../modals/modals.js';
 import * as ui from '../ui/ui.js';
 import { showToast } from '../ui/toasts.js';
 import { state } from '../core/state.js';
