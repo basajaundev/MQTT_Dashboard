@@ -140,9 +140,6 @@
                         <button class="btn-primary" data-action="manual-backup">
                             💾 Backup Ahora
                         </button>
-                        <button class="btn-secondary" data-action="restore-backup-modal">
-                            ♻️ Restaurar Backup
-                        </button>
                     </div>
                 </div>
                 
@@ -155,24 +152,6 @@
             </section>
         </div>
 
-    </div>
-</div>
-
-<!-- Modal Restaurar Backup -->
-<div id="restoreBackupModal" class="modal">
-    <div class="modal-content">
-        <span class="close" data-action="close-restore-modal">&times;</span>
-        <h2>♻️ Restaurar Backup</h2>
-        <p class="warning-text">⚠️ Esta acción reemplazará la base de datos actual. Se perderán los datos no respaldados.</p>
-        <div class="input-group">
-            <label for="restoreBackupSelect">Seleccionar Backup</label>
-            <select id="restoreBackupSelect">
-                <option value="">-- Seleccionar --</option>
-            </select>
-        </div>
-        <button class="btn-danger" data-action="confirm-restore-backup" disabled>
-            ♻️ Restaurar Backup
-        </button>
     </div>
 </div>
 

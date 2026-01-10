@@ -115,31 +115,6 @@ export async function initEventListeners() {
                 state.socket.emit('trigger_backup');
                 break;
             }
-            case 'restore-backup-modal': {
-                if (elements.backupSection?.restoreBackupModal) {
-                    elements.backupSection.restoreBackupModal.style.display = 'block';
-                    state.socket.emit('request_backups');
-                }
-                break;
-            }
-            case 'close-restore-modal':
-            case 'cancel-restore-modal': {
-                if (elements.backupSection?.restoreBackupModal) {
-                    elements.backupSection.restoreBackupModal.style.display = 'none';
-                }
-                break;
-            }
-            case 'confirm-restore-backup': {
-                const select = elements.backupSection?.restoreBackupSelect;
-                const filename = select?.value;
-                if (filename) {
-                    state.socket.emit('restore_backup', { filename });
-                    if (elements.backupSection?.restoreBackupModal) {
-                        elements.backupSection.restoreBackupModal.style.display = 'none';
-                    }
-                }
-                break;
-            }
             case 'restore-backup-item': {
                 const filename = target?.dataset?.filename;
                 if (filename) {
@@ -460,15 +435,6 @@ export async function initEventListeners() {
     if (elements.historyChartRefresh) {
         elements.historyChartRefresh.addEventListener('click', () => {
             refreshHistoryChart();
-        });
-    }
-
-    if (elements.backupSection?.restoreBackupSelect) {
-        elements.backupSection.restoreBackupSelect.addEventListener('change', (e) => {
-            const btn = document.querySelector('[data-action="confirm-restore-backup"]');
-            if (btn) {
-                btn.disabled = !e.target.value;
-            }
         });
     }
 

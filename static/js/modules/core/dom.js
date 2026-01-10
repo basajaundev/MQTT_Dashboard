@@ -88,9 +88,6 @@ export function initElements() {
             autoBackupInterval: document.getElementById('autoBackupInterval'),
             autoBackupKeep: document.getElementById('autoBackupKeep'),
             manualBackupBtn: document.querySelector('[data-action="manual-backup"]'),
-            restoreBackupBtn: document.querySelector('[data-action="restore-backup-modal"]'),
-            restoreBackupModal: document.getElementById('restoreBackupModal'),
-            restoreBackupSelect: document.getElementById('restoreBackupSelect'),
             backupsList: document.getElementById('backupsList'),
             backupsCount: document.getElementById('backupsCount')
         },
