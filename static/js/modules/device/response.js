@@ -127,6 +127,7 @@ export function handleDeviceHistoryResponse(data) {
     if (data.device_id === deviceDetailData.deviceId) {
         if (data.history && Array.isArray(data.history) && data.history.length > 0) {
             renderDeviceChart(data.history);
+            renderDeviceStats(data.history);
         } else {
             const chartContainer = document.querySelector('.chart-container');
             if (chartContainer) {

@@ -180,7 +180,7 @@ export function renderDeviceStats(sensors) {
 
     if (temps.length > 0) {
         html += `<tr class="stats-temp">
-            <td> Temperatura</td>
+            <td>🌡️ Temperatura</td>
             <td>${tempStats.min.toFixed(1)} °C</td>
             <td>${tempStats.avg.toFixed(1)} °C</td>
             <td>${tempStats.max.toFixed(1)} °C</td>
@@ -189,7 +189,7 @@ export function renderDeviceStats(sensors) {
 
     if (hums.length > 0) {
         html += `<tr class="stats-hum">
-            <td> Humedad</td>
+            <td>💧 Humedad</td>
             <td>${humStats.min.toFixed(1)} %</td>
             <td>${humStats.avg.toFixed(1)} %</td>
             <td>${humStats.max.toFixed(1)} %</td>
@@ -198,7 +198,7 @@ export function renderDeviceStats(sensors) {
 
     if (sts.length > 0) {
         html += `<tr class="stats-st">
-            <td> S. Termica</td>
+            <td>❄️ S. Termica</td>
             <td>${stStats.min.toFixed(1)} °C</td>
             <td>${stStats.avg.toFixed(1)} °C</td>
             <td>${stStats.max.toFixed(1)} °C</td>
