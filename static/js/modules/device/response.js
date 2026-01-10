@@ -89,9 +89,16 @@ export function handleDeviceDetailResponse(data) {
 
     renderCurrentSensors(data);
 
-    if (data.sensors && data.sensors.length > 0) {
-        renderDeviceChart(data.sensors);
-        renderDeviceStats(data.sensors);
+    let sensorsArray = null;
+    if (data.sensors && Array.isArray(data.sensors) && data.sensors.length > 0) {
+        sensorsArray = data.sensors;
+    } else if (data.sensor && typeof data.sensor === 'object') {
+        sensorsArray = [data.sensor];
+    }
+
+    if (sensorsArray && sensorsArray.length > 0) {
+        renderDeviceChart(sensorsArray);
+        renderDeviceStats(sensorsArray);
     } else {
         const chartContainer = document.querySelector('.chart-container');
         if (chartContainer) {
