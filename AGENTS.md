@@ -210,10 +210,10 @@ document.body.addEventListener('click', (e) => {
 | File | Purpose |
 |------|---------|
 | `AGENTS.md` | This file - Development guide and conventions |
-| `ARCHITECTURE.md` | System architecture diagrams and flows |
+| `docs/ARCHITECTURE.md` | System architecture diagrams and flows |
 | `docs/COMMUNICATION.md` | MQTT communication protocol documentation |
 
 **Reading recommendations:**
 - Start with `AGENTS.md` for project conventions and setup
-- Refer to `ARCHITECTURE.md` for high-level system design
+- Refer to `docs/ARCHITECTURE.md` for high-level system design
 - Use `docs/COMMUNICATION.md` for MQTT topics, payloads, and protocols
