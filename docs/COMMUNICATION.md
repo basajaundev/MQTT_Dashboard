@@ -7,17 +7,51 @@
 │                           MQTT BROKER                                           │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
-                    ┌─────────────────────────┐
-                    │   SERVIDOR (Dashboard)   │
-                    └───────────┬─────────────┘
-                                │
-          ┌─────────────────────┼─────────────────────┐
-          │                     │                     │
-          ▼                     ▼                     ▼
-   ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
-   │  DISPOSITIVO│       │  DISPOSITIVO│       │  DISPOSITIVO│
-   │     #1      │       │     #2      │       │     #3      │
-   └─────────────┘       └─────────────┘       └─────────────┘
+                     ┌─────────────────────────┐
+                     │   SERVIDOR (Dashboard)   │
+                     └───────────┬─────────────┘
+                                 │
+           ┌─────────────────────┼─────────────────────┐
+           │                     │                     │
+           ▼                     ▼                     ▼
+    ┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+    │  DISPOSITIVO│       │  DISPOSITIVO│       │  DISPOSITIVO│
+    │     #1      │       │     #2      │       │     #3      │
+    └─────────────┘       └─────────────┘       └─────────────┘
+```
+
+---
+
+## ⚙️ Configuración MQTT del Servidor
+
+El servidor usa settings configurables para la conexión MQTT:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   CONFIGURACIÓN MQTT DEL SERVIDOR                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+ Settings almacenados en BD (tabla 'settings'):
+
+ ┌──────────────────────┬──────────────────┬──────────────────────────────────┐
+ │ Setting              │ Default          │ Descripción                      │
+ ├──────────────────────┼──────────────────┼──────────────────────────────────┤
+ │ mqtt_keepalive       │ 60 segundos      │ Intervalo keepalive              │
+ │ mqtt_reconnect_delay │ 5 segundos       │ Delay inicial de reconexión      │
+ │ mqtt_clean_session   │ true             │ Sesión limpia al conectar        │
+ │ mqtt_default_qos     │ 1                │ QoS por defecto (0, 1, 2)        │
+ └──────────────────────┴──────────────────┴──────────────────────────────────┘
+
+ Lectura en conexión:
+     keepalive = int(config['settings'].get('mqtt_keepalive', 60))
+     clean_session = config['settings'].get('mqtt_clean_session', 'true') == 'true'
+     qos = int(config['settings'].get('mqtt_default_qos', 1))
+
+ Aplicado en:
+     mqtt.Client(..., clean_session=clean_session)
+     client.connect(broker, port, keepalive)
+     client.reconnect_delay_set(min=delay, max=delay*2)
+     client.publish(topic, payload, qos=qos)
 ```
 
 ---
@@ -30,6 +64,7 @@
 |-------|-------|
 | **Topic** | `iot/ping/all` |
 | **Payload** | `{"cmd": "PING", "time": <timestamp_unix>}` |
+| **QoS** | Configurable (default: 1) |
 
 **Propósito:** Medir latencia y verificar que los dispositivos están vivos.
 
@@ -43,6 +78,7 @@
 |-------|-------|
 | **Topic** | `iot/cmd/all/all` |
 | **Payload** | `{"cmd": "STATUS"}` |
+| **QoS** | Configurable (default: 1) |
 
 **Propósito:** Solicitar estado a todos los dispositivos simultáneamente.
 
@@ -54,6 +90,7 @@
 |-------|-------|
 | **Topic** | `iot/cmd/<device_id>/<location>` |
 | **Payload** | `{"cmd": "STATUS"}` |
+| **QoS** | Configurable (default: 1) |
 
 **Propósito:** Solicitar estado a un dispositivo específico.
 
@@ -65,12 +102,31 @@ Payload: {"cmd": "STATUS"}
 
 ---
 
-### 4. Comando REBOOT
+### 4. Comando GET_CONFIG
+
+| Campo | Valor |
+|-------|-------|
+| **Topic** | `iot/cmd/<device_id>/<location>` |
+| **Payload** | `{"cmd": "GET_CONFIG"}` |
+| **QoS** | Configurable (default: 1) |
+
+**Propósito:** Solicitar configuración actual del dispositivo.
+
+**Ejemplo:**
+```
+Topic: iot/cmd/esp32/salon
+Payload: {"cmd": "GET_CONFIG"}
+```
+
+---
+
+### 5. Comando REBOOT
 
 | Campo | Valor |
 |-------|-------|
 | **Topic** | `iot/cmd/<device_id>/<location>` |
 | **Payload** | `{"cmd": "REBOOT"}` |
+| **QoS** | Configurable (default: 1) |
 
 **Propósito:** Reiniciar un dispositivo específico de forma remota.
 
@@ -82,12 +138,13 @@ Payload: {"cmd": "REBOOT"}
 
 ---
 
-### 5. Tareas Programadas
+### 6. Tareas Programadas
 
 | Campo | Valor |
 |-------|-------|
 | **Topic** | Personalizado (configurado en la tarea) |
 | **Payload** | Personalizado con soporte de placeholders |
+| **QoS** | Configurable (default: 1) |
 
 **Placeholders disponibles:**
 
@@ -98,6 +155,8 @@ Payload: {"cmd": "REBOOT"}
 | `{{datetime}}` | Fecha y hora completa | `2024-01-01 00:00:00` |
 | `{{date}}` | Solo fecha | `2024-01-01` |
 | `{{time}}` | Solo hora | `00:00:00` |
+| `{{device_id}}` | ID del dispositivo | `esp32` |
+| `{{location}}` | Ubicación | `salon` |
 
 **Ejemplo de payload:**
 ```json
@@ -110,12 +169,13 @@ Payload: {"cmd": "REBOOT"}
 
 ---
 
-### 6. Message Triggers (Acción Publish)
+### 7. Message Triggers (Acción Publish)
 
 | Campo | Valor |
 |-------|-------|
 | **Topic** | Personalizado (configurado en el trigger) |
 | **Payload** | Personalizado (también soporta placeholders) |
+| **QoS** | Configurable (default: 1) |
 
 **Propósito:** Publicar un mensaje automáticamente cuando se recibe otro que cumple una condición.
 
@@ -126,6 +186,18 @@ Condition: temp_c > 30
 Action: publish to home/alerts/temperature
 Payload: {"alert": "Temperatura alta", "temp_c": "{{temp_c}}"}
 ```
+
+---
+
+### 8. Publicación Manual
+
+| Campo | Valor |
+|-------|-------|
+| **Topic** | Cualquier topic configurado por el usuario |
+| **Payload** | Texto libre o JSON |
+| **QoS** | Configurable (default: 1) |
+
+**Propósito:** Envío de mensajes arbitrarios a topics MQTT.
 
 ---
 
@@ -216,6 +288,78 @@ Payload: {"status": "offline"}
 
 ---
 
+## 🔍 Búsqueda de Dispositivos en Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   BÚSQUEDA DE DISPOSITIVOS (Frontend)                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+ Input: deviceSearch (texto de búsqueda)
+ Event: input (búsqueda en tiempo real)
+ Render: renderDevices(searchTerm)
+
+ Campos filtrados por búsqueda:
+   • device.name     (nombre del dispositivo)
+   • device.id       (ID del dispositivo)
+   • device.location (ubicación)
+
+ Ejemplo de filtrado:
+   Input: "esp32" → Muestra solo dispositivos con "esp32" en cualquier campo
+   Input: "salon" → Muestra solo dispositivos de la ubicación "salon"
+   Input: ""     → Muestra todos los dispositivos permitidos
+
+ Sin resultados:
+   Si la búsqueda no encuentra dispositivos, muestra:
+   "Sin resultados - Prueba con otros términos de búsqueda"
+```
+
+---
+
+## 💾 Sistema de Backup
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SISTEMA DE BACKUP                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+ Backup Manual:
+   Usuario hace click en "Backup Ahora"
+           │
+           ▼
+   emit('trigger_backup')
+           │
+           ▼
+   BackupManager.create_backup()
+           │
+           ▼
+   1. Lee dashboard.db
+   2. Comprime con gzip
+   3. Guarda en /backups/dashboard_backup_YYYYMMDD_HHMMSS.db.gz
+   4. Elimina backups antiguos (mantiene N)
+           │
+           ▼
+   Emite 'backup_complete' al navegador
+
+ Backup Automático:
+   Scheduler ejecuta scheduled_backup_job()
+           │
+           ▼
+   BackupManager.create_backup()
+           │
+           ▼
+   Configurado por settings:
+   • auto_backup_enabled: true/false
+   • auto_backup_interval: horas entre backups
+   • auto_backup_keep: número de backups a mantener
+
+ Compresión:
+   • Formato: gzip (.db.gz)
+   • Algoritmo: standard gzip compression
+```
+
+---
+
 ## 🔄 Flujo Completo de Comunicación
 
 ### Inicialización de Conexión
@@ -251,7 +395,7 @@ Admin hace click en "Status" en el dashboard
 Dashboard ──Socket.IO──► Servidor Flask
                               │
                               ▼
-                        Servidor MQTT ──[STATUS]──► Broker ──► Dispositivo
+                        Servidor MQTT ──[STATUS QoS=N]──► Broker ──► Dispositivo
                                                                   │
                                                                   ▼
                                               Dispositivo ──[STATUS]──► Broker ──► Servidor MQTT
@@ -269,7 +413,7 @@ Dashboard ──Socket.IO──► Servidor Flask
 Scheduler (APScheduler) ──► Ejecutar tarea
                                   │
                                   ▼
-                            Servidor MQTT ──[topic + payload]──► Broker ──► Dispositivo
+                            Servidor MQTT ──[topic + payload QoS=N]──► Broker ──► Dispositivo
                                                                           │
                                                                           ▼
                                                                 Dispositivo procesa comando
@@ -303,25 +447,25 @@ Dispositivo ──[publica]──► Broker ──► Servidor MQTT
                                           ▼
                                    ¿Topic coincide con patrón?
                                           │
-                           ┌──────────────┴──────────────┐
-                           │                             │
-                           ▼                             ▼
-                      [NO]Condición                   [SÍ]Evalúa condición
-                         no ejecuta                        │
-                                                         ▼
-                                                ¿Condición cumple?
-                                                   │
-                                    ┌──────────────┴──────────────┐
-                                    │                             │
-                                    ▼                             ▼
-                               [NO]No hace nada           [SÍ]Ejecuta acción
-                                                              │
-                                              ┌───────────────┴───────────────┐
-                                              │                               │
-                                              ▼                               ▼
-                                        [notify]                     [publish]
-                                   Notificación al                    Publica MQTT
-                                   navegador                          a otro topic
+                              ┌──────────────┴──────────────┐
+                              │                             │
+                              ▼                             ▼
+                         [NO]Condición                   [SÍ]Evalúa condición
+                            no ejecuta                        │
+                                                          ▼
+                                                 ¿Condición cumple?
+                                                    │
+                                     ┌──────────────┴──────────────┐
+                                     │                             │
+                                     ▼                             ▼
+                                [NO]No hace nada           [SÍ]Ejecuta acción
+                                                               │
+                                               ┌───────────────┴───────────────┐
+                                               │                               │
+                                               ▼                               ▼
+                                         [notify]                     [publish]
+                                    Notificación al                    Publica MQTT
+                                    navegador                          a otro topic
 ```
 
 ---
@@ -339,16 +483,18 @@ Dispositivo ──[publica]──► Broker ──► Servidor MQTT
 
 ## 📊 Resumen de Todos los Comandos MQTT
 
-| Comando | Tipo | Direction | Topic | Payload |
-|---------|------|-----------|-------|---------|
-| `PING` | Sistema | Servidor→Todos | `iot/ping/all` | `{"cmd": "PING", "time": <ts>}` |
-| `PONG` | Sistema | Dispositivo→Servidor | `iot/pong/<id>/<loc>` | `{"cmd": "PONG", "time": <ts>}` |
-| `STATUS` (broadcast) | Sistema | Servidor→Todos | `iot/cmd/all/all` | `{"cmd": "STATUS"}` |
-| `STATUS` (un dispositivo) | Sistema | Servidor→Uno | `iot/cmd/<id>/<loc>` | `{"cmd": "STATUS"}` |
-| `STATUS` (respuesta) | Sistema | Dispositivo→Servidor | `iot/status/<id>/<loc>` | `{status, device, ip, uptime, ...}` |
-| `REBOOT` | Sistema | Servidor→Uno | `iot/cmd/<id>/<loc>` | `{"cmd": "REBOOT"}` |
-| Tarea programada | Usuario | Servidor→topic | Topic configurable | Payload configurable |
-| Message Trigger | Automático | Servidor→topic | Topic configurable | Payload configurable |
+| Comando | Tipo | Direction | Topic | QoS | Payload |
+|---------|------|-----------|-------|-----|---------|
+| `PING` | Sistema | Servidor→Todos | `iot/ping/all` | config | `{"cmd": "PING", "time": <ts>}` |
+| `PONG` | Sistema | Dispositivo→Servidor | `iot/pong/<id>/<loc>` | 0 | `{"cmd": "PONG", "time": <ts>}` |
+| `STATUS` (broadcast) | Sistema | Servidor→Todos | `iot/cmd/all/all` | config | `{"cmd": "STATUS"}` |
+| `STATUS` (un dispositivo) | Sistema | Servidor→Uno | `iot/cmd/<id>/<loc>` | config | `{"cmd": "STATUS"}` |
+| `GET_CONFIG` | Sistema | Servidor→Uno | `iot/cmd/<id>/<loc>` | config | `{"cmd": "GET_CONFIG"}` |
+| `STATUS` (respuesta) | Sistema | Dispositivo→Servidor | `iot/status/<id>/<loc>` | 0 | `{status, device, ip, uptime, ...}` |
+| `REBOOT` | Sistema | Servidor→Uno | `iot/cmd/<id>/<loc>` | config | `{"cmd": "REBOOT"}` |
+| Tarea programada | Usuario | Servidor→topic | Topic configurable | config | Payload configurable |
+| Message Trigger | Automático | Servidor→topic | Topic configurable | config | Payload configurable |
+| Publish manual | Usuario | Servidor→topic | Personalizado | config | Personalizado |
 
 ---
 
@@ -393,17 +539,40 @@ DEVICE_CMD_TOPIC_PREFIX = "iot/cmd"         # Prefijo para comandos
 
 ## ⚠️ Notas Importantes
 
-1. **QoS:** Todos los comandos usan QoS 0 (at most once) por defecto
+1. **QoS:** Todos los comandos usan QoS configurable (default: 1)
 2. **Retain:** Solo los mensajes de estado pueden usar retain para persistencia
 3. **Autenticación:** Los dispositivos deben estar en la whitelist para aparecer en el dashboard
 4. **Tolerancia a fallos:** Si un dispositivo no responde a 2 PINGs (configurable), se marca como offline
+5. **Clean Session:** Configurable al conectar al broker MQTT
+6. **Reconnect Delay:** Configurable, con backoff automático (delay * 2 como máximo)
 
 ---
 
 ## 📈 Mejoras Implementadas (Última Actualización)
 
+### MQTT Configuration
+- Settings almacenados en BD: keepalive, reconnect_delay, clean_session, default_qos
+- QoS configurable por tipo de mensaje (PING, STATUS, tareas, triggers, publish)
+- Clean session configurable al conectar
+
+### Device Search
+- Búsqueda en tiempo real en el dashboard
+- Filtra por nombre, ID y ubicación del dispositivo
+- Mensaje "Sin resultados" cuando no hay coincidencias
+
+### Backup System
+- Backup manual y automático con compresión gzip
+- Rotación automática de backups antiguos
+- Settings configurables: enabled, interval (horas), keep (número)
+
+### Settings System
+- Todos los settings almacenados en tabla 'settings' (key/value)
+- Migración automática de nuevos settings en BD existente
+- Lectura desde Python (config['settings']) y JavaScript (state.config.settings)
+
 ### Placeholders en Tareas
 - Soporte para `{{timestamp}}`, `{{timestamp_ms}}`, `{{datetime}}`, `{{date}}`, `{{time}}`
+- Nuevos placeholders: `{{device_id}}`, `{{location}}`
 - Procesamiento automático en `src/task_utils.py:process_placeholders()`
 
 ### Análisis de Respuesta de Tareas
@@ -418,4 +587,4 @@ DEVICE_CMD_TOPIC_PREFIX = "iot/cmd"         # Prefijo para comandos
 - Disparadores basados en mensajes MQTT entrantes
 - Soporte para wildcards (`+` y `#`) en topics
 - Condiciones evaluadas sobre el payload JSON
-- Acciones: notificación o publicación MQTT
+- Acciones: notificación o publicación MQTT con QoS configurable
