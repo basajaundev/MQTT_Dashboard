@@ -77,7 +77,10 @@ def load_config():
         global_state['active_server_config'] = servers_data.get(last_server, {})
         config['last_selected_server'] = global_state['active_server_name']
         
-        logger.info(f"✅ Configuración cargada. Servidor por defecto: {global_state['active_server_name']}")
+        from src.globals import load_subscriptions_to_memory
+        load_subscriptions_to_memory()
+        
+        logger.info(f"✅ Configuracion cargada. Servidor por defecto: {global_state['active_server_name']}")
     except Exception as e:
         logger.error(f"❌ Error al cargar configuración: {e}")
 

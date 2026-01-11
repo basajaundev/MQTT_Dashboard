@@ -51,3 +51,21 @@ DEVICE_PING_TOPIC = "iot/ping/all"
 DEVICE_CONFIG_TOPIC = "iot/config/+/+"
 DEVICE_CMD_TOPIC_PREFIX = "iot/cmd"
 DEVICE_CMD_BROADCAST_TOPIC = f"{DEVICE_CMD_TOPIC_PREFIX}/all/all"
+
+
+def load_subscriptions_to_memory():
+    """Carga las suscripciones desde la BD para el servidor activo al iniciar la app."""
+    from src.persistence import load_subscriptions
+    server_name = global_state.get('active_server_name', 'N/A')
+    if server_name and server_name != 'N/A':
+        try:
+            topics = load_subscriptions(server_name)
+            subscribed_topics.clear()
+            subscribed_topics.extend(topics)
+            import logging
+            logger = logging.getLogger()
+            logger.info(f"📚 Suscripciones cargadas para '{server_name}': {len(topics)} topics")
+        except Exception as e:
+            import logging
+            logger = logging.getLogger()
+            logger.error(f"❌ Error al cargar suscripciones al inicio: {e}")
