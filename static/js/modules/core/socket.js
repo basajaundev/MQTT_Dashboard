@@ -86,6 +86,9 @@ export function initSocketListeners() {
             if (elements.backupSection.autoBackupInterval) elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
             if (elements.backupSection.autoBackupKeep) elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
         }
+        if (elements.mqttSection?.cleanSession) {
+            elements.mqttSection.cleanSession.checked = String(settings.mqtt_clean_session) === 'true';
+        }
     });
 
     // --- Listeners para eventos de alta frecuencia o específicos ---
