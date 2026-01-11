@@ -4,7 +4,6 @@ import * as ui from '../ui/ui.js';
 import { displayHistoryChart } from '../ui/charts.js';
 import { openLoginModal } from '../modals/modals.js';
 import { showToast } from '../ui/toasts.js';
-import { handleNotificationEvent } from '../events/notifications.js';
 import { renderDevices, renderServers } from '../device/dashboard.js';
 
 export function initSocketListeners() {
@@ -179,12 +178,6 @@ export function initSocketListeners() {
     state.socket.on('connect', () => {
         state.socket.emit('request_initial_state');
         state.socket.emit('request_backups');
-    });
-}
-
-export function setupNotificationListener() {
-    state.socket.on('new_notification', (data) => {
-        handleNotificationEvent(data);
     });
 }
 

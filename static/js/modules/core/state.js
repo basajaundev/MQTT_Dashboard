@@ -16,8 +16,6 @@ export const state = {
     messagesFooterExpanded: localStorage.getItem('messagesFooterExpanded') !== 'false',
     lastSeenMessageCount: 0,
     selectedDevices: [],
-    notificationsEnabled: false,
-    notificationsSound: true,
     currentDevicePage: 1,
     currentDeviceEvents: [],
     currentDeviceEventFilter: '',
