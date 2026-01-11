@@ -53,7 +53,7 @@ MQTT_Dashboard/
 │   ├── models.py          # SQLAlchemy models (12 models: Server, Device, Task, Alert, etc.)
 │   ├── persistence.py     # DB operations (queries, CRUD)
 │   ├── routes.py          # Flask HTTP routes
-│   ├── socket_handlers.py # Socket.IO event handlers (900+ lines)
+│   ├── socket_handlers.py # Socket.IO event handlers
 │   ├── mqtt_callbacks.py  # MQTT message handlers (on_connect, on_message, on_disconnect)
 │   ├── globals.py         # App init (app, db, scheduler, mqtt_state)
 │   ├── validation.py      # Input validation functions
@@ -109,6 +109,39 @@ except ValueError as e:
 **SQLAlchemy:** Explicit `__tablename__`, use `db.Column`, always `db.session.commit()`.
 
 **App Context:** Always use `with app.app_context():` for DB operations outside request handlers.
+
+## Settings System
+
+**Storage:** All settings stored in `settings` table with `key`/`value` columns.
+
+**Default Settings** (auto-migrated on startup):
+- **General:** `refresh_interval` (30s), `max_missed_pings` (2)
+- **Toast:** `toast_enabled` (true), `toast_duration` (5s), `toast_position` (top-right), `toast_animation` (fade), `toast_types` (all)
+- **Backup:** `auto_backup_enabled` (false), `auto_backup_interval` (24h), `auto_backup_keep` (7)
+- **MQTT:** `mqtt_keepalive` (60s), `mqtt_reconnect_delay` (5s), `mqtt_default_qos` (1), `mqtt_clean_session` (true)
+
+**Access in Python:**
+```python
+from src.globals import config
+keepalive = int(config['settings'].get('mqtt_keepalive', 60))
+```
+
+**Access in JavaScript:**
+```javascript
+const settings = state.config?.settings || {};
+const keepalive = settings.mqtt_keepalive || 60;
+```
+
+## MQTT Configuration
+
+**Settings used when connecting to broker:**
+- `mqtt_keepalive`: Keepalive interval in seconds (default: 60)
+- `mqtt_reconnect_delay`: Delay before reconnecting (default: 5s)
+- `mqtt_clean_session`: Whether to start with clean session (default: true)
+- `mqtt_default_qos`: Default QoS for published messages (default: 1)
+
+**Backend Handler** (`socket_handlers.py`):
+- `handle_update_mqtt_config()`: Updates settings and applies to new connections
 
 ## Backup System Architecture
 
