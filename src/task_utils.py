@@ -6,7 +6,7 @@ from datetime import datetime
 from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.triggers.cron import CronTrigger
 
-from src.globals import mqtt_state, socketio, app
+from src.globals import mqtt_state, socketio, app, config
 
 logger = logging.getLogger(__name__)
 
@@ -177,10 +177,9 @@ def execute_scheduled_task(task_id, topic, payload, task_data=None):
         try:
             client = mqtt_state.get('client')
             if client and client.is_connected():
-                # Process placeholders
                 processed_payload = process_placeholders(payload, task_id)
-
-                client.publish(topic, processed_payload)
+                mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+                client.publish(topic, processed_payload, qos=mqtt_qos)
                 logger.info(f"Task executed: {topic} -> {processed_payload}")
 
                 task_name = task_data.get('name', 'Scheduled Task') if task_data else 'Scheduled Task'

@@ -10,7 +10,8 @@ from src.globals import (
     subscribed_topics, devices, devices_lock, scheduled_tasks, alerts,
     socketio, scheduler, message_history, MAX_MESSAGES,
     global_state,
-    DEVICE_STATUS_TOPIC, DEVICE_PONG_TOPIC, DEVICE_PING_TOPIC, DEVICE_CMD_BROADCAST_TOPIC, DEVICE_CONFIG_TOPIC
+    DEVICE_STATUS_TOPIC, DEVICE_PONG_TOPIC, DEVICE_PING_TOPIC, DEVICE_CMD_BROADCAST_TOPIC, DEVICE_CONFIG_TOPIC,
+    config
 )
 from src.persistence import load_subscriptions, load_tasks, load_message_triggers, insert_sensor_data, get_alerts, get_or_create_device, is_device_allowed, get_all_known_devices, add_device_event
 
@@ -145,7 +146,8 @@ def auto_refresh_loop():
                 socketio.emit('devices_update', {'devices': devices})
             
             ping_command = json.dumps({"cmd": "PING", "time": int(time.time())})
-            client.publish(DEVICE_PING_TOPIC, ping_command)
+            mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+            client.publish(DEVICE_PING_TOPIC, ping_command, qos=mqtt_qos)
             
             socketio.sleep(interval)
         else:
@@ -211,9 +213,10 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
             socketio.emit('alerts_update', {'alerts': alerts})
 
         logger.info("📢 Solicitando estado inicial de dispositivos...")
-        client.publish(DEVICE_PING_TOPIC, json.dumps({"cmd": "PING", "time": int(time.time())}))
-        client.publish(DEVICE_CMD_BROADCAST_TOPIC, json.dumps({"cmd": "STATUS"}))
-        client.publish(DEVICE_CMD_BROADCAST_TOPIC, json.dumps({"cmd": "GET_CONFIG"}))
+        mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+        client.publish(DEVICE_PING_TOPIC, json.dumps({"cmd": "PING", "time": int(time.time())}), qos=mqtt_qos)
+        client.publish(DEVICE_CMD_BROADCAST_TOPIC, json.dumps({"cmd": "STATUS"}), qos=mqtt_qos)
+        client.publish(DEVICE_CMD_BROADCAST_TOPIC, json.dumps({"cmd": "GET_CONFIG"}), qos=mqtt_qos)
 
         if not mqtt_state.get('background_task_started'):
             mqtt_state['background_task_started'] = True
@@ -552,7 +555,8 @@ def check_message_triggers(topic, payload_str):
                     processed_payload = process_placeholders(action_payload)
                     client = mqtt_state.get('client')
                     if client and client.is_connected():
-                        client.publish(action_topic, processed_payload)
+                        mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+                        client.publish(action_topic, processed_payload, qos=mqtt_qos)
                         add_message_to_history(
                             f"Trigger: {trigger['name']}",
                             f"Published to {action_topic}: {processed_payload}",

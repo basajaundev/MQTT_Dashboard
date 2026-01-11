@@ -198,9 +198,10 @@ def handle_ping_all_devices():
         socketio.emit('devices_update', {'devices': devices})
     
     ping_command = json.dumps({"cmd": "PING", "time": int(time.time())})
-    client.publish(DEVICE_PING_TOPIC, ping_command)
+    mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+    client.publish(DEVICE_PING_TOPIC, ping_command, qos=mqtt_qos)
     status_command = json.dumps({"cmd": "STATUS"})
-    client.publish(DEVICE_CMD_BROADCAST_TOPIC, status_command)
+    client.publish(DEVICE_CMD_BROADCAST_TOPIC, status_command, qos=mqtt_qos)
     
     add_message_to_history('SISTEMA', '📢 Actualización completa solicitada...', direction='out')
 
@@ -224,7 +225,8 @@ def handle_request_single_device_status(data):
         if device_id and location:
             topic = f"{DEVICE_CMD_TOPIC_PREFIX}/{device_id}/{location}"
             command = json.dumps({"cmd": "STATUS"})
-            client.publish(topic, command)
+            mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+            client.publish(topic, command, qos=mqtt_qos)
             logger.info(f"📢 Solicitando estado al dispositivo: {topic}")
             add_message_to_history('SISTEMA', f'📢 Solicitando estado a <code>{topic}</code>', direction='out')
 
@@ -243,7 +245,8 @@ def handle_request_device_config(data):
         if device_id and location:
             topic = f"{DEVICE_CMD_TOPIC_PREFIX}/{device_id}/{location}"
             command = json.dumps({"cmd": "GET_CONFIG"})
-            client.publish(topic, command)
+            mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+            client.publish(topic, command, qos=mqtt_qos)
             logger.info(f"⚙️ Solicitando configuración al dispositivo: {topic}")
             add_message_to_history('SISTEMA', f'⚙️ Solicitando configuración a <code>{topic}</code>', direction='out')
 
@@ -262,7 +265,8 @@ def handle_reboot_device(data):
             topic = f"{DEVICE_CMD_TOPIC_PREFIX}/{device_id}/{location}"
             command = json.dumps({"cmd": "REBOOT"})
             logger.info(f"🔥 Enviando comando REBOOT a: {topic}")
-            client.publish(topic, command)
+            mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+            client.publish(topic, command, qos=mqtt_qos)
             add_message_to_history('SISTEMA', f'🔥 Comando REBOOT enviado a <code>{topic}</code>', direction='out')
 
 @socketio.on('get_device_history')
@@ -349,25 +353,29 @@ def _internal_mqtt_connect(data):
         return
 
     try:
+        mqtt_keepalive = int(config['settings'].get('mqtt_keepalive', 60))
+        mqtt_reconnect_delay = int(config['settings'].get('mqtt_reconnect_delay', 5))
+        mqtt_clean_session = config['settings'].get('mqtt_clean_session', 'true') == 'true'
+
         client_userdata = {'server_name': global_state['active_server_name']}
         client_id = f"flask-mqtt-dashboard-{uuid.uuid4()}"
-        new_client = mqtt.Client(client_id=client_id, callback_api_version=CallbackAPIVersion.VERSION2, userdata=client_userdata)
+        new_client = mqtt.Client(client_id=client_id, callback_api_version=CallbackAPIVersion.VERSION2, userdata=client_userdata, clean_session=mqtt_clean_session)
         new_client.on_connect = on_connect
         new_client.on_disconnect = on_disconnect
         new_client.on_message = on_message
-        
+
         if global_state['active_server_config'].get('username'):
             new_client.username_pw_set(global_state['active_server_config']['username'], global_state['active_server_config'].get('password'))
-        
-        new_client.connect(global_state['active_server_config']['broker'], global_state['active_server_config']['port'], 60)
+
+        new_client.connect(global_state['active_server_config']['broker'], global_state['active_server_config']['port'], mqtt_keepalive)
         new_client.loop_start()
-        
-        new_client.reconnect_delay_set(min_delay=10, max_delay=60)
-        
+
+        new_client.reconnect_delay_set(min_delay=mqtt_reconnect_delay, max_delay=mqtt_reconnect_delay * 2)
+
         mqtt_state['client'] = new_client
         mqtt_state['auto_reconnect'] = True
         save_last_selected_server()
-        logger.info(f"🔄 Conectado a {global_state['active_server_config']['broker']}:{global_state['active_server_config']['port']} (Servidor: {global_state['active_server_name']})")
+        logger.info(f"🔄 Conectado a {global_state['active_server_config']['broker']}:{global_state['active_server_config']['port']} (Servidor: {global_state['active_server_name']}, keepalive={mqtt_keepalive}, reconnect={mqtt_reconnect_delay}s, clean_session={mqtt_clean_session})")
     except Exception as e:
         logger.error(f"❌ Error al conectar: {e}")
         emit('mqtt_status', {'connected': False, 'message': f'❌ Error: {str(e)}', 'timestamp': datetime.now().strftime('%H:%M:%S')})
@@ -585,7 +593,8 @@ def handle_mqtt_publish(data):
         return
     client = mqtt_state.get('client')
     if client and client.is_connected() and topic:
-        client.publish(topic, payload)
+        mqtt_qos = int(config['settings'].get('mqtt_default_qos', 1))
+        client.publish(topic, payload, qos=mqtt_qos)
         add_message_to_history('SISTEMA', f'📤Publicado en {topic}: {payload}', force=True, direction='out')
         add_message_to_history('SISTEMA', f'📤Publicado en {topic}: {payload}', force=True, direction='out')
 
