@@ -325,10 +325,13 @@ export function renderAlerts() {
 
 export function populateDeviceSelects() {
     const knownDevices = state.knownDevices || [];
+    const activeServerName = state.config.servers?.[Object.keys(state.config.servers || {}).find(k => state.config.servers[k].id === state.activeServerId)]?.name || '';
+
+    const serverDevices = knownDevices.filter(d => d.server === activeServerName);
 
     if (elements.alertDevice) {
         elements.alertDevice.innerHTML = '<option value="*">Cualquier Dispositivo (*)</option>';
-        knownDevices.forEach(d => {
+        serverDevices.forEach(d => {
             const option = document.createElement('option');
             const value = `${d.id}@${d.location}`;
             option.value = value;
@@ -339,7 +342,7 @@ export function populateDeviceSelects() {
 
     if (elements.whitelistInput) {
         elements.whitelistInput.innerHTML = '<option value="">Dispositivo...</option>';
-        knownDevices.forEach(d => {
+        serverDevices.forEach(d => {
             const option = document.createElement('option');
             const value = `${d.id}@${d.location}`;
             option.value = value;

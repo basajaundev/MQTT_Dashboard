@@ -138,7 +138,7 @@ def get_current_state():
         'access_lists': {
             'whitelist': get_whitelist(server_name) if server_name != "N/A" else []
         },
-        'known_devices': get_all_known_devices(server_name) if server_name != "N/A" else [],
+        'known_devices': get_all_known_devices(),
         'groups': get_groups(server_name) if server_name != "N/A" else []
     }
 

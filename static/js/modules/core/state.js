@@ -6,6 +6,7 @@ export const state = {
     activeServerId: null,
     config: {},
     devices: {},
+    knownDevices: [],
     tasks: [],
     alerts: [],
     subscribedTopics: [],

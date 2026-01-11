@@ -116,7 +116,7 @@ export function renderServers() {
     }
 
     const currentServerId = state.activeServerId;
-    const devices = state.devices || {};
+    const knownDevices = state.knownDevices || [];
     const tasks = state.tasks || {};
 
     elements.serversListGrid.innerHTML = serverNames.map(name => {
@@ -124,7 +124,7 @@ export function renderServers() {
         const isActive = server.id === currentServerId;
         const isConnected = state.isConnected && isActive;
 
-        const serverDevices = Object.values(devices).filter(d => d.server_id === server.id).length;
+        const serverDevices = knownDevices.filter(d => d.server === server.name).length;
         const serverTasks = Object.values(tasks).filter(t => t.server_name === server.name).length;
 
         const statusClass = isConnected ? 'server-status-connected' : 'server-status-disconnected';

@@ -576,11 +576,14 @@ def update_device_alias(dev_id, dev_location, new_alias):
         db.session.rollback()
         return False
 
-def get_all_known_devices(server_name):
-    """Recupera todos los dispositivos registrados en la base de datos para un servidor."""
+def get_all_known_devices(server_name=None):
+    """Recupera todos los dispositivos registrados en la base de datos para un servidor o todos si server_name es null."""
     try:
-        devices = Device.query.filter_by(dev_server=server_name).all()
-        return [{'id': d.dev_id, 'name': d.dev_name, 'location': d.dev_location, 'alias': d.dev_alias} for d in devices]
+        if server_name:
+            devices = Device.query.filter_by(dev_server=server_name).all()
+        else:
+            devices = Device.query.all()
+        return [{'id': d.dev_id, 'name': d.dev_name, 'location': d.dev_location, 'alias': d.dev_alias, 'server': d.dev_server} for d in devices]
     except Exception as e:
         logger.error(f"❌ Error recuperando dispositivos conocidos: {e}")
         return []
