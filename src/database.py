@@ -56,7 +56,16 @@ def init_db():
                 'max_missed_pings': '2',
                 'auto_backup_enabled': 'true',
                 'auto_backup_interval': '24',
-                'auto_backup_keep': '7'
+                'auto_backup_keep': '7',
+                'toast_enabled': 'true',
+                'toast_duration': '5',
+                'toast_position': 'top-right',
+                'toast_animation': 'fade',
+                'toast_types': 'all',
+                'mqtt_keepalive': '60',
+                'mqtt_reconnect_delay': '5',
+                'mqtt_default_qos': '1',
+                'mqtt_clean_session': 'true'
             }
             changes = False
             for key, default_val in settings_to_check.items():
