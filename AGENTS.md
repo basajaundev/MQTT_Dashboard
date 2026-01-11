@@ -43,13 +43,14 @@ MQTT_Dashboard/
 ├── AGENTS.md              # This file
 ├── src/
 │   ├── database.py        # DB initialization
-│   ├── models.py          # SQLAlchemy models
+│   ├── models.py          # SQLAlchemy models (12 models: Server, Device, Task, Alert, etc.)
 │   ├── persistence.py     # DB operations (queries, CRUD)
 │   ├── routes.py          # Flask HTTP routes
-│   ├── socket_handlers.py # Socket.IO event handlers
-│   ├── mqtt_callbacks.py  # MQTT message handlers
+│   ├── socket_handlers.py # Socket.IO event handlers (900+ lines)
+│   ├── mqtt_callbacks.py  # MQTT message handlers (on_connect, on_message, on_disconnect)
 │   ├── globals.py         # App init (app, db, scheduler, mqtt_state)
-│   └── validation.py      # Input validation functions
+│   ├── validation.py      # Input validation functions
+│   └── task_utils.py      # APScheduler triggers + task execution
 ├── static/js/
 │   ├── main.js            # Entry point
 │   └── modules/
