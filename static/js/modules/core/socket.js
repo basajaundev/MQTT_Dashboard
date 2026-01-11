@@ -13,6 +13,8 @@ export function initSocketListeners() {
 
         // 1. Actualizar todo el estado interno
         state.isAdmin = newState.is_admin;
+        state.isConnected = newState.mqtt_status?.connected || false;
+        state.activeServerId = newState.active_server_id || null;
         state.config = newState.config || {};
         state.topics = newState.topics || [];
         state.tasks = newState.tasks || [];
@@ -111,7 +113,14 @@ export function initSocketListeners() {
     state.socket.on('topics_update', (data) => { state.subscribedTopics = data.topics || []; ui.renderTopics(); });
     state.socket.on('task_update', (data) => { state.tasks = data.tasks || []; ui.renderTasks(); });
     state.socket.on('message_triggers_update', (data) => { state.messageTriggers = data.triggers || []; ui.renderMessageTriggers(); });
-    state.socket.on('mqtt_status', (data) => ui.updateStatus(data.connected));
+    state.socket.on('mqtt_status', (data) => {
+        state.isConnected = data.connected;
+        if (data.active_server_id !== undefined) {
+            state.activeServerId = data.active_server_id;
+        }
+        ui.updateStatus(data.connected);
+        renderServers();
+    });
     state.socket.on('mqtt_reconnecting', (data) => ui.setReconnecting(data.reconnecting));
     
     // --- Backup Events ---

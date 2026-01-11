@@ -3,6 +3,7 @@ export const state = {
     socket: io(), // Instancia única de Socket.IO
     isConnected: false,
     isAdmin: false,
+    activeServerId: null,
     config: {},
     devices: {},
     tasks: [],

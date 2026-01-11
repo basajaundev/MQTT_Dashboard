@@ -115,7 +115,7 @@ export function renderServers() {
         return;
     }
 
-    const currentServerId = state.config.currentServerId;
+    const currentServerId = state.activeServerId;
     const devices = state.devices || {};
     const tasks = state.tasks || {};
 

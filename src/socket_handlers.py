@@ -110,6 +110,14 @@ def get_current_state():
     is_mqtt_connected = mqtt_state['client'] is not None and mqtt_state['client'].is_connected()
     server_name = global_state['active_server_name']
     
+    active_server_id = None
+    if server_name and server_name != "N/A":
+        servers = config.get('servers', {})
+        for server in servers.values():
+            if server.get('name') == server_name:
+                active_server_id = server.get('id')
+                break
+    
     current_alerts = []
     if is_mqtt_connected and server_name != "N/A":
         current_alerts = get_alerts(server_name)
@@ -119,6 +127,7 @@ def get_current_state():
 
     return {
         'mqtt_status': {'connected': is_mqtt_connected},
+        'active_server_id': active_server_id,
         'topics': subscribed_topics,
         'tasks': get_tasks_info(),
         'devices': current_devices,

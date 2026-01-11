@@ -164,7 +164,16 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
         mqtt_state['auto_reconnect'] = True
         mqtt_state['user_disconnected'] = False
         socketio.emit('mqtt_reconnecting', {'reconnecting': False})
-        socketio.emit('mqtt_status', {'connected': True})
+        
+        active_server_id = None
+        from src.globals import config
+        servers = config.get('servers', {})
+        for server in servers.values():
+            if server.get('name') == server_name:
+                active_server_id = server.get('id')
+                break
+        
+        socketio.emit('mqtt_status', {'connected': True, 'active_server_id': active_server_id})
         logger.info(f"✅ Conectado al broker MQTT: {server_name}")
         add_message_to_history('SISTEMA', f'✅ Conectado a {server_name}')
         
@@ -202,10 +211,10 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
         scheduler.resume()
         logger.info("⏰ Scheduler reanudado.")
     else:
-        mqtt_state['connected'] = False
-        logger.error(f"❌ Error de conexión MQTT en '{server_name}': {reason_code.getName()}")
-        add_message_to_history('ERROR', f'❌ Error de conexión en {server_name}: {reason_code.getName()}')
-        socketio.emit('mqtt_status', {'connected': False})
+        mqtt_state['auto_reconnect'] = False
+        logger.info(f"⚠️ Desconectado del broker MQTT: {server_name}")
+        add_message_to_history('SISTEMA', f'⚠️ Desconectado de {server_name}')
+        socketio.emit('mqtt_status', {'connected': False, 'active_server_id': null})
 
 def on_disconnect(client, userdata, flags, reason_code, properties=None):
     """Callback para cuando el cliente se desconecta del broker MQTT."""
