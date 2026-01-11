@@ -3,7 +3,7 @@ import { elements } from './dom.js';
 import * as ui from '../ui/ui.js';
 import { displayHistoryChart } from '../ui/charts.js';
 import { openLoginModal } from '../modals/modals.js';
-import { showToast, showToastWithAction } from '../ui/toasts.js';
+import { showToast, showToastWithAction, updateToastConfig } from '../ui/toasts.js';
 import { renderDevices, renderServers } from '../device/dashboard.js';
 
 export function initSocketListeners() {
@@ -82,6 +82,7 @@ export function initSocketListeners() {
             elements.toastSettings.sound.checked = settings.toast_sound !== 'false';
             elements.toastSettings.animation.value = settings.toast_animation || 'fade';
             elements.toastSettings.types.value = settings.toast_types || 'all';
+            updateToastConfig(settings);
         }
     });
 
