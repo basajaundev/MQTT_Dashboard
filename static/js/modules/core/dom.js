@@ -23,6 +23,7 @@ export function initElements() {
         newTaskBtn: document.getElementById('newTaskBtn'),
 
         deviceGrid: document.getElementById('deviceGrid'),
+        deviceSearch: document.getElementById('deviceSearch'),
         historyModal: document.getElementById('historyModal'),
         historyModalTitle: document.getElementById('historyModalTitle'),
         historyChartCanvas: document.getElementById('historyChart'),

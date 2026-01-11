@@ -21,6 +21,13 @@ export async function initEventListeners() {
         console.log('[DEBUG] Login button not found');
     }
 
+    if (elements.deviceSearch) {
+        elements.deviceSearch.addEventListener('input', (e) => {
+            const { renderDevices } = await import('../device/dashboard.js');
+            renderDevices(e.target.value);
+        });
+    }
+
     document.body.addEventListener('click', async (e) => {
         const target = e.target.closest('[data-action]');
         if (!target) return;

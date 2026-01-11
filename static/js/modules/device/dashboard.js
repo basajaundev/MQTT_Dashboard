@@ -19,7 +19,7 @@ function formatUptime(seconds) {
 
 export { formatUptime };
 
-export function renderDevices() {
+export function renderDevices(searchTerm = '') {
     if (!elements.deviceGrid) return;
 
     const whitelist = state.accessLists?.whitelist || [];
@@ -32,14 +32,24 @@ export function renderDevices() {
         deviceToGroup[key] = w.group_name || 'Sin Grupo';
     });
 
-    const deviceKeys = Object.keys(state.devices).filter(key => allowedKeys.has(key));
+    let deviceKeys = Object.keys(state.devices).filter(key => allowedKeys.has(key));
+
+    if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        deviceKeys = deviceKeys.filter(key => {
+            const device = state.devices[key];
+            return device.name?.toLowerCase().includes(term) ||
+                   device.id?.toLowerCase().includes(term) ||
+                   device.location?.toLowerCase().includes(term);
+        });
+    }
 
     if (deviceKeys.length === 0) {
         elements.deviceGrid.innerHTML = `
             <div class="empty-state">
                 <span class="empty-icon">📡</span>
-                <span class="empty-title">Esperando dispositivos...</span>
-                <span class="empty-action">${state.isConnected ? 'Añade dispositivos a la whitelist desde Configuración' : 'Conecta a un servidor MQTT para ver los dispositivos'}</span>
+                <span class="empty-title">${searchTerm ? 'Sin resultados' : 'Esperando dispositivos...'}</span>
+                <span class="empty-action">${searchTerm ? 'Prueba con otros términos de búsqueda' : state.isConnected ? 'Añade dispositivos a la whitelist desde Configuración' : 'Conecta a un servidor MQTT para ver los dispositivos'}</span>
             </div>
         `;
         return;
