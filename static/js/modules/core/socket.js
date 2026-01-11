@@ -4,7 +4,7 @@ import * as ui from '../ui/ui.js';
 import { displayHistoryChart } from '../ui/charts.js';
 import { openLoginModal } from '../modals/modals.js';
 import { showToast, showToastWithAction, updateToastConfig } from '../ui/toasts.js';
-import { renderDevices, renderServers, renderTopics } from '../device/dashboard.js';
+import { renderDevices, renderServers } from '../device/dashboard.js';
 
 export function initSocketListeners() {
     // --- Listener Unificado para el Estado Principal ---
@@ -129,7 +129,7 @@ export function initSocketListeners() {
 
         ui.updateStatus(data.connected);
         renderServers();
-        renderTopics();
+        ui.renderTopics();
     });
     state.socket.on('mqtt_reconnecting', (data) => ui.setReconnecting(data.reconnecting));
     
