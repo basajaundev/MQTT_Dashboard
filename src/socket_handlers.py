@@ -797,7 +797,7 @@ def handle_trigger_backup():
 def handle_update_backup_config(data):
     """Actualizar configuración de backup y reconfigurar scheduler."""
     if not session.get('is_admin'): return
-    
+
     def scheduled_backup_job():
         """Función de backup automático llamada por el scheduler."""
         try:
@@ -810,48 +810,48 @@ def handle_update_backup_config(data):
                 logger.warning("Backup automatico falló")
         except Exception as e:
             logger.error(f"Error en backup automatico: {e}")
-    
+
     try:
         from src.globals import scheduler, app
         from src.models import Setting
-        
-        enabled = data.get('auto_backup_enabled', False)
-        interval = data.get('auto_backup_interval', 24)
-        
+
+        config['settings']['auto_backup_enabled'] = 'true' if data.get('auto_backup_enabled', False) else 'false'
+        config['settings']['auto_backup_interval'] = str(data.get('auto_backup_interval', 24))
+        config['settings']['auto_backup_keep'] = str(data.get('auto_backup_keep', 7))
+
         with app.app_context():
             enabled_setting = Setting.query.filter_by(key='auto_backup_enabled').first()
             interval_setting = Setting.query.filter_by(key='auto_backup_interval').first()
             keep_setting = Setting.query.filter_by(key='auto_backup_keep').first()
-            
+
             if enabled_setting:
-                enabled_setting.value = 'true' if enabled else 'false'
+                enabled_setting.value = config['settings']['auto_backup_enabled']
             if interval_setting:
-                interval_setting.value = str(interval)
+                interval_setting.value = config['settings']['auto_backup_interval']
             if keep_setting:
-                keep_setting.value = str(data.get('auto_backup_keep', 7))
-            
+                keep_setting.value = config['settings']['auto_backup_keep']
+
             db.session.commit()
-            
-            load_config()
-            
+
             broadcast_full_update()
-            
+
             if scheduler.get_job('auto_backup'):
                 scheduler.remove_job('auto_backup')
-            
-            if enabled:
+
+            if config['settings']['auto_backup_enabled'] == 'true':
+                hours = int(config['settings']['auto_backup_interval'])
                 scheduler.add_job(
                     scheduled_backup_job,
                     'interval',
-                    hours=interval,
+                    hours=hours,
                     id='auto_backup',
                     replace_existing=True,
                     name='Backup automático de base de datos'
                 )
-                logger.info(f"Job backup configurado cada {interval} horas")
+                logger.info(f"Job backup configurado cada {hours} horas")
             else:
                 logger.info("Job backup deshabilitado")
-        
+
         emit('backup_config_updated', {'success': True})
     except Exception as e:
         logger.error(f"Error actualizando config de backup: {e}")
