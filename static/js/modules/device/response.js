@@ -202,7 +202,7 @@ export function handleDeviceConfigUpdate(data) {
         }
     }
 
-    showToast('Configuracion actualizada', 'success');
+    showToast('Configuración actualizada', 'success');
 }
 
 function formatUptime(seconds) {

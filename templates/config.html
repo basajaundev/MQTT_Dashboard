@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Configuracion - MQTT IoT
+    Configuración - MQTT IoT
 {% endblock %}
 
 {% block content %}
@@ -64,7 +64,7 @@
                     <div class="fused-third notifications-third">
                         <h4>Toast</h4>
 
-                        <!-- Configuracion de Toast -->
+                        <!-- Configuración de Toast -->
                         <div class="toast-config-inline">
                             <div class="toast-config-row">
                                 <label for="toastEnabled">Habilitar Toast</label>
@@ -74,8 +74,8 @@
                                 </label>
                             </div>
                             <div class="toast-config-row">
-                                <label for="toastDuration">Duracion</label>
-                                <input type="number" id="toastDuration" min="1" max="30" value="5" class="compact-number-input" aria-label="Duracion del toast en segundos">
+                                <label for="toastDuration">Duración</label>
+                                <input type="number" id="toastDuration" min="1" max="30" value="5" class="compact-number-input" aria-label="Duración del toast en segundos">
                                 <span class="unit-label">seg.</span>
                             </div>
                             <div class="toast-config-row">
@@ -113,7 +113,7 @@
             <!-- Seccion Whitelist + Grupos Fusionados -->
             <section class="settings-section">
                 <h3>Gestion de Dispositivos</h3>
-                <p class="section-desc">Gestiona los dispositivos permitidos y organizalos en grupos.</p>
+                <p class="section-desc">Gestiona los dispositivos permitidos y organízalos en grupos.</p>
 
                 <div class="fused-card-content">
                     <!-- Whitelist (mitad izquierda) -->
@@ -181,8 +181,8 @@
 
             <!-- Seccion MQTT -->
             <section class="settings-section settings-section-mqtt">
-                <h3>Configuracion MQTT</h3>
-                <p class="section-desc">Ajustes de conexion y comportamiento MQTT.</p>
+                <h3>Configuración MQTT</h3>
+                <p class="section-desc">Ajustes de conexión y comportamiento MQTT.</p>
 
                 <div class="mqtt-config-row">
                     <div class="mqtt-control-item">
@@ -190,7 +190,7 @@
                         <input type="number" id="mqttKeepalive" value="60" min="5" max="300" aria-label="Intervalo keepalive en segundos">
                     </div>
                     <div class="mqtt-control-item">
-                        <label for="mqttReconnectDelay">Delay Reconexion (segundos)</label>
+                        <label for="mqttReconnectDelay">Delay Reconexión (segundos)</label>
                         <input type="number" id="mqttReconnectDelay" value="5" min="1" max="60" aria-label="Delay antes de reconectar">
                     </div>
                     <div class="mqtt-control-item">
@@ -213,7 +213,7 @@
 
                 <div class="mqtt-actions-bottom">
                     <button class="btn-primary full-width-btn" data-action="save-mqtt-config">
-                        Guardar Configuracion MQTT
+                        Guardar Configuración MQTT
                     </button>
                 </div>
             </section>
