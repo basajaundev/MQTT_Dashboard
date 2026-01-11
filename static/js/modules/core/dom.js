@@ -100,6 +100,13 @@ export function initElements() {
             backupsCount: document.getElementById('backupsCount')
         },
 
+        mqttSection: {
+            keepalive: document.getElementById('mqttKeepalive'),
+            reconnectDelay: document.getElementById('mqttReconnectDelay'),
+            defaultQoS: document.getElementById('mqttDefaultQoS'),
+            cleanSession: document.getElementById('mqttCleanSession')
+        },
+
         deviceModals: {
             rebootModal: document.getElementById('deviceRebootModal'),
             aliasModal: document.getElementById('deviceAliasModal'),
