@@ -8,7 +8,6 @@
 .topic-item, .message-item, .list-item { padding: 12px; background: var(--bg-light-gray); border-radius: 6px; }
 .topic-item { display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary-color); }
 .topic-name { font-weight: 600; color: var(--text-dark); font-family: monospace; }
-.btn-unsubscribe { background: var(--danger-color); color: #1a1b26; padding: 6px 12px; font-size: 12px; }
 
 .publish-form { display: flex; flex-direction: column; gap: 15px; }
 .btn-publish { background: var(--info-color); color: #1a1b26; }

@@ -102,7 +102,7 @@ export function renderTopics() {
     elements.topicsList.innerHTML = state.subscribedTopics.map(topic => `
         <div class="topic-item">
             <span class="topic-name">${topic}</span>
-            <button class="btn-unsubscribe" data-action="unsubscribe" data-topic="${topic}">Cancelar</button>
+            <button class="btn-small btn-danger-text" data-action="unsubscribe" data-topic="${topic}">Cancelar</button>
         </div>`).join('');
 }
 
