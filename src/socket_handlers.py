@@ -431,6 +431,37 @@ def handle_save_settings(data):
         logger.error(f"❌ Error guardando ajustes: {e}", exc_info=True)
         db.session.rollback()
 
+@socketio.on('update_mqtt_config')
+def handle_update_mqtt_config(data):
+    """Actualizar configuración MQTT."""
+    if not session.get('is_admin'): return
+    logger.info(f"💾 Recibida petición para guardar configuración MQTT: {data}")
+    try:
+        for key, value in data.items():
+            if isinstance(value, bool):
+                str_value = 'true' if value else 'false'
+            else:
+                str_value = str(value)
+
+            setting = Setting.query.filter_by(key=key).first()
+            if setting:
+                logger.info(f"   Actualizando {key}: {setting.value} -> {str_value}")
+                setting.value = str_value
+            else:
+                logger.info(f"   Creando nuevo ajuste {key}: {str_value}")
+                db.session.add(Setting(key=key, value=str_value))
+
+            config['settings'][key] = str_value
+
+        db.session.commit()
+        logger.info(f"⚙️ Configuración MQTT guardada exitosamente.")
+        emit('mqtt_config_updated', {'success': True})
+        broadcast_full_update()
+    except Exception as e:
+        logger.error(f"❌ Error guardando configuración MQTT: {e}", exc_info=True)
+        db.session.rollback()
+        emit('mqtt_config_updated', {'success': False, 'message': str(e)})
+
 @socketio.on('change_password')
 def handle_change_password(data):
     if not session.get('is_admin'): return

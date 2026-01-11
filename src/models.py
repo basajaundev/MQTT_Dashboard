@@ -31,7 +31,6 @@ class Group(db.Model):
 # Toast settings constants
 TOAST_DURATION = 'toast_duration'
 TOAST_POSITION = 'toast_position'
-TOAST_SOUND = 'toast_sound'
 TOAST_ANIMATION = 'toast_animation'
 TOAST_TYPES = 'toast_types'
 

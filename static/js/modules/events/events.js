@@ -110,6 +110,17 @@ export async function initEventListeners() {
                 }
                 break;
             }
+            case 'save-mqtt-config': {
+                const data = {
+                    mqtt_keepalive: parseInt(elements.mqttKeepalive?.value || 60, 10),
+                    mqtt_reconnect_delay: parseInt(elements.mqttReconnectDelay?.value || 5, 10),
+                    mqtt_default_qos: parseInt(elements.mqttDefaultQoS?.value || 1, 10),
+                    mqtt_clean_session: elements.mqttCleanSession?.checked || false
+                };
+                state.socket.emit('update_mqtt_config', data);
+                showToast('Configuración MQTT guardada.', 'success');
+                break;
+            }
             case 'manual-backup': {
                 showToast('Creando backup...', 'info');
                 state.socket.emit('trigger_backup');

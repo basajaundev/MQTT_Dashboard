@@ -30,8 +30,7 @@
     gap: 8px;
 }
 
-.notifications-toggle,
-.notifications-sound-toggle {
+.notifications-toggle {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -40,18 +39,15 @@
     transition: background-color 0.2s;
 }
 
-.notifications-toggle:hover,
-.notifications-sound-toggle:hover {
+.notifications-toggle:hover {
     background-color: var(--bg-light-gray);
 }
 
-.notifications-toggle input,
-.notifications-sound-toggle input {
+.notifications-toggle input {
     display: none;
 }
 
-.notifications-icon,
-.sound-icon {
+.notifications-icon {
     font-size: 18px;
     opacity: 0.6;
     transition: opacity 0.2s;
@@ -61,15 +57,7 @@
     opacity: 1;
 }
 
-.notifications-sound-toggle input:checked + .sound-icon {
-    opacity: 1;
-}
-
 .notifications-toggle input:not(:checked) + .notifications-icon {
-    opacity: 0.3;
-}
-
-.notifications-sound-toggle input:not(:checked) + .sound-icon {
     opacity: 0.3;
 }
 
@@ -638,5 +626,43 @@ body {
     .backup-item-actions {
         width: 100%;
         justify-content: flex-end;
+    }
+}
+
+/* MQTT Config Section */
+.settings-section-mqtt {
+    border-top-color: var(--info-color);
+}
+
+.mqtt-config-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.mqtt-options-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-light-gray);
+    border-radius: 6px;
+}
+
+.mqtt-options-row span {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+@media (max-width: 1200px) {
+    .mqtt-config-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .mqtt-config-grid {
+        grid-template-columns: 1fr;
     }
 }

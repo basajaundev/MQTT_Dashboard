@@ -59,7 +59,11 @@ def load_config():
             'toast_duration': '5',
             'toast_position': 'top-right',
             'toast_animation': 'fade',
-            'toast_types': 'all'
+            'toast_types': 'all',
+            'mqtt_keepalive': '60',
+            'mqtt_reconnect_delay': '5',
+            'mqtt_default_qos': '1',
+            'mqtt_clean_session': 'true'
         }
         for key, default_value in defaults.items():
             if key not in settings_data:

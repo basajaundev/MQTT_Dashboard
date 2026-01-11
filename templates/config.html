@@ -160,6 +160,43 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Seccion MQTT -->
+            <section class="settings-section settings-section-mqtt">
+                <h3>Configuracion MQTT</h3>
+                <p class="section-desc">Ajustes de conexion y comportamiento MQTT.</p>
+
+                <div class="mqtt-config-grid">
+                    <div class="input-group">
+                        <label for="mqttKeepalive">Keepalive (segundos)</label>
+                        <input type="number" id="mqttKeepalive" value="60" min="5" max="300" aria-label="Intervalo keepalive en segundos">
+                    </div>
+                    <div class="input-group">
+                        <label for="mqttReconnectDelay">Delay Reconexion (segundos)</label>
+                        <input type="number" id="mqttReconnectDelay" value="5" min="1" max="60" aria-label="Delay antes de reconectar">
+                    </div>
+                    <div class="input-group">
+                        <label for="mqttDefaultQoS">QoS por Defecto</label>
+                        <select id="mqttDefaultQoS" aria-label="QoS por defecto para mensajes">
+                            <option value="0">0 - At most once</option>
+                            <option value="1" selected>1 - At least once</option>
+                            <option value="2">2 - Exactly once</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mqtt-options-row">
+                    <label class="theme-switch">
+                        <input type="checkbox" id="mqttCleanSession" checked aria-label="Limpiar sesion al conectar">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Clean Session</span>
+                </div>
+
+                <button class="btn-primary" data-action="save-mqtt-config" style="margin-top: 15px;">
+                    Guardar Configuracion MQTT
+                </button>
+            </section>
         </div>
 
     </div>
