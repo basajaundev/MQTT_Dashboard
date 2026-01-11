@@ -73,15 +73,15 @@ export function initSocketListeners() {
         
         if (elements.toastSettings?.enabled) {
             elements.toastSettings.enabled.checked = settings.toast_enabled !== 'false';
-            elements.toastSettings.duration.value = settings.toast_duration || 5;
-            elements.toastSettings.position.value = settings.toast_position || 'top-right';
-            elements.toastSettings.animation.value = settings.toast_animation || 'fade';
-            elements.toastSettings.types.value = settings.toast_types || 'all';
+            if (elements.toastSettings.duration) elements.toastSettings.duration.value = settings.toast_duration || 5;
+            if (elements.toastSettings.position) elements.toastSettings.position.value = settings.toast_position || 'top-right';
+            if (elements.toastSettings.animation) elements.toastSettings.animation.value = settings.toast_animation || 'fade';
+            if (elements.toastSettings.types) elements.toastSettings.types.value = settings.toast_types || 'all';
         }
         if (elements.backupSection?.autoBackupEnabled) {
             elements.backupSection.autoBackupEnabled.checked = String(settings.auto_backup_enabled) === 'true';
-            elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
-            elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
+            if (elements.backupSection.autoBackupInterval) elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
+            if (elements.backupSection.autoBackupKeep) elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
         }
     });
 
