@@ -157,8 +157,8 @@ export function renderServers() {
                     </div>
                 </div>
                 <div class="server-card-footer">
-                    <button class="btn-icon" data-action="edit-server" data-server-id="${server.id}" title="Editar">✏️</button>
-                    <button class="btn-icon" data-action="delete-server" data-server-id="${server.id}" title="Eliminar">🗑️</button>
+                    <button class="btn-small" data-action="edit-server" data-server-id="${server.id}">Editar</button>
+                    <button class="btn-small btn-danger-text" data-action="delete-server" data-server-id="${server.id}">Eliminar</button>
                 </div>
             </div>`;
     }).join('');
