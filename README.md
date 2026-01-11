@@ -1,55 +1,64 @@
 # MQTT Dashboard
 
-Panel de control web para gestión de dispositivos IoT via MQTT.
+Panel de control web para gestion de dispositivos IoT via MQTT.
 
-## Descripción
+## Descripcion
 
-MQTT Dashboard es una aplicación web que permite gestionar y monitorizar dispositivos IoT conectados a través del protocolo MQTT. Proporciona una interfaz moderna y responsive para:
+MQTT Dashboard es una aplicacion web que permite gestionar y monitorizar dispositivos IoT conectados a traves del protocolo MQTT. Proporciona una interfaz moderna y responsive para:
 
-- **Gestión de servidores MQTT** - Múltiples conexiones simultáneas
-- **Monitorización en tiempo real** - Estado de dispositivos, latencia, sensores
+- **Gestion de servidores MQTT** - Multiple conexiones simultaneas
+- **Monitorizacion en tiempo real** - Estado de dispositivos, latencia, sensores
 - **Sistema de alertas** - Notificaciones configurables
-- **Tareas programadas** - Envío automático de comandos MQTT
-- **Disparadores automáticos** - Respuesta automática a eventos
-- **Backup automático** - Copias de seguridad con compresión
+- **Tareas programadas** - Envio automatico de comandos MQTT
+- **Disparadores automaticos** - Respuesta automatica a eventos
+- **Backup automatico** - Copias de seguridad con compresion
 
-## Características
+## Caracteristicas
 
-- Interfaz web responsive (desktop y móvil)
-- Comunicación bidireccional en tiempo real (WebSocket)
-- Soporte para múltiples grupos de dispositivos
+- Interfaz web responsive (desktop y movil)
+- Comunicacion bidireccional en tiempo real (WebSocket)
+- Soporte para multiples grupos de dispositivos
 - Persistencia de datos con SQLite
-- Configuración completa desde la interfaz
-- Búsqueda de dispositivos en tiempo real
-- Visualización de gráficos de sensores
+- Configuracion completa desde la interfaz
+- Busqueda de dispositivos en tiempo real
+- Visualizacion de graficos de sensores
 
-## Tecnologías
+## tecnologias
 
 ### Backend
 - **Flask** - Framework web
-- **Flask-SocketIO** - Comunicación WebSocket
-- **gevent** - Programación asíncrona
+- **Flask-SocketIO** - Comunicacion WebSocket
+- **gevent** - Programacion asincrona
 - **APScheduler** - Tareas programadas
 - **paho-mqtt** - Cliente MQTT
 - **Flask-SQLAlchemy** - ORM para base de datos
-- **Flask-Compress** - Compresión de respuestas
+- **Flask-Compress** - Compresion de respuestas
 
 ### Frontend
 - Vanilla JavaScript ES6+
 - CSS moderno con variables
 - Socket.IO client
-- Chart.js para gráficos
+- Chart.js para graficos
 
 ### Base de datos
 - **SQLite** - Base de datos embebida
 
-## Instalación
+## Creado con Inteligencia Artificial
+
+Este proyecto ha sido integramente creado utilizando inteligencia artificial:
+
+- **Fase inicial:** Gemini (Google)
+- **Fase actual:** MiniMax
+
+Agradecimiento especial a **OpenCode** (https://github.com/anomalyco/opencode) por proporcionar la plataforma deIA que facilita el desarrollo de este tipo de proyectos.
+
+## Instalacion
 
 ### Requisitos previos
 - Python 3.8 o superior
 - pip
 
-### Pasos de instalación
+### Pasos de instalacion
 
 ```bash
 # Clonar el repositorio
@@ -68,32 +77,32 @@ source venv/bin/activate
 # Instalar dependencias
 pip install -r requirements.txt
 
-# Ejecutar la aplicación
+# Ejecutar la aplicacion
 python app.py
 ```
 
-La aplicación estará disponible en `http://localhost:5000`
+La aplicacion estara disponible en `http://localhost:5000`
 
 ## Estructura del proyecto
 
 ```
 MQTT_Dashboard/
-├── app.py                    # Punto de entrada de la aplicación
+├── app.py                    # Punto de entrada de la aplicacion
 ├── requirements.txt          # Dependencias Python
-├── AGENTS.md                # Guía de desarrollo
-├── backup_db.py             # Sistema de backup con compresión
+├── AGENTS.md                # Guia de desarrollo
+├── backup_db.py             # Sistema de backup con compresion
 ├── docs/
-│   ├── ARCHITECTURE.md      # Documentación de arquitectura
-│   └── COMMUNICATION.md     # Protocolo de comunicación MQTT
+│   ├── ARCHITECTURE.md      # Documentacion de arquitectura
+│   └── COMMUNICATION.md     # Protocolo de comunicacion MQTT
 ├── src/
-│   ├── database.py          # Inicialización de base de datos
+│   ├── database.py          # Inicializacion de base de datos
 │   ├── models.py            # Modelos SQLAlchemy
 │   ├── persistence.py       # Operaciones de base de datos
 │   ├── routes.py            # Rutas HTTP
 │   ├── socket_handlers.py   # Manejadores Socket.IO
 │   ├── mqtt_callbacks.py    # Callbacks MQTT
 │   ├── globals.py           # Variables globales
-│   ├── validation.py        # Validación de entrada
+│   ├── validation.py        # Validacion de entrada
 │   └── task_utils.py        # Utilidades de tareas
 ├── static/
 │   ├── css/                 # Estilos CSS
@@ -101,42 +110,42 @@ MQTT_Dashboard/
 ├── templates/
 │   ├── layout.html          # Layout base
 │   ├── dashboard.html       # Panel de dispositivos
-│   ├── config.html          # Configuración
-│   └── *.html               # Otras páginas
+│   ├── config.html          # Configuracion
+│   └── *.html               # Otras paginas
 └── tests/                   # Tests
 ```
 
-## Configuración
+## Configuracion
 
-###添加伺服idores MQTT
+### Agregar servidores MQTT
 
-1. Ir a la sección "Configuración"
-2. En la pestaña "Servidores", hacer clic en "Añadir Servidor"
+1. Ir a la seccion "Configuracion"
+2. En la pesta?a "Servidores", hacer clic en "Anadir Servidor"
 3. Completar los datos:
    - Nombre del servidor
    - Broker (IP o hostname)
    - Puerto (por defecto 1883)
-   - Usuario y contraseña (opcional)
+   - Usuario y contrasena (opcional)
 
 ### Whitelist de dispositivos
 
 Los dispositivos deben estar en la whitelist para aparecer en el dashboard:
 
-1. Ir a "Configuración" > "Gestión de Dispositivos"
-2. Añadir dispositivos por ID y ubicación
+1. Ir a "Configuracion" > "Gestion de Dispositivos"
+2. Anadir dispositivos por ID y ubicacion
 3. Asignar a grupos (opcional)
 
 ### Ajustes del sistema
 
-- **Intervalo de refresco**: Tiempo entre refrescos automáticos (segundos)
-- **Tolerancia a fallos**: Número de PINGs perdidos antes de marcar offline
+- **Intervalo de refresco:** Tiempo entre refrescos automaticos (segundos)
+- **Tolerancia a fallos:** Numero de PINGs perdidos antes de marcar offline
 
-### Configuración MQTT
+### Configuracion MQTT
 
-- **Keepalive**: Intervalo de keepalive en segundos
-- **Delay de reconexión**: Delay antes de reconectar
-- **Clean session**: Sesión limpia al conectar
-- **QoS por defecto**: Calidad de servicio para mensajes
+- **Keepalive:** Intervalo de keepalive en segundos
+- **Delay de reconexion:** Delay antes de reconectar
+- **Clean session:** Sesion limpia al conectar
+- **QoS por defecto:** Calidad de servicio para mensajes
 
 ## Uso
 
@@ -155,40 +164,40 @@ Los dispositivos aparecen agrupados por grupo en el dashboard. Cada tarjeta mues
 
 ### Buscar dispositivos
 
-Usar el campo de búsqueda para filtrar dispositivos por nombre, ID o ubicación.
+Usar el campo de busqueda para filtrar dispositivos por nombre, ID o ubicacion.
 
 ### Enviar comandos
 
-1. Ir a la página del dispositivo
-2. Usar los botones de acción o enviar comandos personalizados
+1. Ir a la pagina del dispositivo
+2. Usar los botones de accion o enviar comandos personalizados
 
 ### Crear tareas programadas
 
 1. Ir a "Tareas"
 2. Hacer clic en "Nueva Tarea"
-3. Configurar topic, payload y programación
+3. Configurar topic, payload y programacion
 
 ## Sistema de Backup
 
 ### Backup manual
 
-Hacer clic en "Backup Ahora" en la sección de configuración.
+Hacer clic en "Backup Ahora" en la seccion de configuracion.
 
-### Backup automático
+### Backup automatico
 
-1. Habilitar "Backup Automático"
+1. Habilitar "Backup Automatico"
 2. Configurar intervalo en horas
-3. Definir número de backups a mantener
+3. Definir numero de backups a mantener
 
 Los backups se guardan comprimidos en formato gzip en la carpeta `backups/`.
 
-## Documentación adicional
+## Documentacion adicional
 
-| Documento | Descripción |
+| Documento | Descripcion |
 |-----------|-------------|
-| `AGENTS.md` | Guía de desarrollo y convenciones |
+| `AGENTS.md` | Guia de desarrollo y convenciones |
 | `docs/ARCHITECTURE.md` | Diagramas de arquitectura del sistema |
-| `docs/COMMUNICATION.md` | Protocolo de comunicación MQTT |
+| `docs/COMMUNICATION.md` | Protocolo de comunicacion MQTT |
 
 ## Licencia
 
@@ -196,4 +205,4 @@ MIT License
 
 ## Autor
 
-basajaundev
+GallaZ
