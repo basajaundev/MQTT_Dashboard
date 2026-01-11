@@ -105,6 +105,32 @@ button:disabled:hover { transform: none; box-shadow: none; }
 .device-footer, .server-card-footer { display: flex; justify-content: flex-end; align-items: center; margin-top: auto; padding-top: 15px; }
 .device-actions, .server-card-footer { display: flex; gap: 8px; }
 
+/* --- Server Cards Enhanced --- */
+.server-card { position: relative; }
+.server-card.server-status-connected { border-top-color: var(--success-color); }
+.server-card.server-status-disconnected { border-top-color: var(--neutral-color); opacity: 0.85; }
+.server-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.server-active-badge {
+    background: var(--success-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+.server-status { margin-bottom: 10px; }
+.status-indicator { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; }
+.status-indicator.server-status-connected { color: var(--success-color); }
+.status-indicator.server-status-disconnected { color: var(--text-light); }
+.server-info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
+.server-info-row:last-of-type { border-bottom: none; }
+.server-info-row .info-label { margin-bottom: 0; }
+.server-info-row .info-value { font-size: 14px; }
+.server-stats { display: flex; gap: 20px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); }
+.server-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-medium); }
+
 /* --- Alert Cards Specifics --- */
 .alert-item.alert-info { border-top-color: var(--info-color); }
 .alert-item.alert-success { border-top-color: var(--success-color); }

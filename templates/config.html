@@ -173,24 +173,24 @@
         <div class="modal-form">
             <input type="hidden" id="serverId" value="">
             <div class="input-group">
-                <label for="serverName">Nombre del Servidor</label>
-                <input type="text" id="serverName" placeholder="Ej: Mi Broker Local" required>
+                <label for="serverName">Nombre del Servidor *</label>
+                <input type="text" id="serverName" placeholder="Ej: Mi Broker Local" required aria-label="Nombre identificativo del servidor">
             </div>
             <div class="input-group">
-                <label for="serverBroker">Broker (IP o Dominio)</label>
-                <input type="text" id="serverBroker" placeholder="Ej: localhost o broker.hivemq.com" required>
+                <label for="serverBroker">Broker (IP o Dominio) *</label>
+                <input type="text" id="serverBroker" placeholder="Ej: localhost o broker.hivemq.com" required aria-label="Direccion IP o nombre de dominio del broker MQTT">
             </div>
             <div class="input-group">
-                <label for="serverPort">Puerto</label>
-                <input type="number" id="serverPort" value="1883" min="1" max="65535" required>
+                <label for="serverPort">Puerto *</label>
+                <input type="number" id="serverPort" value="1883" min="1" max="65535" required aria-label="Puerto del broker MQTT (1883 por defecto)">
             </div>
             <div class="input-group">
                 <label for="serverUsername">Usuario (opcional)</label>
-                <input type="text" id="serverUsername" placeholder="Usuario MQTT">
+                <input type="text" id="serverUsername" placeholder="Usuario MQTT" aria-label="Nombre de usuario para autenticacion MQTT">
             </div>
             <div class="input-group">
                 <label for="serverPassword">Contrasena (opcional)</label>
-                <input type="password" id="serverPassword" placeholder="Contrasena MQTT">
+                <input type="password" id="serverPassword" placeholder="Contrasena MQTT" aria-label="Contrasena para autenticacion MQTT">
             </div>
             <button class="btn-primary" data-action="save-server">Guardar Servidor</button>
         </div>

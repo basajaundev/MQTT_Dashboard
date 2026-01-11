@@ -7,7 +7,7 @@ export function openServerModal(serverId) {
     if (serverId) {
         var server = state.config.servers[Object.keys(state.config.servers).find(function(k) { return state.config.servers[k].id == serverId; })];
         if (server) {
-            document.getElementById('serverModalTitle').textContent = 'Edit Server';
+            document.getElementById('serverModalTitle').textContent = 'Editar Servidor';
             document.getElementById('serverId').value = server.id;
             document.getElementById('serverName').value = server.name;
             document.getElementById('serverBroker').value = server.broker;
@@ -16,7 +16,7 @@ export function openServerModal(serverId) {
             document.getElementById('serverPassword').value = server.password || '';
         }
     } else {
-        document.getElementById('serverModalTitle').textContent = 'Add New Server';
+        document.getElementById('serverModalTitle').textContent = 'Anadir Nuevo Servidor';
         document.getElementById('serverId').value = '';
         document.getElementById('serverName').value = '';
         document.getElementById('serverBroker').value = '';
@@ -45,7 +45,7 @@ export function saveServer() {
         }
         elements.serverModal.style.display = 'none';
     } else {
-        showNotification('Please complete all required fields.', 'error');
+        showNotification('Por favor complete todos los campos requeridos.', 'error');
     }
 }
 

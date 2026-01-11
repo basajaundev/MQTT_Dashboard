@@ -114,16 +114,52 @@ export function renderServers() {
         elements.serversListGrid.innerHTML = '<div class="empty-state"><p>No hay servidores configurados.</p></div>';
         return;
     }
+
+    const currentServerId = state.config.currentServerId;
+    const devices = state.devices || {};
+    const tasks = state.tasks || {};
+
     elements.serversListGrid.innerHTML = serverNames.map(name => {
         const server = state.config.servers[name];
+        const isActive = server.id === currentServerId;
+        const isConnected = state.isConnected && isActive;
+
+        const serverDevices = Object.values(devices).filter(d => d.server_id === server.id).length;
+        const serverTasks = Object.values(tasks).filter(t => t.server_name === server.name).length;
+
+        const statusClass = isConnected ? 'server-status-connected' : 'server-status-disconnected';
+        const statusText = isConnected ? 'Conectado' : 'Desconectado';
+        const statusIcon = isConnected ? '🟢' : '🔴';
+
+        const activeBadge = isActive ? '<span class="server-active-badge">Activo</span>' : '';
+
         return `
-            <div class="server-card">
-                <div class="server-card-header"><span class="server-name">${server.name}</span></div>
-                <div class="server-card-body"><p><strong>Broker:</strong> ${server.broker}:${server.port}</p><p><strong>Usuario:</strong> ${server.username || 'Ninguno'}</p></div>
+            <div class="server-card ${statusClass}" data-server-id="${server.id}">
+                <div class="server-card-header">
+                    <span class="server-name">${server.name}</span>
+                    ${activeBadge}
+                </div>
+                <div class="server-status">
+                    <span class="status-indicator ${statusClass}">${statusIcon} ${statusText}</span>
+                </div>
+                <div class="server-card-body">
+                    <div class="server-info-row">
+                        <span class="info-label">Broker:</span>
+                        <span class="info-value">${server.broker}:${server.port}</span>
+                    </div>
+                    <div class="server-info-row">
+                        <span class="info-label">Usuario:</span>
+                        <span class="info-value">${server.username || 'Ninguno'}</span>
+                    </div>
+                    <div class="server-stats">
+                        <span class="server-stat" title="Dispositivos">📱 ${serverDevices}</span>
+                        <span class="server-stat" title="Tareas">⚙️ ${serverTasks}</span>
+                    </div>
+                </div>
                 <div class="server-card-footer">
-                <button class="btn-icon" data-action="edit-server" data-server-id="${server.id}" title="Editar">✏️</button>
-                <button class="btn-icon" data-action="delete-server" data-server-id="${server.id}" title="Eliminar">🗑️</button>
-            </div>
+                    <button class="btn-icon" data-action="edit-server" data-server-id="${server.id}" title="Editar">✏️</button>
+                    <button class="btn-icon" data-action="delete-server" data-server-id="${server.id}" title="Eliminar">🗑️</button>
+                </div>
             </div>`;
     }).join('');
 }
