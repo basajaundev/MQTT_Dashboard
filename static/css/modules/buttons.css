@@ -46,3 +46,20 @@ button:disabled:hover { transform: none; box-shadow: none; }
     background: rgba(231, 76, 60, 0.1);
     border-color: var(--danger-color);
 }
+
+/* Inline buttons for compact lists */
+.list-item-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.list-item-actions .btn-small {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 3px;
+}
+
+.list-item-actions .btn-small:hover {
+    transform: none;
+}
+

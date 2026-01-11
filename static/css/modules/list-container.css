@@ -48,6 +48,25 @@ body.dark-mode .group-badge {
     border: 1px solid var(--border-color);
 }
 
+/* Compact lists for whitelist and groups */
+.whitelist-list,
+.groups-list {
+    padding: 8px;
+    gap: 6px;
+}
+
+.whitelist-list .list-item,
+.groups-list .list-item {
+    padding: 6px 10px;
+    gap: 8px;
+}
+
+.whitelist-list .list-item:hover,
+.groups-list .list-item:hover {
+    background-color: var(--border-color);
+    transform: none;
+}
+
 .empty-state {
     text-align: center;
     padding: 30px;

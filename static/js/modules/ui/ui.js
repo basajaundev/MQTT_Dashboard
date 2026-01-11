@@ -382,7 +382,6 @@ export function renderGroups() {
     if (groups.length === 0) {
         elements.groupsList.innerHTML = `
             <div class="empty-state">
-                <span class="empty-icon">👥</span>
                 <span class="empty-title">Sin grupos</span>
                 <span class="empty-action">Crea un grupo para organizar tus dispositivos</span>
             </div>
@@ -394,8 +393,8 @@ export function renderGroups() {
         <div class="list-item">
             <span>${g.name}</span>
             <div class="list-item-actions">
-                <button class="btn-icon" data-action="edit-group" data-group-id="${g.id}" title="Editar">✏️</button>
-                <button class="btn-icon" data-action="delete-group" data-group-id="${g.id}" title="Eliminar">🗑️</button>
+                <button class="btn-small" data-action="edit-group" data-group-id="${g.id}">Editar</button>
+                <button class="btn-small btn-danger-text" data-action="delete-group" data-group-id="${g.id}">Eliminar</button>
             </div>
         </div>
     `).join('');
