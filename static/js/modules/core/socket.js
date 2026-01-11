@@ -74,9 +74,7 @@ export function initSocketListeners() {
         if (elements.toastSettings?.enabled) {
             elements.toastSettings.enabled.checked = settings.toast_enabled !== 'false';
             elements.toastSettings.duration.value = settings.toast_duration || 5;
-            elements.toastSettings.durationValue.textContent = (settings.toast_duration || 5) + 's';
             elements.toastSettings.position.value = settings.toast_position || 'top-right';
-            elements.toastSettings.sound.checked = settings.toast_sound !== 'false';
             elements.toastSettings.animation.value = settings.toast_animation || 'fade';
             elements.toastSettings.types.value = settings.toast_types || 'all';
         }

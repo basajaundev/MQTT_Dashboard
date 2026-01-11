@@ -311,32 +311,20 @@
     min-width: 70px;
 }
 
-.toast-config-row .range-with-value {
-    flex: 1;
-    gap: 8px;
+.toast-config-row .compact-number-input {
+    width: 60px;
+    padding: 8px 10px;
+    font-size: 13px;
+    border: 2px solid var(--border-color);
+    border-radius: 0;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    text-align: center;
 }
 
-.toast-config-row .range-with-value input[type="range"] {
-    height: 6px;
-    -webkit-appearance: none;
-    background: var(--border-color);
-    border-radius: 0;
+.toast-config-row .compact-number-input:focus {
+    border-color: var(--primary-color);
     outline: none;
-}
-
-.toast-config-row .range-with-value input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    background: var(--primary-color);
-    border-radius: 0;
-    cursor: pointer;
-}
-
-.toast-config-row .range-with-value span {
-    font-size: 12px;
-    min-width: 35px;
-    text-align: right;
 }
 
 .toast-config-row select.compact-select {
@@ -362,7 +350,7 @@
 
 .toast-config-row .theme-switch.compact-switch .slider {
     height: 24px;
-    border-radius: 0;
+    border-radius: 24px;
 }
 
 .toast-config-row .theme-switch.compact-switch .slider:before {
@@ -370,7 +358,7 @@
     width: 16px;
     bottom: 4px;
     left: 4px;
-    border-radius: 0;
+    border-radius: 50%;
 }
 
 .toast-config-row .theme-switch.compact-switch input:checked + .slider:before {

@@ -520,10 +520,7 @@ export async function initEventListeners() {
     }
 
     if (elements.toastSettings?.duration) {
-        elements.toastSettings.duration.addEventListener('input', () => {
-            if (elements.toastSettings.durationValue) {
-                elements.toastSettings.durationValue.textContent = elements.toastSettings.duration.value + 's';
-            }
+        elements.toastSettings.duration.addEventListener('change', () => {
             console.log('[TOAST] Guardando configuración...');
             state.socket.emit('save_settings', {
                 'toast_duration': parseInt(elements.toastSettings.duration.value, 10)
@@ -536,15 +533,6 @@ export async function initEventListeners() {
             console.log('[TOAST] Posición cambiada, guardando...');
             state.socket.emit('save_settings', {
                 'toast_position': elements.toastSettings.position.value
-            });
-        });
-    }
-
-    if (elements.toastSettings?.sound) {
-        elements.toastSettings.sound.addEventListener('change', () => {
-            console.log('[TOAST] Sonido cambiado, guardando...');
-            state.socket.emit('save_settings', {
-                'toast_sound': elements.toastSettings.sound.checked
             });
         });
     }

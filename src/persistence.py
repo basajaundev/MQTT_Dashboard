@@ -58,7 +58,6 @@ def load_config():
             'toast_enabled': 'true',
             'toast_duration': '5',
             'toast_position': 'top-right',
-            'toast_sound': 'true',
             'toast_animation': 'fade',
             'toast_types': 'all'
         }

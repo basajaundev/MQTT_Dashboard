@@ -65,9 +65,7 @@ export function initElements() {
         toastSettings: {
             enabled: document.getElementById('toastEnabled'),
             duration: document.getElementById('toastDuration'),
-            durationValue: document.getElementById('toastDurationValue'),
             position: document.getElementById('toastPosition'),
-            sound: document.getElementById('toastSound'),
             animation: document.getElementById('toastAnimation'),
             types: document.getElementById('toastTypes')
         },
