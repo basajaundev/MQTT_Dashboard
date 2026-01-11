@@ -1,0 +1,9 @@
+/* --- Status & Badges --- */
+.status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+.status-disconnected { background: var(--status-disconnected-bg); color: var(--status-disconnected-text); }
+.status-connected { background: var(--status-connected-bg); color: var(--status-connected-text); }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse 2s infinite; background-color: currentColor; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.task-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.badge-enabled { background: var(--badge-enabled-bg); color: var(--badge-enabled-text); }
+.badge-disabled { background: var(--badge-disabled-bg); color: var(--badge-disabled-text); }

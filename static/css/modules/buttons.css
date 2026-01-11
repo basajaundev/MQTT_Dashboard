@@ -1,0 +1,21 @@
+/* --- Buttons --- */
+button { padding: 12px 24px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 14px; }
+.btn-primary { background: var(--primary-color); color: #c0caf5; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background-color: var(--neutral-color); color: #c0caf5; padding: 8px 14px; font-size: 12px; text-decoration: none; display: inline-block;}
+.btn-secondary:hover { background-color: var(--neutral-hover); }
+.btn-danger { background-color: var(--danger-color); color: #1a1b26; padding: 8px 14px; font-size: 12px; }
+.btn-danger:hover { background-color: var(--danger-hover); }
+.btn-info { background-color: var(--info-color); color: #1a1b26; padding: 8px 14px; font-size: 12px; }
+.btn-info:hover { background-color: var(--info-hover); }
+.btn-warning { background-color: var(--warning-color); color: #1a1b26; padding: 8px 14px; font-size: 12px; }
+.btn-warning:hover { background-color: var(--warning-hover); }
+.btn-success { background-color: var(--success-color); color: #1a1b26; padding: 8px 14px; font-size: 12px; }
+.btn-success:hover { background-color: var(--success-hover); }
+.btn-connect { background: var(--primary-color); color: #c0caf5; }
+.btn-connect:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(122, 162, 247, 0.2); }
+.btn-disconnect { background: var(--danger-color); color: #1a1b26; }
+.btn-disconnect:hover { background: var(--danger-hover); }
+button:disabled:hover { transform: none; box-shadow: none; }
+.btn-icon { background: none; border: none; padding: 5px; font-size: 16px; color: var(--text-medium); cursor: pointer; transition: color 0.3s; }
+.btn-icon:hover { color: var(--primary-color); background: none; box-shadow: none; transform: scale(1.1); }

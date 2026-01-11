@@ -1,0 +1,34 @@
+/* --- Inputs & Forms --- */
+.input-group { display: flex; flex-direction: column; }
+input, textarea, select { padding: 10px; border: 2px solid var(--border-color); border-radius: 6px; font-size: 14px; transition: border-color 0.3s; background: var(--bg-white); color: var(--text-dark); }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary-color); }
+input:disabled, select:disabled, button:disabled {
+    background-color: var(--bg-light-gray);
+    cursor: not-allowed;
+    opacity: 0.6;
+    position: relative;
+}
+
+body.dark-mode input:disabled,
+body.dark-mode select:disabled,
+body.dark-mode button:disabled {
+    background-color: #3d4450;
+    opacity: 0.5;
+}
+
+button:disabled {
+    pointer-events: none;
+}
+
+button:disabled::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    cursor: not-allowed;
+}
+
+textarea { font-family: monospace; resize: vertical; min-height: 80px; }

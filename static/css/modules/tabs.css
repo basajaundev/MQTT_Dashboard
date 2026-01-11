@@ -1,0 +1,53 @@
+/* --- Tabs (Config Page - unified with main-nav) --- */
+.config-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text-medium);
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    border-radius: 0;
+    font-size: 14px;
+}
+
+.tab-link:hover {
+    color: var(--primary-color);
+}
+
+.tab-link.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* --- Reconnecting Icon --- */
+.reconnecting-icon {
+    font-size: 24px;
+    color: var(--warning-color);
+    animation: spin 2s linear infinite;
+    display: inline-block;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.reconnecting-icon.hidden {
+    display: none;
+}
