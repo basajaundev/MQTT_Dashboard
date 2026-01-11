@@ -3,7 +3,7 @@ import { elements } from './dom.js';
 import * as ui from '../ui/ui.js';
 import { displayHistoryChart } from '../ui/charts.js';
 import { openLoginModal } from '../modals/modals.js';
-import { showToast } from '../ui/toasts.js';
+import { showToast, showToastWithAction } from '../ui/toasts.js';
 import { renderDevices, renderServers } from '../device/dashboard.js';
 
 export function initSocketListeners() {
@@ -13,16 +13,8 @@ export function initSocketListeners() {
 
         // 1. Actualizar todo el estado interno
         state.isAdmin = newState.is_admin;
-
-        // Actualizar clase del body para mostrar checkboxes
-        if (state.isAdmin) {
-            document.body.classList.add('is-admin');
-        } else {
-            document.body.classList.remove('is-admin');
-        }
-
-        state.config = newState.config;
-        state.subscribedTopics = newState.topics || [];
+        state.config = newState.config || {};
+        state.topics = newState.topics || [];
         state.tasks = newState.tasks || [];
         state.devices = newState.devices || {};
         state.alerts = newState.alerts || [];
@@ -162,14 +154,12 @@ export function initSocketListeners() {
     
     state.socket.on('restore_complete', (data) => {
         if (data.success) {
-            showToast('Base de datos restaurada', 'success');
             showRestartConfirmNotification();
         } else {
             showToast('Error al restaurar backup', 'error');
         }
     });
-
-    // --- Error handling ---
+    
     state.socket.on('error', (data) => {
         showToast(data.message || 'Error desconocido', 'error');
     });
@@ -230,40 +220,4 @@ function showRestartConfirmNotification() {
             state.socket.emit('restart_server');
         }
     );
-}
-
-function showToastWithAction(title, body, type, tag, buttonText, buttonAction) {
-    const container = document.getElementById('toasts-container') || document.body;
-    const toastId = 'toast-' + Date.now();
-    
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = `toast toast-${type}`;
-    toast.dataset.tag = tag;
-    
-    toast.innerHTML = `
-        <div class="toast-content">
-            <div class="toast-title">${title}</div>
-            <div class="toast-body">${body}</div>
-        </div>
-        <button class="toast-action-btn">${buttonText}</button>
-        <button class="toast-close">&times;</button>
-    `;
-    
-    const closeBtn = toast.querySelector('.toast-close');
-    closeBtn.onclick = () => toast.remove();
-    
-    const actionBtn = toast.querySelector('.toast-action-btn');
-    actionBtn.onclick = () => {
-        buttonAction();
-        toast.remove();
-    };
-    
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.remove();
-        }
-    }, 10000);
 }
