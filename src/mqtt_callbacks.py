@@ -172,8 +172,19 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
             if server.get('name') == server_name:
                 active_server_id = server.get('id')
                 break
-        
-        socketio.emit('mqtt_status', {'connected': True, 'active_server_id': active_server_id})
+
+        # Cargar suscripciones del servidor desde BD
+        with app.app_context():
+            subscribed_topics.clear()
+            subscribed_topics.extend(load_subscriptions(server_name))
+
+        # Enviar mqtt_status CON las suscripciones del servidor
+        socketio.emit('mqtt_status', {
+            'connected': True,
+            'active_server_id': active_server_id,
+            'topics': list(subscribed_topics)
+        })
+
         logger.info(f"✅ Conectado al broker MQTT: {server_name}")
         add_message_to_history('SISTEMA', f'✅ Conectado a {server_name}')
         
@@ -214,7 +225,9 @@ def on_connect(client, userdata, flags, reason_code, properties=None):
         mqtt_state['auto_reconnect'] = False
         logger.info(f"⚠️ Desconectado del broker MQTT: {server_name}")
         add_message_to_history('SISTEMA', f'⚠️ Desconectado de {server_name}')
-        socketio.emit('mqtt_status', {'connected': False, 'active_server_id': null})
+        # Limpiar suscripciones al desconectar
+        subscribed_topics.clear()
+        socketio.emit('mqtt_status', {'connected': False, 'active_server_id': None, 'topics': []})
 
 def on_disconnect(client, userdata, flags, reason_code, properties=None):
     """Callback para cuando el cliente se desconecta del broker MQTT."""
@@ -233,7 +246,7 @@ def on_disconnect(client, userdata, flags, reason_code, properties=None):
         mqtt_state['auto_reconnect'] = False
         logger.info(f"⚠️ Desconectado del broker MQTT: {server_name}")
         add_message_to_history('SISTEMA', f'⚠️ Desconectado de {server_name}')
-        socketio.emit('mqtt_status', {'connected': False})
+        socketio.emit('mqtt_status', {'connected': False, 'active_server_id': None, 'topics': []})
     
     scheduler.pause()
     logger.info("⏰ Scheduler pausado.")

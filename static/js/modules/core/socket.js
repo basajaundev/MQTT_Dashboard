@@ -16,7 +16,8 @@ export function initSocketListeners() {
         state.isConnected = newState.mqtt_status?.connected || false;
         state.activeServerId = newState.active_server_id || null;
         state.config = newState.config || {};
-        state.topics = newState.topics || [];
+        state.subscribedTopics = newState.topics || [];
+        state.topics = newState.topics || []; // Mantener compatibilidad
         state.tasks = newState.tasks || [];
         state.devices = newState.devices || {};
         state.alerts = newState.alerts || [];
@@ -115,11 +116,20 @@ export function initSocketListeners() {
     state.socket.on('message_triggers_update', (data) => { state.messageTriggers = data.triggers || []; ui.renderMessageTriggers(); });
     state.socket.on('mqtt_status', (data) => {
         state.isConnected = data.connected;
-        if (data.active_server_id !== undefined) {
-            state.activeServerId = data.active_server_id;
+        state.activeServerId = data.active_server_id || null;
+
+        // Las suscripciones son por servidor:
+        // - Si conecta: usar las topics del evento (del servidor conectado)
+        // - Si desconecta: limpiar suscripciones
+        if (data.connected && data.topics) {
+            state.subscribedTopics = data.topics;
+        } else {
+            state.subscribedTopics = [];
         }
+
         ui.updateStatus(data.connected);
         renderServers();
+        renderTopics();
     });
     state.socket.on('mqtt_reconnecting', (data) => ui.setReconnecting(data.reconnecting));
     
