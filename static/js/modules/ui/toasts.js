@@ -31,25 +31,35 @@ function updateToastContainerPosition() {
 }
 
 function playToastSound() {
-    if (toastConfig.sound) {
-        try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = 800;
-            oscillator.type = 'sine';
-            gainNode.gain.value = 0.1;
-            
-            oscillator.start();
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
-            oscillator.stop(audioContext.currentTime + 0.3);
-        } catch (e) {
-            console.log('[TOAST] Could not play sound:', e);
+    if (!toastConfig.sound) return;
+    
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        
+        const audioContext = new AudioContext();
+        
+        if (audioContext.state === 'suspended') {
+            audioContext.resume().catch(() => {});
+            return;
         }
+        
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (e) {
+        console.log('[TOAST] Could not play sound:', e);
     }
 }
 
@@ -80,12 +90,19 @@ export function showToast(message, type = 'info', duration = 0) {
     container.appendChild(toast);
 
     const removeToast = () => {
-        toast.classList.add('toast-hiding');
-        toast.addEventListener('animationend', () => {
-            if (toast.parentElement) {
+        if (!toast.classList.contains('toast-hiding')) {
+            toast.classList.add('toast-hiding');
+            toast.style.animation = 'none';
+            toast.offsetHeight;
+            toast.style.animation = null;
+        }
+        const handleAnimationEnd = () => {
+            if (toast.classList.contains('toast-hiding') && toast.parentElement) {
                 toast.remove();
             }
-        });
+            toast.removeEventListener('animationend', handleAnimationEnd);
+        };
+        toast.addEventListener('animationend', handleAnimationEnd);
     };
 
     const toastDuration = duration > 0 ? duration : toastConfig.duration;
@@ -121,12 +138,19 @@ export function showToastWithAction(message, type, actionId, actionText, actionC
     container.appendChild(toast);
 
     const removeToast = () => {
-        toast.classList.add('toast-hiding');
-        toast.addEventListener('animationend', () => {
-            if (toast.parentElement) {
+        if (!toast.classList.contains('toast-hiding')) {
+            toast.classList.add('toast-hiding');
+            toast.style.animation = 'none';
+            toast.offsetHeight;
+            toast.style.animation = null;
+        }
+        const handleAnimationEnd = () => {
+            if (toast.classList.contains('toast-hiding') && toast.parentElement) {
                 toast.remove();
             }
-        });
+            toast.removeEventListener('animationend', handleAnimationEnd);
+        };
+        toast.addEventListener('animationend', handleAnimationEnd);
     };
 
     setTimeout(removeToast, toastConfig.duration);
