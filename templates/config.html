@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Configuración - MQTT IoT
+    Configuracion - MQTT IoT
 {% endblock %}
 
 {% block content %}
@@ -11,77 +11,76 @@
         <button class="tab-link" data-tab="settings">⚙️ Ajustes del Sistema</button>
     </div>
 
-    <!-- Pestaña de Servidores -->
+    <!-- Pestana de Servidores -->
     <div id="servers" class="tab-content active">
         <div class="server-management-header">
-            <h2>Gestión de Servidores MQTT</h2>
-            <button id="addServerBtn" class="btn-icon" data-action="add-server-modal" title="Añadir Servidor">🆕</button>
+            <h2>Gestion de Servidores MQTT</h2>
+            <button id="addServerBtn" class="btn-icon" data-action="add-server-modal" title="Anadir Servidor">🆕</button>
         </div>
         <div class="servers-list-grid" id="serversListGrid">
-            <!-- Las tarjetas de servidor se insertarán aquí dinámicamente -->
+            <!-- Las tarjetas de servidor se insertaran aqui dinamicamente -->
         </div>
     </div>
 
-    <!-- Pestaña de Ajustes Unificada -->
+    <!-- Pestana de Ajustes Unificada -->
     <div id="settings" class="tab-content">
 
         <div class="settings-layout">
-            <!-- Sección Ajustes del Dashboard Fusionada -->
+            <!-- Seccion Ajustes del Dashboard Fusionada -->
             <section class="settings-section">
-                <h3>🛠️ Ajustes del Dashboard</h3>
+                <h3>Ajustes del Dashboard</h3>
                 <p class="section-desc">Configura el comportamiento y preferencias del dashboard.</p>
 
                 <div class="triple-fused-content">
                     <!-- General (tercio izquierdo) -->
                     <div class="fused-third general-third">
-                        <h4>🛠️ General</h4>
+                        <h4>General</h4>
                         <div class="input-group">
                             <label for="refreshInterval">Intervalo de Auto-Refresco (s)</label>
-                            <input type="number" id="refreshInterval" value="30" min="5">
+                            <input type="number" id="refreshInterval" value="30" min="5" aria-label="Intervalo de auto-refresco en segundos">
                         </div>
                         <div class="input-group">
                             <label for="maxMissedPings">Tolerancia de Pings (Vidas)</label>
-                            <input type="number" id="maxMissedPings" value="2" min="1" max="10">
+                            <input type="number" id="maxMissedPings" value="2" min="1" max="10" aria-label="Numero de pings perdidos antes de marcar como offline">
                         </div>
                         <button class="btn-primary" data-action="save-settings" style="width: 100%;">Guardar Ajustes</button>
                     </div>
 
                     <!-- Seguridad (tercio central) -->
                     <div class="fused-third security-third">
-                        <h4>🔒 Seguridad</h4>
+                        <h4>Seguridad</h4>
                         <div class="input-group">
-                            <label for="newPassword">Nueva Contraseña</label>
-                            <input type="password" id="newPassword">
+                            <label for="newPassword">Nueva Contrasena</label>
+                            <input type="password" id="newPassword" aria-label="Nueva contrasena de administrador">
                         </div>
                         <div class="input-group">
-                            <label for="confirmPassword">Confirmar Contraseña</label>
-                            <input type="password" id="confirmPassword">
+                            <label for="confirmPassword">Confirmar Contrasena</label>
+                            <input type="password" id="confirmPassword" aria-label="Confirmar nueva contrasena">
                         </div>
-                        <button class="btn-primary" data-action="change-password" style="width: 100%;">Cambiar Contraseña</button>
+                        <button class="btn-primary" data-action="change-password" style="width: 100%;">Cambiar Contrasena</button>
                     </div>
 
                     <!-- Notificaciones (tercio derecho) -->
                     <div class="fused-third notifications-third">
-                        <h4>🍞 Toast</h4>
-                        
-                        <!-- Configuración de Toast -->
-                        <div class="toast-config-inline" style="margin-top: 0; padding-top: 0; border-top: none;">
+                        <h4>Toast</h4>
+
+                        <!-- Configuracion de Toast -->
+                        <div class="toast-config-inline">
                             <div class="toast-config-row">
                                 <label for="toastEnabled">Habilitar Toast</label>
                                 <label class="theme-switch compact-switch">
-                                    <input type="checkbox" id="toastEnabled" checked>
+                                    <input type="checkbox" id="toastEnabled" checked aria-label="Habilitar notificaciones toast">
                                     <span class="slider"></span>
                                 </label>
                             </div>
                             <div class="toast-config-row">
-                                <label for="toastDuration">Duración</label>
-                                <input type="number" id="toastDuration" min="1" max="30" value="5" class="compact-number-input">
-                                <span style="font-size: 12px; color: var(--text-medium);">seg.</span>
-                            </div>
+                                <label for="toastDuration">Duracion</label>
+                                <input type="number" id="toastDuration" min="1" max="30" value="5" class="compact-number-input" aria-label="Duracion del toast en segundos">
+                                <span class="unit-label">seg.</span>
                             </div>
                             <div class="toast-config-row">
-                                <label for="toastAnimation">Animación</label>
-                                <select id="toastAnimation" class="compact-select">
+                                <label for="toastAnimation">Animacion</label>
+                                <select id="toastAnimation" class="compact-select" aria-label="Tipo de animacion del toast">
                                     <option value="fade">Fade</option>
                                     <option value="slide">Slide</option>
                                     <option value="zoom">Zoom</option>
@@ -92,30 +91,30 @@
                 </div>
             </section>
 
-            <!-- Sección Whitelist + Grupos Fusionados -->
+            <!-- Seccion Whitelist + Grupos Fusionados -->
             <section class="settings-section">
-                <h3>📱 Gestión de Dispositivos</h3>
-                <p class="section-desc">Gestiona los dispositivos permitidos y organízalos en grupos.</p>
+                <h3>Gestion de Dispositivos</h3>
+                <p class="section-desc">Gestiona los dispositivos permitidos y organizalos en grupos.</p>
 
                 <div class="fused-card-content">
                     <!-- Whitelist (mitad izquierda) -->
                     <div class="fused-half whitelist-half">
-                        <h4>🛡️ Whitelist</h4>
+                        <h4>Whitelist</h4>
                         <div class="whitelist-form-inline">
-                            <select id="whitelist-device-id">
+                            <select id="whitelist-device-id" aria-label="Seleccionar dispositivo para agregar a whitelist">
                                 <option value="">Dispositivo...</option>
                             </select>
-                            <select id="whitelist-group-id">
+                            <select id="whitelist-group-id" aria-label="Seleccionar grupo para el dispositivo">
                                 <option value="">Grupo...</option>
                             </select>
                         </div>
-                        <button class="btn-success" data-action="add-to-whitelist" style="width: 100%;">Añadir</button>
+                        <button class="btn-success" data-action="add-to-whitelist" style="width: 100%;">Anadir</button>
                         <div id="whitelistContainer" class="list-items whitelist-list"></div>
                     </div>
 
                     <!-- Grupos (mitad derecha) -->
                     <div class="fused-half groups-half">
-                        <h4>👥 Grupos</h4>
+                        <h4>Grupos</h4>
                         <div id="groupsList" class="list-items groups-list"></div>
                         <button class="btn-primary" data-action="add-group-modal" style="width: 100%;">
                             + Crear Grupo
@@ -124,40 +123,40 @@
                 </div>
             </section>
 
-            <!-- Sección Backup -->
-            <section class="settings-section">
-                <h3>💾 Backup de Base de Datos</h3>
-                <p class="section-desc">Copias de seguridad automáticas y restauración.</p>
-                
+            <!-- Seccion Backup -->
+            <section class="settings-section settings-section-backup">
+                <h3>Backup de Base de Datos</h3>
+                <p class="section-desc">Copias de seguridad automaticas y restauracion.</p>
+
                 <div class="backup-controls-grid">
                     <div class="backup-main-controls">
                         <div class="input-group">
-                            <label for="autoBackupEnabled">Backup Automático</label>
+                            <label for="autoBackupEnabled">Backup Automatico</label>
                             <label class="theme-switch">
-                                <input type="checkbox" id="autoBackupEnabled">
+                                <input type="checkbox" id="autoBackupEnabled" aria-label="Habilitar backup automatico">
                                 <span class="slider"></span>
                             </label>
                         </div>
                         <div class="input-group">
                             <label for="autoBackupInterval">Intervalo (horas)</label>
-                            <input type="number" id="autoBackupInterval" value="24" min="1" max="168">
+                            <input type="number" id="autoBackupInterval" value="24" min="1" max="168" aria-label="Intervalo de backup automatico en horas">
                         </div>
                         <div class="input-group">
                             <label for="autoBackupKeep">Backups a mantener</label>
-                            <input type="number" id="autoBackupKeep" value="7" min="1" max="30">
+                            <input type="number" id="autoBackupKeep" value="7" min="1" max="30" aria-label="Numero de backups a mantener">
                         </div>
                     </div>
                     <div class="backup-actions">
-                        <button class="btn-primary" data-action="manual-backup">
+                        <button class="btn-primary" data-action="manual-backup" aria-label="Crear backup ahora">
                             💾 Backup Ahora
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="backups-list-container">
-                    <h4>📁 Backups Disponibles (<span id="backupsCount">0</span>)</h4>
+                    <h4>Backups Disponibles (<span id="backupsCount">0</span>)</h4>
                     <div id="backupsList" class="backups-list">
-                        <div class="empty-state">Cargando backups...</div>
+                        <div class="empty-state loading-state">Cargando backups...</div>
                     </div>
                 </div>
             </section>
@@ -166,11 +165,11 @@
     </div>
 </div>
 
-<!-- Modal para añadir/editar servidor -->
+<!-- Modal para anadir/editar servidor -->
 <div id="serverModal" class="modal">
     <div class="modal-content">
         <span class="close" data-action="close-server-modal">&times;</span>
-        <h2 id="serverModalTitle">Añadir Nuevo Servidor</h2>
+        <h2 id="serverModalTitle">Anadir Nuevo Servidor</h2>
         <div class="modal-form">
             <input type="hidden" id="serverId" value="">
             <div class="input-group">
@@ -190,19 +189,19 @@
                 <input type="text" id="serverUsername" placeholder="Usuario MQTT">
             </div>
             <div class="input-group">
-                <label for="serverPassword">Contraseña (opcional)</label>
-                <input type="password" id="serverPassword" placeholder="Contraseña MQTT">
+                <label for="serverPassword">Contrasena (opcional)</label>
+                <input type="password" id="serverPassword" placeholder="Contrasena MQTT">
             </div>
             <button class="btn-primary" data-action="save-server">Guardar Servidor</button>
         </div>
     </div>
 </div>
 
-<!-- Modal para añadir/editar grupo -->
+<!-- Modal para anadir/editar grupo -->
 <div id="groupModal" class="modal">
     <div class="modal-content">
         <span class="close" data-action="close-group-modal">&times;</span>
-        <h3 id="groupModalTitle">👥 Crear Grupo</h3>
+        <h3 id="groupModalTitle">Crear Grupo</h3>
         <div class="modal-form">
             <input type="hidden" id="groupId" value="">
             <div class="form-group">
@@ -211,8 +210,8 @@
                 <div id="groupNameError" class="form-error" style="display: none;"></div>
             </div>
             <div class="form-group">
-                <label for="groupDescription">Descripción (opcional)</label>
-                <textarea id="groupDescription" placeholder="Descripción breve del grupo..." rows="2" maxlength="200"></textarea>
+                <label for="groupDescription">Descripcion (opcional)</label>
+                <textarea id="groupDescription" placeholder="Descripcion breve del grupo..." rows="2" maxlength="200"></textarea>
             </div>
         </div>
         <div class="modal-actions">

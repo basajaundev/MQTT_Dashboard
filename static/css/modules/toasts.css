@@ -302,13 +302,14 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    gap: 10px;
+    gap: 12px;
 }
 
 .toast-config-row label {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-medium);
-    min-width: 70px;
+    min-width: 80px;
+    flex-shrink: 0;
 }
 
 .toast-config-row .compact-number-input {
@@ -316,7 +317,7 @@
     padding: 8px 10px;
     font-size: 13px;
     border: 2px solid var(--border-color);
-    border-radius: 0;
+    border-radius: 6px;
     background: var(--bg-secondary);
     color: var(--text-primary);
     text-align: center;
@@ -327,11 +328,18 @@
     outline: none;
 }
 
+.toast-config-row .unit-label {
+    font-size: 12px;
+    color: var(--text-light);
+    min-width: 35px;
+    text-align: left;
+}
+
 .toast-config-row select.compact-select {
     padding: 8px 10px;
     font-size: 13px;
     border: 2px solid var(--border-color);
-    border-radius: 0;
+    border-radius: 6px;
     background: var(--bg-secondary);
     color: var(--text-primary);
     cursor: pointer;
