@@ -263,6 +263,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
+    min-height: 0;
 }
 
 .fused-half h4 {
@@ -285,8 +287,11 @@
     min-height: 450px;
 }
 
+.whitelist-list,
 .groups-list {
-    max-height: 380px;
+    flex: 1;
+    max-height: none;
+    min-height: 200px;
 }
 
 /* Tablet: 2 columnas */

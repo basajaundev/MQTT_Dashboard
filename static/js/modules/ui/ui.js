@@ -361,9 +361,11 @@ export function renderAccessLists() {
         return `
             <div class="list-item">
                 <span>${label}</span>
-                <button class="btn-danger" data-action="remove-from-whitelist"
-                    data-device-id="${device.id}" data-location="${device.location}"
-                    ${!state.isAdmin ? 'disabled' : ''}>&times;</button>
+                <div class="list-item-actions">
+                    <button class="btn-small btn-danger-text" data-action="remove-from-whitelist"
+                        data-device-id="${device.id}" data-location="${device.location}"
+                        ${!state.isAdmin ? 'disabled' : ''}>Eliminar</button>
+                </div>
             </div>`;
     }).join('') : `
         <div class="empty-state">
