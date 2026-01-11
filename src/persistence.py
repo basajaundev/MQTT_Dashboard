@@ -55,6 +55,7 @@ def load_config():
             'auto_backup_enabled': 'false',
             'auto_backup_interval': '24',
             'auto_backup_keep': '7',
+            'toast_enabled': 'true',
             'toast_duration': '5',
             'toast_position': 'top-right',
             'toast_sound': 'true',

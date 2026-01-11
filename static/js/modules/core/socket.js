@@ -76,6 +76,7 @@ export function initSocketListeners() {
         }
         if (elements.toastSettings?.duration) {
             const settings = newState.config?.settings || {};
+            elements.toastSettings.enabled.checked = settings.toast_enabled !== 'false';
             elements.toastSettings.duration.value = settings.toast_duration || 5;
             elements.toastSettings.durationValue.textContent = (settings.toast_duration || 5) + 's';
             elements.toastSettings.position.value = settings.toast_position || 'top-right';

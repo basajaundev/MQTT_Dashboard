@@ -63,6 +63,7 @@ export function initElements() {
         saveSettingsBtn: document.getElementById('saveSettingsBtn'),
         
         toastSettings: {
+            enabled: document.getElementById('toastEnabled'),
             duration: document.getElementById('toastDuration'),
             durationValue: document.getElementById('toastDurationValue'),
             position: document.getElementById('toastPosition'),

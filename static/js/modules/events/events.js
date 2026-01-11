@@ -510,6 +510,15 @@ export async function initEventListeners() {
         });
     }
 
+    if (elements.toastSettings?.enabled) {
+        elements.toastSettings.enabled.addEventListener('change', () => {
+            console.log('[TOAST] Habilitación cambiada, guardando...');
+            state.socket.emit('save_settings', {
+                'toast_enabled': elements.toastSettings.enabled.checked
+            });
+        });
+    }
+
     if (elements.toastSettings?.duration) {
         elements.toastSettings.duration.addEventListener('input', () => {
             if (elements.toastSettings.durationValue) {

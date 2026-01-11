@@ -2,6 +2,7 @@ import { state } from '../core/state.js';
 import { elements } from '../core/dom.js';
 
 let toastConfig = {
+    enabled: true,
     duration: 5000,
     position: 'top-right',
     sound: true,
@@ -11,6 +12,7 @@ let toastConfig = {
 
 export function updateToastConfig(config) {
     if (config) {
+        toastConfig.enabled = config.toast_enabled !== 'false';
         toastConfig.duration = (config.toast_duration || 5) * 1000;
         toastConfig.position = config.toast_position || 'top-right';
         toastConfig.sound = config.toast_sound !== 'false';
@@ -52,6 +54,7 @@ function playToastSound() {
 }
 
 export function showToast(message, type = 'info', duration = 0) {
+    if (!toastConfig.enabled) return;
     if (toastConfig.types === 'none') return;
     if (toastConfig.types === 'info+warning' && !['info', 'warning'].includes(type)) return;
     
@@ -99,6 +102,7 @@ export function showToast(message, type = 'info', duration = 0) {
 }
 
 export function showToastWithAction(message, type, actionId, actionText, actionCallback) {
+    if (!toastConfig.enabled) return;
     if (toastConfig.types === 'none') return;
     if (toastConfig.types === 'info+warning' && !['info', 'warning'].includes(type)) return;
     

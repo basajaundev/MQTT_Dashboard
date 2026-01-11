@@ -66,7 +66,13 @@
                         
                         <!-- Configuración de Toast -->
                         <div class="toast-config-inline" style="margin-top: 0; padding-top: 0; border-top: none;">
-                            <h5 style="display: none;">Toast</h5>
+                            <div class="toast-config-row">
+                                <label for="toastEnabled">Habilitar Toast</label>
+                                <label class="theme-switch compact-switch">
+                                    <input type="checkbox" id="toastEnabled" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                             <div class="toast-config-row">
                                 <label for="toastDuration">Duración</label>
                                 <div class="range-with-value compact">
