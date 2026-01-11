@@ -369,7 +369,12 @@ def on_message(client, userdata, msg):
                             server_name
                         )
 
-                    # Actualizar información de configuración siempre
+                    # Verificar que el dispositivo existe antes de acceder (evita race condition)
+                    if device_key not in devices:
+                        logger.warning(f"Dispositivo {device_key} no encontrado tras get_or_create_device, saltando actualizacion de config")
+                        return
+
+                    # Actualizar informacion de configuracion siempre
                     if 'firmware' in data:
                         devices[device_key]['firmware'] = data.get('firmware', 'Unknown')
                     if 'mac' in data:
