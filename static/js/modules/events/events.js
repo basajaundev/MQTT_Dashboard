@@ -455,8 +455,9 @@ export async function initEventListeners() {
     if (elements.publishBtn) elements.publishBtn.addEventListener('click', () => { const topic = elements.publishTopic.value.trim(); const payload = elements.publishPayload.value; if (topic) state.socket.emit('mqtt_publish', { topic, payload }); });
     if (elements.configTabs) {
         elements.configTabs.addEventListener('click', (e) => {
-            const target = e.target.closest('button, .tab-link');
+            const target = e.target.closest('a.tab-link, button.tab-link');
             if (target && target.dataset.tab) {
+                e.preventDefault();
                 const tab = target.dataset.tab;
                 state.currentTab = tab;
                 document.querySelectorAll('.tab-content').forEach(s => {

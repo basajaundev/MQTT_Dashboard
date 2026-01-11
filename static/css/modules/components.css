@@ -192,10 +192,41 @@ button:disabled:hover { transform: none; box-shadow: none; }
 .chart-container { position: relative; height: 40vh; width: 100%; }
 body.dark-mode .chart-container { color: var(--text-dark); }
 
-/* --- Tabs --- */
-.config-tabs { display: flex; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
-.tab-link { background: none; border: none; padding: 15px 25px; cursor: pointer; font-size: 16px; font-weight: 600; color: var(--text-light); border-bottom: 3px solid transparent; margin-bottom: -1px; }
-.tab-link.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+/* --- Tabs (Config Page - unified with main-nav) --- */
+.config-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.tab-link {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text-medium);
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    font-size: 14px;
+}
+
+.tab-link:hover {
+    color: var(--primary-color);
+}
+
+.tab-link.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
