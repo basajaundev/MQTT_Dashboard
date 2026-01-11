@@ -30,6 +30,12 @@ pytest --tb=short -x                            # Short traceback, stop on first
 del dashboard.db && python app.py                # Reset DB (Windows)
 rm -f dashboard.db && python app.py              # Reset DB (Linux/Mac)
 
+# Backup System (uses backup_db.py)
+python backup_db.py                              # Create backup
+python backup_db.py --restore                    # Restore last backup
+python backup_db.py --list                       # List available backups
+python backup_db.py --delete-old 30              # Delete backups older than 30 days
+
 # Quick validation
 python -c "from src.models import *; print('Models OK')"
 ```
@@ -41,6 +47,7 @@ MQTT_Dashboard/
 ├── app.py                  # Entry point (monkey.patch_all() BEFORE imports)
 ├── requirements.txt        # Python dependencies
 ├── AGENTS.md              # This file
+├── backup_db.py           # Backup manager (BackupManager class, CLI + scheduler integration)
 ├── src/
 │   ├── database.py        # DB initialization
 │   ├── models.py          # SQLAlchemy models (12 models: Server, Device, Task, Alert, etc.)
@@ -102,6 +109,29 @@ except ValueError as e:
 **SQLAlchemy:** Explicit `__tablename__`, use `db.Column`, always `db.session.commit()`.
 
 **App Context:** Always use `with app.app_context():` for DB operations outside request handlers.
+
+## Backup System Architecture
+
+**BackupManager Class** (`backup_db.py`): Central class for all backup operations.
+- `create_backup()`: Creates timestamped backup with compression
+- `restore_backup()`: Restores from backup file
+- `rotate_backups()`: Keeps only N most recent backups
+- `delete_backup()`: Removes specific backup file
+- `get_backups_for_ui()`: Returns formatted list for frontend
+
+**Integration** (`socket_handlers.py`): Backend handlers import and use BackupManager:
+- `handle_request_backups()`: List available backups
+- `handle_trigger_backup()`: Manual backup trigger
+- `handle_update_backup_config()`: Configure auto-backup scheduler
+- `handle_restore_backup()`: Restore from backup
+- `handle_delete_backup()`: Delete backup file
+
+**Settings** (stored in `settings` table):
+- `auto_backup_enabled`: Enable automatic backups
+- `auto_backup_interval`: Hours between backups (default: 24)
+- `auto_backup_keep`: Number of backups to retain (default: 7)
+
+**Backup Location:** `/backups/dashboard_backup_YYYYMMDD_HHMMSS.db.gz`
 
 ## JavaScript Conventions
 
