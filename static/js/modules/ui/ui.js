@@ -131,9 +131,9 @@ export function renderTasks() {
                 </div>
             </div>
             <div class="task-footer">
-                <button class="btn-icon" data-action="edit-task" data-task-id="${task.id}" title="Editar">✏️</button>
-                <button class="btn-icon" data-action="toggle-task" data-task-id="${task.id}" title="${task.enabled ? 'Pausar' : 'Activar'}">${task.enabled ? '⏸️' : '▶️'}</button>
-                <button class="btn-icon" data-action="delete-task" data-task-id="${task.id}" title="Eliminar">🗑️</button>
+                <button class="btn-small" data-action="edit-task" data-task-id="${task.id}">Editar</button>
+                <button class="btn-small" data-action="toggle-task" data-task-id="${task.id}">${task.enabled ? 'Pausar' : 'Activar'}</button>
+                <button class="btn-small btn-danger-text" data-action="delete-task" data-task-id="${task.id}">Eliminar</button>
             </div>
         </div>`).join('');
 }
@@ -316,8 +316,8 @@ export function renderAlerts() {
                 <div class="alert-message">"${alert.message}"</div>
             </div>
             <div class="alert-footer">
-                <button class="btn-icon" data-action="edit-alert" data-alert-id="${alert.id}" title="Editar">✏️</button>
-                <button class="btn-icon" data-action="delete-alert" data-alert-id="${alert.id}" title="Eliminar">🗑️</button>
+                <button class="btn-small" data-action="edit-alert" data-alert-id="${alert.id}">Editar</button>
+                <button class="btn-small btn-danger-text" data-action="delete-alert" data-alert-id="${alert.id}">Eliminar</button>
             </div>
         </div>`;
     }).join('');
