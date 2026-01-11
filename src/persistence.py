@@ -701,50 +701,6 @@ def update_cleanup_timestamp():
         logger.error(f"❌ Error actualizando fecha de cleanup: {e}")
         db.session.rollback()
 
-def save_scheduler_state():
-    """Guarda el estado actual del scheduler (jobs activos) en la base de datos."""
-    try:
-        with app.app_context():
-            jobs_data = []
-            for job in scheduler.get_jobs():
-                job_data = {
-                    'id': job.id,
-                    'name': job.name,
-                    'trigger_type': str(job.trigger)[0:50],
-                    'next_run': job.next_run_time.strftime('%Y-%m-%d %H:%M:%S') if job and job.next_run_time else 'Pausada'
-                }
-                jobs_data.append(job_data)
-            
-            jobs_json = str(jobs_data)
-            setting = Setting.query.filter_by(key='scheduler_jobs').first()
-            if setting:
-                setting.value = jobs_json
-            else:
-                db.session.add(Setting(key='scheduler_jobs', value=jobs_json))
-            
-            # Verificar estado del scheduler de forma segura
-            # Cuando scheduler.start(paused=True) se usa, el atributo 'paused' no existe después de iniciar
-            try:
-                is_paused = getattr(scheduler, 'paused', False) or not scheduler.running
-            except:
-                is_paused = False
-            
-            paused_state = 'true' if is_paused else 'false'
-            paused_setting = Setting.query.filter_by(key='scheduler_paused').first()
-            if paused_setting:
-                paused_setting.value = paused_state
-            else:
-                db.session.add(Setting(key='scheduler_paused', value=paused_state))
-            
-            db.session.commit()
-            logger.info(f"💾 Estado del scheduler guardado: {len(jobs_data)} job(s).")
-    except Exception as e:
-        logger.error(f"❌ Error guardando estado del scheduler: {e}")
-        try:
-            db.session.rollback()
-        except Exception:
-            pass
-
 # --- Device Events ---
 
 def add_device_event(device_id, location, event_type, details=None):

@@ -35,7 +35,7 @@ app.config['COMPRESS_ZSTD_LEVEL'] = 0   # Disable Zstandard
 app.config['COMPRESS_BR_LEVEL'] = 0     # Disable Brotli
 app.config['COMPRESS_GZIP_LEVEL'] = 6   # Use Gzip with level 6
 from src.database import init_db
-from src.persistence import load_config, cleanup_sensor_data, should_run_cleanup, save_scheduler_state
+from src.persistence import load_config, cleanup_sensor_data, should_run_cleanup
 from src.routes import *
 from src.socket_handlers import *
 
@@ -92,14 +92,7 @@ def stop_server():
                 except Exception as e:
                     logger.warning(f"Error cerrando thread {thread.name}: {e}")
     
-    # 4. Guardar estado del scheduler
-    try:
-        save_scheduler_state()
-        logger.info("Estado del scheduler guardado")
-    except Exception as e:
-        logger.error(f"Error guardando estado: {e}")
-    
-    # 5. Shutdown del scheduler
+    # 4. Shutdown del scheduler
     try:
         if scheduler.running:
             scheduler.shutdown(wait=False)
