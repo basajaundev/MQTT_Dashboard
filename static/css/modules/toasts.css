@@ -297,7 +297,6 @@
 .toast-config-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     margin-bottom: 10px;
     gap: 12px;
 }
@@ -346,26 +345,4 @@
 .toast-config-row select.compact-select:focus {
     border-color: var(--primary-color);
     outline: none;
-}
-
-.toast-config-row .theme-switch.compact-switch {
-    width: 50px;
-    height: 24px;
-}
-
-.toast-config-row .theme-switch.compact-switch .slider {
-    height: 24px;
-    border-radius: 24px;
-}
-
-.toast-config-row .theme-switch.compact-switch .slider:before {
-    height: 16px;
-    width: 16px;
-    bottom: 4px;
-    left: 4px;
-    border-radius: 50%;
-}
-
-.toast-config-row .theme-switch.compact-switch input:checked + .slider:before {
-    transform: translateX(26px);
 }
