@@ -452,35 +452,38 @@ body {
 }
 
 /* Backup Section Styles */
-.backup-controls-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background: var(--bg-secondary);
-    border-radius: 0;
-}
-
-.backup-main-controls {
+.backup-controls-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    align-items: end;
+    gap: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
 }
 
-.backup-actions {
+.backup-control-item {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    justify-content: center;
+    gap: 0.5rem;
 }
 
-.backup-actions .btn-primary,
-.backup-actions .btn-secondary {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    font-size: 14px;
+.backup-control-item label:first-child {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.backup-control-item input[type="number"] {
+    padding: 8px 10px;
+    font-size: 13px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-white);
+    color: var(--text-dark);
+}
+
+.backup-control-item input[type="number"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
 }
 
 .backups-list-container {
@@ -513,6 +516,22 @@ body {
     border-top-color: var(--primary-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+.backups-list-container .full-width-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.75rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+    .backup-controls-row {
+        grid-template-columns: 1fr;
+    }
 }
 
 @keyframes spin {

@@ -147,28 +147,21 @@
                 <h3>Backup de Base de Datos</h3>
                 <p class="section-desc">Copias de seguridad automaticas y restauracion.</p>
 
-                <div class="backup-controls-grid">
-                    <div class="backup-main-controls">
-                        <div class="input-group">
-                            <label for="autoBackupEnabled">Backup Automatico</label>
-                            <label class="theme-switch">
-                                <input type="checkbox" id="autoBackupEnabled" aria-label="Habilitar backup automatico">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="input-group">
-                            <label for="autoBackupInterval">Intervalo (horas)</label>
-                            <input type="number" id="autoBackupInterval" value="24" min="1" max="168" aria-label="Intervalo de backup automatico en horas">
-                        </div>
-                        <div class="input-group">
-                            <label for="autoBackupKeep">Backups a mantener</label>
-                            <input type="number" id="autoBackupKeep" value="7" min="1" max="30" aria-label="Numero de backups a mantener">
-                        </div>
+                <div class="backup-controls-row">
+                    <div class="backup-control-item">
+                        <label for="autoBackupEnabled">Backup Automatico</label>
+                        <label class="theme-switch compact-switch">
+                            <input type="checkbox" id="autoBackupEnabled" aria-label="Habilitar backup automatico">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <div class="backup-actions">
-                        <button class="btn-primary" data-action="manual-backup" aria-label="Crear backup ahora">
-                            💾 Backup Ahora
-                        </button>
+                    <div class="backup-control-item">
+                        <label for="autoBackupInterval">Intervalo (Horas)</label>
+                        <input type="number" id="autoBackupInterval" value="24" min="1" max="168" aria-label="Intervalo de backup automatico en horas">
+                    </div>
+                    <div class="backup-control-item">
+                        <label for="autoBackupKeep">Backups a Mantener</label>
+                        <input type="number" id="autoBackupKeep" value="7" min="1" max="30" aria-label="Numero de backups a mantener">
                     </div>
                 </div>
 
@@ -177,6 +170,9 @@
                     <div id="backupsList" class="backups-list">
                         <div class="empty-state loading-state">Cargando backups...</div>
                     </div>
+                    <button class="btn-primary full-width-btn" data-action="manual-backup" aria-label="Crear backup ahora">
+                        💾 Backup Ahora
+                    </button>
                 </div>
             </section>
 
