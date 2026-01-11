@@ -68,14 +68,10 @@ export function initSocketListeners() {
             const settings = newState.config?.settings || {};
             elements.maxMissedPingsInput.value = settings.max_missed_pings || 2;
         }
-        if (elements.backupSection?.autoBackupEnabled) {
-            const settings = newState.config?.settings || {};
-            elements.backupSection.autoBackupEnabled.checked = String(settings.auto_backup_enabled) === 'true';
-            elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
-            elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
-        }
-        if (elements.toastSettings?.duration) {
-            const settings = newState.config?.settings || {};
+        const settings = newState.config?.settings || {};
+        updateToastConfig(settings);
+        
+        if (elements.toastSettings?.enabled) {
             elements.toastSettings.enabled.checked = settings.toast_enabled !== 'false';
             elements.toastSettings.duration.value = settings.toast_duration || 5;
             elements.toastSettings.durationValue.textContent = (settings.toast_duration || 5) + 's';
@@ -83,7 +79,11 @@ export function initSocketListeners() {
             elements.toastSettings.sound.checked = settings.toast_sound !== 'false';
             elements.toastSettings.animation.value = settings.toast_animation || 'fade';
             elements.toastSettings.types.value = settings.toast_types || 'all';
-            updateToastConfig(settings);
+        }
+        if (elements.backupSection?.autoBackupEnabled) {
+            elements.backupSection.autoBackupEnabled.checked = String(settings.auto_backup_enabled) === 'true';
+            elements.backupSection.autoBackupInterval.value = settings.auto_backup_interval || 24;
+            elements.backupSection.autoBackupKeep.value = settings.auto_backup_keep || 7;
         }
     });
 
