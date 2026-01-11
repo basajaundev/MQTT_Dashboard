@@ -283,9 +283,6 @@
 
 /* Estilos compactos para toast integrado en columna Notificaciones */
 .toast-config-inline {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
 }
 
 .toast-config-inline h5 {
