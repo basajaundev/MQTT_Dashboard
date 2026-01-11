@@ -22,7 +22,7 @@ export async function initEventListeners() {
     }
 
     if (elements.deviceSearch) {
-        elements.deviceSearch.addEventListener('input', (e) => {
+        elements.deviceSearch.addEventListener('input', async (e) => {
             const { renderDevices } = await import('../device/dashboard.js');
             renderDevices(e.target.value);
         });
