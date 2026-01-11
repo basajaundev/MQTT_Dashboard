@@ -248,7 +248,10 @@ export function openLoginModal() {
     elements.loginModal.style.display = 'block';
     if (elements.loginError) elements.loginError.style.display = 'none';
     const passwordInput = document.getElementById('loginPassword');
-    if (passwordInput) passwordInput.value = '';
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.focus();
+    }
 }
 
 export function openGroupModal(groupId) {
