@@ -19,6 +19,12 @@ from flask_compress import Compress
 
 compress = Compress()
 
+# Disable Zstd compression due to memory issues on some systems
+# Use Gzip instead which is more compatible and requires less memory
+app.config['COMPRESS_ZSTD_LEVEL'] = 0  # Disable Zstandard
+app.config['COMPRESS_BR_LEVEL'] = 0     # Disable Brotli
+app.config['COMPRESS_GZIP_LEVEL'] = 6   # Use Gzip with level 6
+
 # Filtrar advertencia inofensiva de gevent/libuv en Windows
 warnings.filterwarnings("ignore", category=UserWarning, module='gevent.timeout')
 
