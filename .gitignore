@@ -118,3 +118,11 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
+
+# Backups
+backups/
+*.db.gz
+
+# Logs
+*.log
+logs/
