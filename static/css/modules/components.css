@@ -215,6 +215,7 @@ body.dark-mode .chart-container { color: var(--text-dark); }
     border-left: none;
     border-top: none;
     border-right: none;
+    border-radius: 0;
     font-size: 14px;
 }
 
