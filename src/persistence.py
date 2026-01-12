@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import hashlib
 
 from src.globals import (
@@ -11,6 +11,19 @@ from src.database import serialize_schedule_data, deserialize_schedule_data
 from src.task_utils import _create_task_trigger, execute_scheduled_task
 
 logger = logging.getLogger(__name__)
+
+def format_timestamp_utc(dt):
+    """Convierte un datetime naive a UTC y formatea con sufijo Z."""
+    if dt is None:
+        return None
+    try:
+        if dt.tzinfo is None:
+            local_tz = datetime.now().astimezone().tzinfo
+            dt = dt.replace(tzinfo=local_tz)
+        utc_dt = dt.astimezone(timezone.utc)
+        return utc_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    except Exception:
+        return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 # --- Admin Authentication ---
 def check_admin_password(password):
@@ -437,11 +450,11 @@ def get_sensor_data_for_device(device_id, location, start_date=None, end_date=No
             for i in range(MAX_POINTS):
                 index = int(i * step)
                 row = results[index]
-                data.append({'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st})
+                data.append({'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': format_timestamp_utc(row.timestamp), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st})
             logger.info(f"Downsampling aplicado: {total_points} -> {len(data)} puntos.")
             return data
         else:
-            return [{'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st} for row in results]
+            return [{'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': format_timestamp_utc(row.timestamp), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st} for row in results]
     except Exception as e:
         logger.error(f"Error recovering sensor data: {e}")
         return []
