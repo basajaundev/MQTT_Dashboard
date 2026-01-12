@@ -309,7 +309,7 @@ export async function initEventListeners() {
                     state.socket.emit('update_device_alias', {
                         device_id: deviceId,
                         location: location,
-                        alias: alias
+                        new_alias: alias
                     });
                 }
                 const modal = document.getElementById('deviceAliasModal');
