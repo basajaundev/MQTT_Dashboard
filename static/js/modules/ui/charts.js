@@ -123,7 +123,7 @@ export function displayHistoryChart(deviceId, history) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { type: 'time', time: { unit: 'auto', displayFormats: { hour: 'dd/MM HH:mm', minute: 'HH:mm', day: 'dd/MM' } }, title: { display: true, text: 'Fecha y Hora' }, min: minTime, max: maxTime },
+                x: { type: 'time', time: { displayFormats: { hour: 'dd/MM HH:mm', minute: 'HH:mm', day: 'dd/MM' } }, title: { display: true, text: 'Fecha y Hora' }, min: minTime, max: maxTime },
                 y_temp: { type: 'linear', position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
                 y_hum: { type: 'linear', position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } }
             },

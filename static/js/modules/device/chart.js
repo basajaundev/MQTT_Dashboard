@@ -62,7 +62,7 @@ export function renderDeviceChart(sensors) {
             scales: {
                 x: {
                     type: 'time',
-                    time: { unit: 'auto', displayFormats: { hour: 'dd/MM HH:mm', minute: 'HH:mm', day: 'dd/MM' } },
+                    time: { displayFormats: { hour: 'dd/MM HH:mm', minute: 'HH:mm', day: 'dd/MM' } },
                     title: { display: true, text: 'Fecha y Hora' }
                 },
                 y_temp: {
