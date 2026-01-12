@@ -217,3 +217,60 @@ document.body.addEventListener('click', (e) => {
 - Start with `AGENTS.md` for project conventions and setup
 - Refer to `docs/ARCHITECTURE.md` for high-level system design
 - Use `docs/COMMUNICATION.md` for MQTT topics, payloads, and protocols
+
+## Timestamp & Timezone System
+
+**Sensor Data Storage:** Sensors send data in UTC timezone.
+
+**Python Processing** (`persistence.py`):
+```python
+def format_timestamp_utc(dt):
+    """Formatea timestamp con sufijo Z indicando UTC (sensor ya envía en UTC)."""
+    return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+```
+
+**Frontend Display** (`charts.js`, `chart.js`):
+- Uses `chartjs-adapter-luxon` for time scale
+- Configured with `zone: 'local'` to convert UTC to browser timezone
+- Date format: `dd/MM HH:mm` (24-hour format)
+
+**Timezone Flow:**
+```
+Sensor (UTC) → Python (+Z suffix) → JavaScript (UTC) → Chart.js (local timezone)
+Example: 10:19 UTC → "2026-01-12T10:19:00Z" → CET display: 11:19
+```
+
+## Chart Configuration
+
+**Adapter:** `chartjs-adapter-luxon` with Luxon 3.x
+
+**Chart Options** (`static/js/modules/ui/charts.js`, `static/js/modules/device/chart.js`):
+```javascript
+scales: {
+    x: {
+        type: 'time',
+        time: {
+            zone: 'local',  // Convert UTC to browser timezone
+            displayFormats: {
+                hour: 'dd/MM HH:mm',
+                minute: 'HH:mm',
+                day: 'dd/MM'
+            }
+        },
+        title: { display: true, text: 'Fecha y Hora' }
+    }
+}
+```
+
+**Important:** Do NOT use `unit: 'auto'` - Luxon adapter does not support it. Omit the unit or use specific units like `hour`, `minute`, `day`.
+
+## Recent Bug Fixes
+
+### Device Edit Button Fix
+**File:** `static/js/modules/events/events.js`
+**Issue:** Frontend sent `alias` parameter but backend expected `new_alias`
+**Fix:** Changed parameter name to match backend expectation
+
+### Chart Timeout Fix
+**Issue:** Chart.js hung with "Invalid unit auto" error
+**Fix:** Switched from `chartjs-adapter-date-fns` to `chartjs-adapter-luxon` and removed `unit: 'auto'`
