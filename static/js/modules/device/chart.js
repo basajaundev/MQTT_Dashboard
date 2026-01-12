@@ -62,7 +62,7 @@ export function renderDeviceChart(sensors) {
             scales: {
                 x: {
                     type: 'time',
-                    time: { unit: 'hour' },
+                    time: { unit: 'hour', timezone: 'local', displayFormats: { hour: 'HH:mm' } },
                     title: { display: true, text: 'Hora' }
                 },
                 y_temp: {
@@ -75,6 +75,16 @@ export function renderDeviceChart(sensors) {
                     position: 'right',
                     title: { display: true, text: 'Humedad (%)' },
                     grid: { drawOnChartArea: false }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (context) => {
+                            const date = new Date(context[0].parsed.x);
+                            return date.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        }
+                    }
                 }
             }
         }

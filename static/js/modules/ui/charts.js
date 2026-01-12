@@ -95,8 +95,8 @@ export function displayHistoryChart(deviceId, history) {
     }
 
     if (history && history.length > 0) {
-        const dataMinTime = new Date(history[0].timestamp + 'Z');
-        const dataMaxTime = new Date(history[history.length - 1].timestamp + 'Z');
+        const dataMinTime = new Date(history[0].timestamp);
+        const dataMaxTime = new Date(history[history.length - 1].timestamp);
         if (preset === 'all') {
             minTime = dataMinTime;
             maxTime = dataMaxTime;
@@ -107,13 +107,13 @@ export function displayHistoryChart(deviceId, history) {
     }
     const datasets = [];
     if (history.some(d => d.temp_c !== null)) {
-        datasets.push({ label: 'Temperatura (°C)', data: history.map(d => ({ x: new Date(d.timestamp + 'Z'), y: d.temp_c })), borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)', yAxisID: 'y_temp' });
+        datasets.push({ label: 'Temperatura (°C)', data: history.map(d => ({ x: new Date(d.timestamp), y: d.temp_c })), borderColor: 'rgba(255, 99, 132, 1)', backgroundColor: 'rgba(255, 99, 132, 0.2)', yAxisID: 'y_temp' });
     }
     if (history.some(d => d.temp_st !== null)) {
-        datasets.push({ label: 'S. Termica (°C)', data: history.map(d => ({ x: new Date(d.timestamp + 'Z'), y: d.temp_st })), borderColor: 'rgba(255, 159, 64, 1)', backgroundColor: 'rgba(255, 159, 64, 0.2)', yAxisID: 'y_temp' });
+        datasets.push({ label: 'S. Termica (°C)', data: history.map(d => ({ x: new Date(d.timestamp), y: d.temp_st })), borderColor: 'rgba(255, 159, 64, 1)', backgroundColor: 'rgba(255, 159, 64, 0.2)', yAxisID: 'y_temp' });
     }
     if (history.some(d => d.temp_h !== null)) {
-        datasets.push({ label: 'Humedad (%)', data: history.map(d => ({ x: new Date(d.timestamp + 'Z'), y: d.temp_h })), borderColor: 'rgba(54, 162, 235, 1)', backgroundColor: 'rgba(54, 162, 235, 0.2)', yAxisID: 'y_hum' });
+        datasets.push({ label: 'Humedad (%)', data: history.map(d => ({ x: new Date(d.timestamp), y: d.temp_h })), borderColor: 'rgba(54, 162, 235, 1)', backgroundColor: 'rgba(54, 162, 235, 0.2)', yAxisID: 'y_hum' });
     }
     if (state.historyChart) state.historyChart.destroy();
     state.historyChart = new Chart(elements.historyChartCanvas, {
@@ -123,9 +123,19 @@ export function displayHistoryChart(deviceId, history) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { type: 'time', time: { unit: 'hour' }, title: { display: true, text: 'Hora' }, min: minTime, max: maxTime },
+                x: { type: 'time', time: { unit: 'hour', timezone: 'local', displayFormats: { hour: 'HH:mm' } }, title: { display: true, text: 'Hora' }, min: minTime, max: maxTime },
                 y_temp: { type: 'linear', position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
                 y_hum: { type: 'linear', position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (context) => {
+                            const date = new Date(context[0].parsed.x);
+                            return date.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+                        }
+                    }
+                }
             }
         }
     });
