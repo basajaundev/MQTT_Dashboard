@@ -13,17 +13,13 @@ from src.task_utils import _create_task_trigger, execute_scheduled_task
 logger = logging.getLogger(__name__)
 
 def format_timestamp_utc(dt):
-    """Convierte un datetime naive a UTC y formatea con sufijo Z."""
+    """Formatea timestamp con sufijo Z indicando UTC (sensor ya envía en UTC)."""
     if dt is None:
         return None
     try:
-        if dt.tzinfo is None:
-            local_tz = datetime.now().astimezone().tzinfo
-            dt = dt.replace(tzinfo=local_tz)
-        utc_dt = dt.astimezone(timezone.utc)
-        return utc_dt.strftime('%Y-%m-%dT%H:%M:%SZ')
-    except Exception:
         return dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    except Exception:
+        return None
 
 # --- Admin Authentication ---
 def check_admin_password(password):
