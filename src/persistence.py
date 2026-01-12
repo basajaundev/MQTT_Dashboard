@@ -437,11 +437,11 @@ def get_sensor_data_for_device(device_id, location, start_date=None, end_date=No
             for i in range(MAX_POINTS):
                 index = int(i * step)
                 row = results[index]
-                data.append({'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st})
+                data.append({'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st})
             logger.info(f"Downsampling aplicado: {total_points} -> {len(data)} puntos.")
             return data
         else:
-            return [{'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%d %H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st} for row in results]
+            return [{'id': row.id, 'device_id': row.device_id, 'location': row.location, 'timestamp': row.timestamp.strftime('%Y-%m-%dT%H:%M:%S'), 'temp_c': row.temp_c, 'temp_h': row.temp_h, 'temp_st': row.temp_st} for row in results]
     except Exception as e:
         logger.error(f"Error recovering sensor data: {e}")
         return []
