@@ -123,7 +123,7 @@ export function displayHistoryChart(deviceId, history) {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { type: 'time', time: { unit: 'hour', timezone: 'local', displayFormats: { hour: 'HH:mm' } }, title: { display: true, text: 'Hora' }, min: minTime, max: maxTime },
+                x: { type: 'time', time: { unit: 'auto', displayFormats: { hour: 'dd/MM HH:mm', minute: 'HH:mm', day: 'dd/MM' } }, title: { display: true, text: 'Fecha y Hora' }, min: minTime, max: maxTime },
                 y_temp: { type: 'linear', position: 'left', title: { display: true, text: 'Temperatura (°C)' } },
                 y_hum: { type: 'linear', position: 'right', title: { display: true, text: 'Humedad (%)' }, grid: { drawOnChartArea: false } }
             },
@@ -132,7 +132,7 @@ export function displayHistoryChart(deviceId, history) {
                     callbacks: {
                         title: (context) => {
                             const date = new Date(context[0].parsed.x);
-                            return date.toLocaleString('es-ES', { hour: '2-digit', minute: '2-digit', hour12: false });
+                            return date.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false });
                         }
                     }
                 }
